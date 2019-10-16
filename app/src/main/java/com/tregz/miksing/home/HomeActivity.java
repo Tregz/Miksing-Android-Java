@@ -89,6 +89,7 @@ public class HomeActivity extends BaseActivity implements HomeView {
 
     private void expand(FloatingActionButton fab) {
         fab.setExpanded(!fab.isExpanded());
+        fab.setImageResource(fab.isExpanded() ? R.drawable.ic_close : R.drawable.ic_add);
     }
 
     private boolean back() {
