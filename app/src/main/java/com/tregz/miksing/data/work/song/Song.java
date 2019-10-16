@@ -5,12 +5,16 @@ import android.os.Parcelable;
 
 import com.tregz.miksing.data.work.Work;
 
+import java.util.Date;
+
 public class Song extends Work {
 
     private String mixedBy;
     private int kind = 0;
 
-    public Song() {}
+    public Song(Date createdAt) {
+        copy = createdAt;
+    }
 
     public String getMixedBy() {
         return mixedBy;
@@ -44,11 +48,15 @@ public class Song extends Work {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        //TODO
+        parcel.writeString(mixedBy);
+        parcel.writeInt(kind);
+        super.writeToParcel(parcel, i);
     }
 
     private Song(Parcel parcel) {
-        //TODO
+        mixedBy = parcel.readString();
+        kind = parcel.readInt();
+        read(parcel);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator<Song>() {

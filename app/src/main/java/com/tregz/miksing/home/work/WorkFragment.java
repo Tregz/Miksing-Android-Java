@@ -139,18 +139,17 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
         Work work = null;
         WorkType type = WorkType.values()[spWorkType.getSelectedItemPosition()];
         if (type == WorkType.TAKE) {
-            work = new Take();
+            work = new Take(new Date());
             Log.d(TAG, "TAKE");
         }
         else if (type == WorkType.SONG) {
-            work = new Song();
+            work = new Song(new Date());
             if (etMixedBy != null) ((Song) work).setMixedBy(etMixedBy.getText().toString());
             if (cbDirty != null) ((Song) work).setDirty(cbDirty.isChecked());
             if (spMixVersion != null) ((Song) work).setMix(spMixVersion.getSelectedItemPosition());
         }
         if (work != null) {
             work.setArtist(etArtist.getText().toString());
-            work.setCreatedAt(new Date());
             work.setReleasedAt(releasedAt);
             work.setTitle(etTitle.getText().toString());
             WorkCollection.getInstance().add(work);

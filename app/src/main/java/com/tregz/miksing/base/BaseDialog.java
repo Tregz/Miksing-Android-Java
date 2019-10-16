@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat;
 import android.content.DialogInterface;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;

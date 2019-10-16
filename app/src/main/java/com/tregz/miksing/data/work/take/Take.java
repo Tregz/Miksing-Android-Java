@@ -4,9 +4,13 @@ import android.os.Parcel;
 
 import com.tregz.miksing.data.work.Work;
 
+import java.util.Date;
+
 public class Take extends Work {
 
-    public Take() {}
+    public Take(Date createAt) {
+        copy = createAt;
+    }
 
     @Override
     public int describeContents() {
@@ -15,11 +19,11 @@ public class Take extends Work {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        //TODO
+        super.writeToParcel(parcel, i);
     }
 
     private Take(Parcel parcel) {
-        //TODO
+        read(parcel);
     }
 
     public static final Creator CREATOR = new Creator<Take>() {

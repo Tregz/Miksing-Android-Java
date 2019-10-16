@@ -1,5 +1,7 @@
 package com.tregz.miksing.data.work;
 
+import android.os.Parcel;
+
 import com.tregz.miksing.data.DataModel;
 
 import java.util.Date;
@@ -25,19 +27,25 @@ public abstract class Work extends DataModel {
         this.name = name;
     }
 
-    public Date getCreatedAt() {
-        return copy;
-    }
-
-    public void setCreatedAt(Date copy) {
-        this.copy = copy;
-    }
-
     public Date getReleasedAt() {
         return born;
     }
 
     public void setReleasedAt(Date born) {
         this.born = born;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        mark = parcel.readString();
+        name = parcel.readString();
+        super.writeToParcel(parcel, i);
+    }
+
+    @Override
+    protected void read(Parcel parcel) {
+        parcel.writeString(mark);
+        parcel.writeString(name);
+        super.read(parcel);
     }
 }

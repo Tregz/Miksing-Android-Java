@@ -1,9 +1,11 @@
 package com.tregz.miksing.home.work;
 
+import android.os.Parcelable;
 import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
+import com.tregz.miksing.data.DataModel;
 import com.tregz.miksing.data.work.Work;
 
 import java.util.ArrayList;
@@ -43,11 +45,16 @@ public class WorkCollection {
         return list;
     }
 
-    Work add(@NonNull Work apple) {
-        list.add(apple);
-        set.add(apple);
-        map.put(map.size(), apple);
-        return apple;
+    Work add(@NonNull Work work) {
+        list.add(work);
+        set.add(work);
+        map.put(map.size(), work);
+        return work;
+    }
+
+    Work add(@NonNull Work work, int position) {
+        map.put(position, work);
+        return work;
     }
 
 }
