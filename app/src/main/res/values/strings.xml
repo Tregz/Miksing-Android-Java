@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Miksing</string>
+    <string name="action_settings">Settings</string>
+
+
+    <string name="song_artist">Artist</string>
+    <string name="song_title">Title</string>
+    <string name="song_mixed_by">Mixed by</string>
+    <string name="song_release_date">Release date</string>
+    <string name="song_dirty">Dirty lyrics</string>
+    <string name="song_version">Version</string>
+
+    <string name="user_email">Courriel</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="eColor">#660000</color>
+    <color name="primary">#ff9933</color>
+    <color name="primaryAccent">#ffcc00</color>
+    <color name="primaryAccentLight">#ffe066</color>
+    <color name="primaryDark">#cc6600</color>
+    <color name="primaryLight">#ffca64</color>
+    <color name="primaryPage">#fff9e9</color>
+    <color name="primaryPageLight">#fffcf9</color>
+    <color name="primaryShadow">#99ffca64</color>
+    <color name="primaryShadowDark">#ccffca64</color>
+    <color name="primaryText">#660000</color>
+    <color name="primaryTextDark">#330000</color>
+    <color name="primaryTextLight">#ffeedd</color>
+    <color name="secondaryAccent">#D81B60</color>
+    <color name="secondary">#cc3399</color>
+    <color name="secondaryDark">#97006b</color>
+    <color name="secondaryLight">#ff6aca</color>
+    <color name="secondaryPage">#ffbbdd</color>
+    <color name="secondaryText">#ffddee</color>
+    <color name="secondaryPageLight">#ffe9f9</color>
+    <color name="secondaryTextDark">#330033</color>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="primaryColor" format="reference"/>
+    <attr name="primaryDarkColor" format="reference"/>
+    <attr name="primaryLightColor" format="reference"/>
+    <attr name="primaryPageColor" format="reference"/>
+    <attr name="primaryShadowColor" format="reference"/>
+    <attr name="primaryTextColor" format="reference"/>
+    <attr name="primaryTextDarkColor" format="reference"/>
+</resources>

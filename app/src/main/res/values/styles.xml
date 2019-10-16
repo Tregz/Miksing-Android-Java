@@ -1,0 +1,56 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="primaryColor">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="primaryLightColor">@color/primaryLight</item>
+        <item name="primaryShadowColor">@color/primaryShadow</item>
+        <item name="primaryTextColor">@color/primaryText</item>
+        <item name="primaryTextDarkColor">@color/primaryTextDark</item>
+        <item name="primaryDarkColor">@color/primaryDark</item>
+        <item name="colorAccent">@color/primaryAccent</item>
+        <item name="primaryPageColor">@color/primaryPage</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <style name="CheckboxStyle" parent="AppTheme">
+        <item name="buttonTint">?attr/colorPrimaryDark</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">?attr/primaryTextColor</item>
+    </style>
+
+    <!-- Progress theme. -->
+    <style name="SplashTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowBackground">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary</item>
+        <item name="colorAccent">@color/primaryShadow</item>
+    </style>
+
+    <style name="TextInputEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">@color/primaryText</item>
+    </style>
+
+    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/sh_rounded_light</item>
+        <item name="android:textColor">@color/primaryTextDark</item>
+        <item name="android:textColorHint">@color/primaryDark</item>
+        <item name="hintTextColor">@color/primaryText</item>
+    </style>
+
+</resources>

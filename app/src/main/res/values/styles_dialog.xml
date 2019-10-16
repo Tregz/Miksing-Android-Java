@@ -1,0 +1,18 @@
+<resources>
+
+    <style name="AlertDialogLook" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:windowBackground">@drawable/sh_rounded_light</item>
+        <item name="buttonBarNegativeButtonStyle">
+            @style/Widget.MaterialComponents.Button.OutlinedButton.Custom</item>
+        <item name="buttonBarNeutralButtonStyle">
+            @style/Widget.MaterialComponents.Button.OutlinedButton.Custom</item>
+    </style>
+
+    <style name="AlertDialogWrap" parent="AlertDialogLook">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="buttonBarPositiveButtonStyle">
+            @style/Widget.MaterialComponents.Button.Icon.Custom.Main</item>
+    </style>
+
+</resources>

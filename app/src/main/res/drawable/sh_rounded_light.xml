@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:top="6dp"
+        android:right="2dp"
+        android:left="2dp"
+        android:bottom="3dp">
+        <shape>
+            <solid android:color="@color/primaryPageLight" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+</layer-list>

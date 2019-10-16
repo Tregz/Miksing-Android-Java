@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Picker" parent="@style/ThemeOverlay.MaterialComponents.Light">
+        <!--<item name="showTitle">false</item> -->
+        <item name="colorControlActivated">?attr/primaryTextDarkColor</item>
+        <item name="colorAccent">?attr/primaryColor</item>
+        <item name="android:textColorPrimary">?attr/primaryTextColor</item>
+        <item name="android:textColorSecondary">?attr/primaryTextColor</item>
+        <item name="android:headerBackground">?attr/primaryShadowColor</item>
+    </style>
+
+</resources>

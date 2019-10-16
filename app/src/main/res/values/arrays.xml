@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="array_user_genre">
+        <item>Indéfini</item>
+        <item>Femme</item>
+        <item>Homme</item>
+        <item>Autre</item>
+    </string-array>
+
+    <string-array name="array_work_type">
+        <item>Image</item>
+        <item>Video</item>
+    </string-array>
+
+    <string-array name="array_song_mix_version">
+        <item>Undefined</item>
+        <item>Mix</item>
+        <item>Extended</item>
+        <item>Remix</item>
+        <item>Extended Remix</item>
+    </string-array>
+
+</resources>

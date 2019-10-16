@@ -1,0 +1,53 @@
+<resources>
+
+    <style name="HorizontalSpeedDial">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/speed_dial_margin</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:visibility">invisible</item>
+        <item name="layout_anchorGravity">center_vertical</item>
+        <item name="layout_behavior">
+            com.google.android.material.transformation.FabTransformationScrimBehavior
+        </item>
+    </style>
+
+    <style name="MiniButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/small_gap</item>
+        <item name="tint">@color/primaryText</item>
+        <item name="fabSize">mini</item>
+        <item name="backgroundTint">@color/primaryAccentLight</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Button.Icon.Custom">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="iconPadding">0dp</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Button.Icon.Custom.Main">
+        <item name="backgroundTint">@color/primaryDark</item>
+        <item name="rippleColor">@color/primaryLight</item>
+        <item name="android:textColor">@color/primaryPage</item>
+    </style>
+
+
+    <style name="Widget.MaterialComponents.Button.OutlinedButton.Custom">
+        <item name="backgroundTint">@color/secondaryPageLight</item>
+        <item name="rippleColor">@color/secondaryLight</item>
+        <item name="android:textColor">@color/secondaryDark</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="iconPadding">0dp</item>
+    </style>
+
+</resources>
