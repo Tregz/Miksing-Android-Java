@@ -4,6 +4,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -55,12 +57,27 @@ public class HomeActivity extends BaseActivity implements HomeView {
         videoParams.height = panoramic();
         video.setLayoutParams(videoParams);
 
-        String path = "anim/Miksing_Logo-Animated.mp4";
-        Task<Uri> task = FirebaseStorage.getInstance().getReference().child(path).getDownloadUrl();
-        task.addOnSuccessListener(new OnSuccessListener<Uri>() {
+        String path1 = "anim/Miksing_Logo-Animated.mp4";
+        Task<Uri> t1 = FirebaseStorage.getInstance().getReference().child(path1).getDownloadUrl();
+        t1.addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 video.setVideoURI(uri);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e.getMessage() != null) toast(e.getMessage());
+            }
+        });
+
+        /* Image viewer */
+        String path2 = "draw/Cshawi-logo-mini.png";
+        Task<Uri> t2 = FirebaseStorage.getInstance().getReference().child(path2).getDownloadUrl();
+        t2.addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                loadImage(uri, R.id.image_1);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -94,6 +111,11 @@ public class HomeActivity extends BaseActivity implements HomeView {
                 if (primary instanceof WorkFragment) ((WorkFragment) primary).save();
             }
         });
+    }
+
+    private void loadImage(Uri uri, int resource) {
+        ImageView image = findViewById(resource);
+        Glide.with(this).load(uri).into(image);
     }
 
     @Override
