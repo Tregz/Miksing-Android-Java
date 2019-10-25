@@ -16,14 +16,13 @@ import com.tregz.miksing.home.work.WorkFragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 
 public class HomeActivity extends BaseActivity implements HomeView {
@@ -52,7 +51,10 @@ public class HomeActivity extends BaseActivity implements HomeView {
                 mp.start(); // loop
             }
         });
-        panoramic(findViewById(R.id.app_bar));
+        LinearLayout.LayoutParams videoParams = (LinearLayout.LayoutParams) video.getLayoutParams();
+        videoParams.height = panoramic();
+        video.setLayoutParams(videoParams);
+
         String path = "anim/Miksing_Logo-Animated.mp4";
         Task<Uri> task = FirebaseStorage.getInstance().getReference().child(path).getDownloadUrl();
         task.addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -134,15 +136,12 @@ public class HomeActivity extends BaseActivity implements HomeView {
 
     private void expand(FloatingActionButton fab) {
         fab.setExpanded(!fab.isExpanded());
-        findViewById(R.id.clear_all).bringToFront();
         fab.setImageResource(fab.isExpanded() ? R.drawable.ic_close : R.drawable.ic_add);
     }
 
-    private void panoramic(View view) {
+    private int panoramic() {
         float top = getResources().getDimension(R.dimen.material_toolbar_height_with_mini_gap);
-        int height = ((int)(getResources().getDisplayMetrics().widthPixels * 0.5625)) + (int)top;
-        int match = ViewGroup.LayoutParams.MATCH_PARENT;
-        view.setLayoutParams(new CoordinatorLayout.LayoutParams(match, height));
+        return ((int)(getResources().getDisplayMetrics().widthPixels * 0.5625)) + (int)top;
     }
 
     private boolean back() {

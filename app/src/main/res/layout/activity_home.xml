@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/app_bar_height"
         android:background="@color/primary"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -18,9 +18,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/material_toolbar_height_with_tiny_gap"
-            android:background="@color/primary"
-            android:fitsSystemWindows="true"
+            android:layout_height="match_parent"
             app:contentScrim="?attr/primaryDarkColor"
             app:collapsedTitleTextAppearance="@style/AppTheme.AppBarOverlay.Collapsed"
             app:expandedTitleGravity="bottom|start"
@@ -28,23 +26,18 @@
             app:expandedTitleMarginEnd="15dp"
             app:expandedTitleMarginStart="50dp"
             app:expandedTitleTextAppearance="@style/AppTheme.AppBarOverlay.Shadow"
-            app:layout_scrollFlags="scroll|snap"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
+            <!-- app:layout_scrollFlags="scroll|snap" -->
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:layout_collapseMode="parallax" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-        <VideoView
-            android:id="@+id/video_1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -57,61 +50,66 @@
         tools:context=".home.HomeActivity"
         tools:showIn="@layout/activity_home">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@color/primaryDark"/>
+
+            <VideoView
+                android:id="@+id/video_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <fragment
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="44dp"
                 app:defaultNavHost="true"
                 app:navGraph="@navigation/storyboard" />
 
-            <FrameLayout
-                android:id="@+id/header"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@color/primary"/>
-
-            <LinearLayout
-                android:id="@+id/dial"
-                style="@style/HorizontalSpeedDial"
-                app:layout_anchor="@id/fab">
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/clear_all"
-                    style="@style/MiniButton"
-                    app:srcCompat="@drawable/ic_clear_all" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/web_search"
-                    style="@style/MiniButton"
-                    app:srcCompat="@drawable/ic_web_search" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/save"
-                    style="@style/MiniButton"
-                    app:srcCompat="@drawable/ic_save" />
-
-            </LinearLayout>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
-                app:tint="@color/primaryTextDark"
-                app:backgroundTint="@color/primaryAccent"
-                app:layout_anchor="@id/nav_host_fragment"
-                app:layout_anchorGravity="top|end"
-                app:maxImageSize="40dp"
-                app:srcCompat="@drawable/ic_add" />
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/dial"
+        style="@style/HorizontalSpeedDial"
+        app:layout_anchor="@id/fab">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/clear_all"
+            style="@style/MiniButton"
+            app:srcCompat="@drawable/ic_clear_all" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/web_search"
+            style="@style/MiniButton"
+            app:srcCompat="@drawable/ic_web_search" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/save"
+            style="@style/MiniButton"
+            app:srcCompat="@drawable/ic_save" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:tint="@color/primaryTextDark"
+        app:backgroundTint="@color/primaryAccent"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end"
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
