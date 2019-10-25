@@ -4,4 +4,6 @@
     <dimen name="small_gap">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="material_toolbar_height_with_mini_gap">58dp</dimen>
+    <dimen name="material_toolbar_height_with_tiny_gap">57dp</dimen>
 </resources>

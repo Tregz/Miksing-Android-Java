@@ -1,27 +1,72 @@
 package com.tregz.miksing.home;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.home.work.WorkFragment;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 
 public class HomeActivity extends BaseActivity implements HomeView {
 
+    private VideoView video;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+
+        /* Video player */
+        video = findViewById(R.id.video_1);
+        video.setMediaController(new MediaController(this));
+        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start(); // auto play
+            }
+        });
+        video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.start(); // loop
+            }
+        });
+        panoramic(findViewById(R.id.app_bar));
+        String path = "anim/Miksing_Logo-Animated.mp4";
+        Task<Uri> task = FirebaseStorage.getInstance().getReference().child(path).getDownloadUrl();
+        task.addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                video.setVideoURI(uri);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e.getMessage() != null) toast(e.getMessage());
+            }
+        });
+
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +134,15 @@ public class HomeActivity extends BaseActivity implements HomeView {
 
     private void expand(FloatingActionButton fab) {
         fab.setExpanded(!fab.isExpanded());
+        findViewById(R.id.clear_all).bringToFront();
         fab.setImageResource(fab.isExpanded() ? R.drawable.ic_close : R.drawable.ic_add);
+    }
+
+    private void panoramic(View view) {
+        float top = getResources().getDimension(R.dimen.material_toolbar_height_with_mini_gap);
+        int height = ((int)(getResources().getDisplayMetrics().widthPixels * 0.5625)) + (int)top;
+        int match = ViewGroup.LayoutParams.MATCH_PARENT;
+        view.setLayoutParams(new CoordinatorLayout.LayoutParams(match, height));
     }
 
     private boolean back() {

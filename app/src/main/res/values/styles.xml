@@ -22,6 +22,22 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
+    <style name="AppTheme.AppBarOverlay.Collapsed"
+        parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay.Shadow"
+        parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/primaryTextDark</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">0</item>
+        <item name="android:shadowRadius">15</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:shadowColor">@color/primaryDark</item>
+    </style>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
     <style name="CheckboxStyle" parent="AppTheme">

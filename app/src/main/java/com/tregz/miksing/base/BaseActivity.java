@@ -1,7 +1,9 @@
 package com.tregz.miksing.base;
 
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tregz.miksing.R;
@@ -27,5 +29,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         for (BaseDialog dialog : dialogs) if (dialog.alert != null) dialog.alert.dismiss();
         super.onDestroy();
+    }
+
+    protected void toast(@NonNull String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

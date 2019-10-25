@@ -1,5 +1,6 @@
 package com.tregz.miksing.home.work;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,12 +98,12 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
     }
 
     private void dialog() {
-        if (getActivity() instanceof HomeActivity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Date released = releasedAt != null ? releasedAt : new Date();
             ViewGroup group = ((HomeActivity)getActivity()).getViewGroup();
             WorkDialog dialog = new WorkDialog(group, this, released);
             ((HomeActivity)getActivity()).add(dialog);
-        }
+        } else toast("Android version must Lollipop or higher");
     }
 
     @Override

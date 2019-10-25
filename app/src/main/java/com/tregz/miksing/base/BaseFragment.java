@@ -1,6 +1,7 @@
 package com.tregz.miksing.base;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,5 +22,9 @@ public abstract class BaseFragment extends Fragment {
             String name = HomeView.class.getSimpleName();
             throw new ClassCastException(context.toString() + " must implement " + name);
         }
+    }
+
+    protected void toast(@NonNull String message) {
+        if (getContext() != null) Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
