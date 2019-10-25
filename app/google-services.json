@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "748399202359",
+    "firebase_url": "https://miksing.firebaseio.com",
+    "project_id": "miksing",
+    "storage_bucket": "miksing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748399202359:android:e3996991e4c20b7d",
+        "android_client_info": {
+          "package_name": "com.tregz.miksing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "748399202359-3og4emj7e3l74sd4s3emf471hddgpnnf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tregz.miksing",
+            "certificate_hash": "5667e8e2d6e53defd2c2618f6333cc54f2f54fdc"
+          }
+        },
+        {
+          "client_id": "748399202359-8n9hochknc2rf1d5meoq7a1o53pebv66.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0OhPNwbly8qicAqIGBCbMJs0OOrs63dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748399202359-8n9hochknc2rf1d5meoq7a1o53pebv66.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
