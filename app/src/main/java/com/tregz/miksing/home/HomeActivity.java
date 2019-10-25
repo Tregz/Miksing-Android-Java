@@ -8,12 +8,14 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.home.work.WorkFragment;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,9 +29,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-public class HomeActivity extends BaseActivity implements HomeView {
+public class HomeActivity extends BaseActivity implements HomeView,
+        AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout> {
 
     private VideoView video;
+    private boolean collapsing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class HomeActivity extends BaseActivity implements HomeView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+        ((AppBarLayout)findViewById(R.id.app_bar)).addOnOffsetChangedListener(this);
 
         /* Video player */
         video = findViewById(R.id.video_1);
@@ -137,6 +142,16 @@ public class HomeActivity extends BaseActivity implements HomeView {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        if (verticalOffset < -175) { if (!collapsing) collapsing = true; }
+        else if (collapsing) collapsing = false;
+        LinearLayout dial = findViewById(R.id.dial);
+        if (collapsing) {
+            if (dial.getVisibility() == View.VISIBLE) dial.setVisibility(View.INVISIBLE);
+        } else if (dial.getVisibility() == View.INVISIBLE) dial.setVisibility(View.VISIBLE);
     }
 
     @Override
