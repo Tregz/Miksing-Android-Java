@@ -21,12 +21,16 @@ public final class DateUtil {
     }
 
     private static String format(String pattern, Date at) {
-        return new SimpleDateFormat(pattern, Locale.getDefault()).format(calendar(at).getTime());
+        return simple(pattern).format(calendar(at).getTime());
     }
 
     private static String pattern(String skeleton) {
         return DateFormat.getBestDateTimePattern(Locale.getDefault(), skeleton);
     }
 
+    public static SimpleDateFormat simple(String skeleton) {
+        String pattern = skeleton != null ? skeleton : "yyyy-MM-dd";
+        return new SimpleDateFormat(pattern, Locale.getDefault());
+    }
 
 }

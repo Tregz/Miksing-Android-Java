@@ -34,6 +34,7 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
 
     private boolean dirty = false;
     private Date releasedAt = null;
+    private String mixedBy;
     private int mix = 0;
 
     // UI ref
@@ -91,10 +92,6 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
         setAdapter(spWorkType, R.array.array_work_type);
 
         // Update UI
-        // TODO et_artist.setText(artist)
-        // if (releasedAt != null) etReleaseDate.setText(DateUtil.dayOfYear(null, releasedAt));
-        // TODO et_title.setText(title)
-        // TODO sp selected
     }
 
     private void dialog() {
@@ -136,6 +133,19 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
         if (spMixVersion != null) spMixVersion.setSelection(0);
     }
 
+    public void fill(Work work) {
+        etArtist.setText(work.getArtist());
+        etReleaseDate.setText(DateUtil.dayOfYear(null, work.getReleasedAt()));
+        etTitle.setText(work.getTitle());
+        if (work instanceof Song) {
+            mix = ((Song) work).getMix();
+            mixedBy = ((Song) work).getMixedBy();
+            spWorkType.setSelection(WorkType.SONG.ordinal());
+        } else if (work instanceof Take) {
+            spWorkType.setSelection(WorkType.TAKE.ordinal());
+        }
+    }
+
     public void save() {
         Work work = null;
         WorkType type = WorkType.values()[spWorkType.getSelectedItemPosition()];
@@ -154,7 +164,7 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
             work.setReleasedAt(releasedAt);
             work.setTitle(etTitle.getText().toString());
             WorkCollection.getInstance().add(work);
-            listener.saved();
+            listener.onSaved();
         }
     }
 
@@ -183,12 +193,12 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
                         }
                     }
                 });
-                setAdapter(spMixVersion, R.array.array_work_type);
+                setAdapter(spMixVersion, R.array.array_song_mix_version);
 
                 // Update UI
+                spMixVersion.setSelection(mix);
+                if (mixedBy != null) etMixedBy.setText(mixedBy);
                 // TODO cbDirty.setChecked();
-                // et
-                // sp
             }
         }
     }

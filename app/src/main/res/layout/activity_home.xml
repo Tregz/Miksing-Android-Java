@@ -66,10 +66,22 @@
                 android:layout_height="44dp"
                 android:background="@color/primaryDark"/>
 
-            <VideoView
-                android:id="@+id/video_1"
+            <FrameLayout
+                android:id="@+id/players"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="200dp">
+
+                <com.tregz.miksing.base.play.PlayVideo
+                    android:id="@+id/webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <VideoView
+                    android:id="@+id/video_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </FrameLayout>
 
             <fragment
                 android:id="@+id/nav_host_fragment"
@@ -86,6 +98,7 @@
     <LinearLayout
         android:id="@+id/dial"
         style="@style/HorizontalSpeedDial"
+        android:visibility="invisible"
         app:layout_anchor="@id/fab">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

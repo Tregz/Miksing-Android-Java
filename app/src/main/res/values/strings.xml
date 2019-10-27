@@ -14,5 +14,9 @@
 
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="clear">Clear</string>
+    <string name="save">Save</string>
+
+    <string name="request_youtube">Get YouTube video or playlist from HTTP link</string>
 
 </resources>

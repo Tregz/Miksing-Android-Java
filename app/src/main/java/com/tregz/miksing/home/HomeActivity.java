@@ -4,7 +4,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -13,14 +12,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseActivity;
+import com.tregz.miksing.base.play.PlayVideo;
+import com.tregz.miksing.data.work.Work;
 import com.tregz.miksing.home.work.WorkFragment;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -32,7 +32,9 @@ import androidx.fragment.app.Fragment;
 public class HomeActivity extends BaseActivity implements HomeView,
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout> {
 
+    private FloatingActionButton fab;
     private VideoView video;
+    private PlayVideo webView;
     private boolean collapsing = false;
 
     @Override
@@ -42,6 +44,27 @@ public class HomeActivity extends BaseActivity implements HomeView,
         setContentView(R.layout.activity_home);
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
         ((AppBarLayout)findViewById(R.id.app_bar)).addOnOffsetChangedListener(this);
+
+        /* Image viewer */
+        String path2 = "draw/Cshawi-logo-mini.png";
+        Task<Uri> t2 = FirebaseStorage.getInstance().getReference().child(path2).getDownloadUrl();
+        t2.addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                image(uri, R.id.image_1);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e.getMessage() != null) toast(e.getMessage());
+            }
+        });
+
+        // Container for media players
+        FrameLayout frame = findViewById(R.id.players);
+        LinearLayout.LayoutParams frameParams = (LinearLayout.LayoutParams) frame.getLayoutParams();
+        frameParams.height = panoramic();
+        frame.setLayoutParams(frameParams);
 
         /* Video player */
         video = findViewById(R.id.video_1);
@@ -58,10 +81,6 @@ public class HomeActivity extends BaseActivity implements HomeView,
                 mp.start(); // loop
             }
         });
-        LinearLayout.LayoutParams videoParams = (LinearLayout.LayoutParams) video.getLayoutParams();
-        videoParams.height = panoramic();
-        video.setLayoutParams(videoParams);
-
         String path1 = "anim/Miksing_Logo-Animated.mp4";
         Task<Uri> t1 = FirebaseStorage.getInstance().getReference().child(path1).getDownloadUrl();
         t1.addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -75,23 +94,20 @@ public class HomeActivity extends BaseActivity implements HomeView,
                 if (e.getMessage() != null) toast(e.getMessage());
             }
         });
-
-        /* Image viewer */
-        String path2 = "draw/Cshawi-logo-mini.png";
-        Task<Uri> t2 = FirebaseStorage.getInstance().getReference().child(path2).getDownloadUrl();
-        t2.addOnSuccessListener(new OnSuccessListener<Uri>() {
+        video.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Uri uri) {
-                loadImage(uri, R.id.image_1);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e.getMessage() != null) toast(e.getMessage());
+            public void onClick(View v) {
+                video.setVisibility(View.GONE);
+                webView.load("5-q3meXJ6W4"); // testing
             }
         });
 
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+        // Web video player
+        webView = findViewById(R.id.webview);
+
+        // Listeners
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!back()) {
@@ -103,24 +119,21 @@ public class HomeActivity extends BaseActivity implements HomeView,
         findViewById(R.id.clear_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO dialog
-                Fragment primary = primary();
-                if (primary instanceof WorkFragment) ((WorkFragment) primary).clear();
+                ((HomeDialog)add(new HomeDialog(HomeActivity.this))).clear();
             }
         });
         findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO dialog
-                Fragment primary = primary();
-                if (primary instanceof WorkFragment) ((WorkFragment) primary).save();
+                ((HomeDialog)add(new HomeDialog(HomeActivity.this))).save();
             }
         });
-    }
-
-    private void loadImage(Uri uri, int resource) {
-        ImageView image = findViewById(resource);
-        Glide.with(this).load(uri).into(image);
+        findViewById(R.id.web_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                add(new HomeDialog(webView));
+            }
+        });
     }
 
     @Override
@@ -151,7 +164,8 @@ public class HomeActivity extends BaseActivity implements HomeView,
         LinearLayout dial = findViewById(R.id.dial);
         if (collapsing) {
             if (dial.getVisibility() == View.VISIBLE) dial.setVisibility(View.INVISIBLE);
-        } else if (dial.getVisibility() == View.INVISIBLE) dial.setVisibility(View.VISIBLE);
+        } else if (dial.getVisibility() == View.INVISIBLE && fab.isExpanded())
+            dial.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -160,7 +174,25 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
-    public void saved() {
+    public void onClearItemDetails() {
+        Fragment primary = primary();
+        if (primary instanceof WorkFragment) ((WorkFragment) primary).clear();
+    }
+
+    @Override
+    public void onFillItemDetails(Work work) {
+        Fragment primary = primary();
+        if (primary instanceof WorkFragment) ((WorkFragment) primary).fill(work);
+    }
+
+    @Override
+    public void onSaveItem() {
+        Fragment primary = primary();
+        if (primary instanceof WorkFragment) ((WorkFragment) primary).save();
+    }
+
+    @Override
+    public void onSaved() {
         back();
         //Fragment primary = primary();
         //Log.d(TAG, "homeFrag " + (primary instanceof HomeFragment));

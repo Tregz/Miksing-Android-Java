@@ -7,6 +7,14 @@ import java.util.Date;
 
 public abstract class DataModel implements Parcelable {
 
+    public String getKey() {
+        return _key;
+    }
+
+    public void setKey(String _key) {
+        this._key = _key;
+    }
+
     private String _key;
     protected Date born;
     protected Date copy;

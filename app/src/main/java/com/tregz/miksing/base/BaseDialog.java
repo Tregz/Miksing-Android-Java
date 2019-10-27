@@ -3,9 +3,12 @@ package com.tregz.miksing.base;
 import android.app.Activity;
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
@@ -14,12 +17,15 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.tregz.miksing.R;
 
 public abstract class BaseDialog implements DialogInterface.OnShowListener {
 
-    private Context context;
+    protected Context context;
     AlertDialog alert;
     protected AlertDialog.Builder builder;
     protected String okay;
@@ -68,6 +74,24 @@ public abstract class BaseDialog implements DialogInterface.OnShowListener {
             else drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
         }
         return drawable;
+    }
+
+    protected EditText input() {
+        FrameLayout container = new FrameLayout(context);
+        int match = LinearLayout.LayoutParams.MATCH_PARENT;
+        LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(match, match);
+        container.setLayoutParams(containerParams);
+        EditText editText = new AppCompatEditText(context);
+        FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(match, match);
+        frameParams.setMargins(20,0,20,0);
+        editText.setLayoutParams(frameParams);
+        int color = ContextCompat.getColor(context, R.color.primaryDark);
+        editText.setTextColor(color);
+        ColorStateList colorStateList = ColorStateList.valueOf(color);
+        ViewCompat.setBackgroundTintList(editText, colorStateList);
+        container.addView(editText);
+        builder.setView(container);
+        return editText;
     }
 
     protected View inflate(ViewGroup group, int layout) {
