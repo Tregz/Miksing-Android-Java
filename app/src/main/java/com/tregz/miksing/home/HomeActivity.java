@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
@@ -28,6 +29,7 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.ui.NavigationUI;
 
 public class HomeActivity extends BaseActivity implements HomeView,
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout> {
@@ -44,6 +46,10 @@ public class HomeActivity extends BaseActivity implements HomeView,
         setContentView(R.layout.activity_home);
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
         ((AppBarLayout)findViewById(R.id.app_bar)).addOnOffsetChangedListener(this);
+
+        //BottomNavigationView bottom = findViewById(R.id.bottom);
+        //NavigationUI.setupWithNavController(bottom, HomeNavigation.getInstance().controller(this));
+
 
         /* Image viewer */
         String path2 = "draw/Cshawi-logo-mini.png";

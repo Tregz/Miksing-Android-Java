@@ -130,4 +130,15 @@
         app:maxImageSize="40dp"
         app:srcCompat="@drawable/ic_add" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryDark"
+        app:elevation="16dp"
+        app:itemIconTint="@color/primaryAccent"
+        app:itemTextColor="@color/primaryTextLight"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:menu="@menu/menu_home_bottom" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
