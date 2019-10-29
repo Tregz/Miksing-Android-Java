@@ -21,4 +21,9 @@
         <item>Extended Remix</item>
     </string-array>
 
+    <string-array name="page_tabs">
+        <item>@string/tab_start</item>
+        <item>@string/tab_right</item>
+    </string-array>
+
 </resources>

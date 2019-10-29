@@ -1,26 +1,18 @@
 package com.tregz.miksing.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
-import com.tregz.miksing.data.work.Work;
-import com.tregz.miksing.data.work.song.Song;
-import com.tregz.miksing.data.work.take.Take;
-import com.tregz.miksing.home.work.WorkCollection;
-import com.tregz.miksing.home.work.WorkType;
 
 public class HomeFragment extends BaseFragment {
-
-    private TextView log;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +22,6 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        update();
     }
 
     @Nullable
@@ -46,19 +37,8 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        log = view.findViewById(R.id.log);
-    }
-
-    void update() {
-        log.setText("");
-        Log.d(TAG, "List size " + WorkCollection.getInstance().getList().size());
-        for (Work work : WorkCollection.getInstance().getList()) {
-            log.append(work.getArtist() + " - " + work.getTitle());
-            if (work instanceof Song) log.append(" (" + WorkType.SONG.getType() + ")\n");
-            else if (work instanceof Take) log.append(" (" + WorkType.TAKE.getType() + ")\n");
-            else log.append("\n");
-            // TODO more info
-        }
+        HomePager pager = new HomePager(getContext(), getChildFragmentManager());
+        ((ViewPager) view.findViewById(R.id.view_pager)).setAdapter(pager);
     }
 
     static {

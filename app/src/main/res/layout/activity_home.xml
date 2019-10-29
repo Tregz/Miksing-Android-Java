@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,53 +8,14 @@
     android:fitsSystemWindows="true"
     tools:context=".home.HomeActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
-        android:background="@color/primary"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:contentScrim="?attr/primaryDarkColor"
-            app:collapsedTitleTextAppearance="@style/AppTheme.AppBarOverlay.Collapsed"
-            app:expandedTitleGravity="bottom|start"
-            app:expandedTitleMarginBottom="15dp"
-            app:expandedTitleMarginEnd="15dp"
-            app:expandedTitleMarginStart="50dp"
-            app:expandedTitleTextAppearance="@style/AppTheme.AppBarOverlay.Shadow"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
-            <!-- app:layout_scrollFlags="scroll|snap" -->
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:layout_collapseMode="parallax" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/image_1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include layout="@layout/top_home"/>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/primaryPageColor"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".home.HomeActivity"
-        tools:showIn="@layout/activity_home">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,27 +29,16 @@
                 android:background="@color/primaryDark"/>
 
             <FrameLayout
-                android:id="@+id/players"
+                android:id="@+id/nav_host_guideline"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <com.tregz.miksing.base.play.PlayVideo
-                    android:id="@+id/webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-                <VideoView
-                    android:id="@+id/video_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </FrameLayout>
+                android:layout_height="@dimen/tiny_gap"
+                android:background="@color/primary"/>
 
             <fragment
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="500dp"
                 app:defaultNavHost="true"
                 app:navGraph="@navigation/storyboard" />
 
@@ -118,27 +69,49 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="-70dp"
+        android:gravity="top"
+        android:orientation="vertical"
+        app:layout_anchor="@id/nav_host_guideline"
+        app:layout_anchorGravity="bottom|start">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_1"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:tint="@color/primary"
+            android:padding="@dimen/default_gap"/>
+
+    </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        app:tint="@color/primaryTextDark"
         app:backgroundTint="@color/primaryAccent"
-        app:layout_anchor="@id/app_bar"
+        app:layout_anchor="@id/nav_host_guideline"
         app:layout_anchorGravity="bottom|end"
         app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_add" />
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@color/primaryTextDark" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="@color/primaryDark"
-        app:elevation="16dp"
-        app:itemIconTint="@color/primaryAccent"
-        app:itemTextColor="@color/primaryTextLight"
-        app:layout_behavior="@string/bottom_sheet_behavior"
-        app:menu="@menu/menu_home_bottom" />
+        app:itemIconTint="@color/primaryAccentLight"
+        app:itemTextColor="@color/primaryAccentLight"
+        app:menu="@menu/menu_home_bottom"
+        app:labelVisibilityMode="selected"
+        app:layout_anchor="@+id/nav_host_fragment"
+        app:layout_anchorGravity="bottom"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

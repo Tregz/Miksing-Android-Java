@@ -23,4 +23,7 @@
     <string name="main_bottom_digit">Number</string>
     <string name="main_bottom_fresh">Date</string>
 
+    <string name="tab_right">Takes</string>
+    <string name="tab_start">Songs</string>
+
 </resources>
