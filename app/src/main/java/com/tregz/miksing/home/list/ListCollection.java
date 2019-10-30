@@ -1,4 +1,4 @@
-package com.tregz.miksing.home.work;
+package com.tregz.miksing.home.list;
 
 import android.util.SparseArray;
 
@@ -11,14 +11,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class WorkCollection {
-    private static final WorkCollection sInstance = new WorkCollection();
+public class ListCollection {
+    private static final ListCollection sInstance = new ListCollection();
 
-    public static WorkCollection getInstance() {
+    public static ListCollection getInstance() {
         return sInstance;
     }
 
-    private WorkCollection() {
+    private ListCollection() {
     }
 
     private final List<Work> list = new ArrayList<>();
@@ -39,7 +39,7 @@ public class WorkCollection {
         map.clear();
     }
 
-    public List<Work> getList() {
+    List<Work> getList() {
         return list;
     }
 

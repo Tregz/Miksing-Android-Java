@@ -1,4 +1,4 @@
-package com.tregz.miksing.home.work;
+package com.tregz.miksing.home.item;
 
 import android.content.DialogInterface;
 import android.view.View;
@@ -13,11 +13,11 @@ import com.tregz.miksing.base.BaseDialog;
 import java.util.Calendar;
 import java.util.Date;
 
-public class WorkDialog extends BaseDialog implements DatePicker.OnDateChangedListener {
+public class ItemDialog extends BaseDialog implements DatePicker.OnDateChangedListener {
 
     private Date date;
 
-    WorkDialog(@NonNull ViewGroup group, @NonNull final WorkView listener, @NonNull Date at) {
+    ItemDialog(@NonNull ViewGroup group, @NonNull final ItemView listener, @NonNull Date at) {
         super(group.getContext());
         date = at;
         builder.setTitle(R.string.song_release_date);

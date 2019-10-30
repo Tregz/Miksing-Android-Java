@@ -1,48 +1,51 @@
 package com.tregz.miksing.home;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
+import android.view.MenuItem;
+import android.view.View;
 
-import com.tregz.miksing.R;
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
-class HomeNavigation {
-    private static final HomeNavigation ourInstance = new HomeNavigation();
+import com.google.android.material.navigation.NavigationView;
 
-    static HomeNavigation getInstance() {
-        return ourInstance;
+public class HomeNavigation implements DrawerLayout.DrawerListener,
+        NavigationView.OnNavigationItemSelectedListener {
+
+    private DrawerLayout drawer;
+
+    HomeNavigation(DrawerLayout drawer) {
+        this.drawer = drawer;
+        drawer.addDrawerListener(this);
     }
 
-    private HomeNavigation() {
+    @Override
+    public void onDrawerClosed(@NonNull View drawerView) {
+        // "not implemented yet"
     }
 
-    private final int HOST = R.id.nav_host_fragment;
-
-    void pop(AppCompatActivity activity) {
-        controller(activity).popBackStack();
+    @Override
+    public void onDrawerOpened(@NonNull View drawerView) {
+        // "not implemented yet"
     }
 
-    void navigate(AppCompatActivity activity, int action) {
-        controller(activity).navigate(action);
+    @Override
+    public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+        // "not implemented yet"
     }
 
-    Fragment primary(AppCompatActivity activity) {
-        return host(activity).getChildFragmentManager().getPrimaryNavigationFragment();
+    @Override
+    public void onDrawerStateChanged(int newState) {
+        // "not implemented yet"
     }
 
-    Integer fragmentId(AppCompatActivity activity) {
-        NavDestination destination = controller(activity).getCurrentDestination();
-        return destination != null ? destination.getId() : null;
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 
-    NavController controller(AppCompatActivity activity) {
-        return Navigation.findNavController(activity, HOST);
-    }
-
-    private NavHostFragment host(AppCompatActivity activity) {
-        return (NavHostFragment) activity.getSupportFragmentManager().findFragmentById(HOST);
+    void toggle() {
+        if (drawer.isDrawerOpen(GravityCompat.END)) drawer.closeDrawer(GravityCompat.END);
+        else drawer.openDrawer(GravityCompat.END);
     }
 }

@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Miksing</string>
-    <string name="action_settings">Settings</string>
-
 
     <string name="song_artist">Artist</string>
     <string name="song_title">Title</string>
@@ -14,16 +12,6 @@
 
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-    <string name="clear">Clear</string>
-    <string name="save">Save</string>
 
-    <string name="request_youtube">Get YouTube video or playlist from HTTP link</string>
-
-    <string name="main_bottom_alpha">Alpha</string>
-    <string name="main_bottom_digit">Number</string>
-    <string name="main_bottom_fresh">Date</string>
-
-    <string name="tab_right">Takes</string>
-    <string name="tab_start">Songs</string>
 
 </resources>

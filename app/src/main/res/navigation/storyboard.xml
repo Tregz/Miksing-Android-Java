@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/workFragment"
-        android:name="com.tregz.miksing.home.work.WorkFragment"
+        android:name="com.tregz.miksing.home.item.ItemFragment"
         android:label="WorkFragment"
         tools:layout="@layout/fragment_work" />
 

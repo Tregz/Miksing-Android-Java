@@ -15,16 +15,27 @@ import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.data.work.Work;
 import com.tregz.miksing.data.work.song.Song;
 import com.tregz.miksing.data.work.take.Take;
-import com.tregz.miksing.home.work.WorkCollection;
-import com.tregz.miksing.home.work.WorkType;
+import com.tregz.miksing.home.item.ItemType;
 
 public class ListFragment extends BaseFragment {
 
     private TextView log;
+    private int type;
+
+    public static ListFragment newInstance(ItemType type) {
+        ListFragment fragment = new ListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ItemType.class.getSimpleName(), type.ordinal());
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null)
+            type = getArguments().getInt(ItemType.class.getSimpleName(), 0);
+        else type = 0;
     }
 
     @Override
@@ -36,7 +47,6 @@ public class ListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         update();
-        Log.d(TAG, "homeFrag");
     }
 
     @Nullable
@@ -55,15 +65,17 @@ public class ListFragment extends BaseFragment {
         log = view.findViewById(R.id.log);
     }
 
-    public void update() {
+    private void update() {
         log.setText("");
-        Log.d(TAG, "List size " + WorkCollection.getInstance().getList().size());
-        for (Work work : WorkCollection.getInstance().getList()) {
-            log.append(work.getArtist() + " - " + work.getTitle());
-            if (work instanceof Song) log.append(" (" + WorkType.SONG.getType() + ")\n");
-            else if (work instanceof Take) log.append(" (" + WorkType.TAKE.getType() + ")\n");
-            else log.append("\n");
-            // TODO more info
+        Log.d(TAG, "List size " + ListCollection.getInstance().getList().size());
+        for (Work work : ListCollection.getInstance().getList()) {
+            if (type == ItemType.SONG.ordinal() && work instanceof Song ||
+                    type == ItemType.TAKE.ordinal() && work instanceof Take) {
+                log.append(work.getArtist() + " - " + work.getTitle());
+                if (work instanceof Song) log.append(" (" + ItemType.SONG.getType() + ")\n");
+                else log.append(" (" + ItemType.TAKE.getType() + ")\n");
+                // TODO more info
+            }
         }
     }
 

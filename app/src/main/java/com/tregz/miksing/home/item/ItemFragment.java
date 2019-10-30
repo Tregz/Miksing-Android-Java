@@ -1,4 +1,4 @@
-package com.tregz.miksing.home.work;
+package com.tregz.miksing.home.item;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -23,14 +23,15 @@ import com.tregz.miksing.data.work.Work;
 import com.tregz.miksing.data.work.song.Song;
 import com.tregz.miksing.data.work.take.Take;
 import com.tregz.miksing.home.HomeActivity;
+import com.tregz.miksing.home.list.ListCollection;
 
 import java.util.Date;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class WorkFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,
-        WorkView {
+public class ItemFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,
+        ItemView {
 
     private boolean dirty = false;
     private Date releasedAt = null;
@@ -89,16 +90,18 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
                 dialog();
             }
         });
-        setAdapter(spWorkType, R.array.array_work_type);
+        String[] types = new String[ItemType.values().length];
+        for (ItemType item : ItemType.values()) types[item.ordinal()] = item.getType();
+        setAdapter(spWorkType, types);
 
         // Update UI
     }
 
     private void dialog() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
             Date released = releasedAt != null ? releasedAt : new Date();
             ViewGroup group = ((HomeActivity)getActivity()).getViewGroup();
-            WorkDialog dialog = new WorkDialog(group, this, released);
+            ItemDialog dialog = new ItemDialog(group, this, released);
             ((HomeActivity)getActivity()).add(dialog);
         } else toast("Android version must Lollipop or higher");
     }
@@ -140,20 +143,20 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
         if (work instanceof Song) {
             mix = ((Song) work).getMix();
             mixedBy = ((Song) work).getMixedBy();
-            spWorkType.setSelection(WorkType.SONG.ordinal());
+            spWorkType.setSelection(ItemType.SONG.ordinal());
         } else if (work instanceof Take) {
-            spWorkType.setSelection(WorkType.TAKE.ordinal());
+            spWorkType.setSelection(ItemType.TAKE.ordinal());
         }
     }
 
     public void save() {
         Work work = null;
-        WorkType type = WorkType.values()[spWorkType.getSelectedItemPosition()];
-        if (type == WorkType.TAKE) {
+        ItemType type = ItemType.values()[spWorkType.getSelectedItemPosition()];
+        if (type == ItemType.TAKE) {
             work = new Take(new Date());
             Log.d(TAG, "TAKE");
         }
-        else if (type == WorkType.SONG) {
+        else if (type == ItemType.SONG) {
             work = new Song(new Date());
             if (etMixedBy != null) ((Song) work).setMixedBy(etMixedBy.getText().toString());
             if (cbDirty != null) ((Song) work).setDirty(cbDirty.isChecked());
@@ -163,13 +166,13 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
             work.setArtist(etArtist.getText().toString());
             work.setReleasedAt(releasedAt);
             work.setTitle(etTitle.getText().toString());
-            WorkCollection.getInstance().add(work);
+            ListCollection.getInstance().add(work);
             listener.onSaved();
         }
     }
 
     private void onWorkTypeSelected(int position) {
-        boolean show = position == WorkType.SONG.ordinal();
+        boolean show = position == ItemType.SONG.ordinal();
         if (getView() != null) {
             getView().findViewById(R.id.song_details).setVisibility(show ? VISIBLE : GONE);
             if (show) {
@@ -211,7 +214,17 @@ public class WorkFragment extends BaseFragment implements AdapterView.OnItemSele
         spinner.setOnItemSelectedListener(this);
     }
 
+    private void setAdapter(Spinner spinner, String[] array) {
+        int layout = R.layout.spinner_label;
+        if (getContext() != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), layout, array);
+            //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+        }
+        spinner.setOnItemSelectedListener(this);
+    }
+
     static {
-        TAG = WorkFragment.class.getSimpleName();
+        TAG = ItemFragment.class.getSimpleName();
     }
 }

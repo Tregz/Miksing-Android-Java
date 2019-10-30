@@ -15,7 +15,7 @@ import com.tregz.miksing.core.date.DateUtil;
 import com.tregz.miksing.core.text.TextUtil;
 import com.tregz.miksing.data.work.Work;
 import com.tregz.miksing.data.work.song.Song;
-import com.tregz.miksing.home.work.WorkCollection;
+import com.tregz.miksing.home.list.ListCollection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -149,7 +149,7 @@ class HomeDialog extends BaseDialog {
                 song.setReleasedAt(born);
                 song.setArtist(author);
                 song.setTitle(title);
-                WorkCollection.getInstance().add(song);
+                ListCollection.getInstance().add(song);
                 if (array.length() == 1) {
                     if (context instanceof HomeView) ((HomeView) context).onFillItemDetails(song);
                 } else {

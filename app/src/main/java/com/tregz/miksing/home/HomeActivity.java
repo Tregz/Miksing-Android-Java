@@ -15,7 +15,7 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.data.work.Work;
-import com.tregz.miksing.home.work.WorkFragment;
+import com.tregz.miksing.home.item.ItemFragment;
 
 import android.util.Log;
 import android.view.Menu;
@@ -30,44 +30,28 @@ import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.ui.NavigationUI;
 
 public class HomeActivity extends BaseActivity implements HomeView,
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout> {
 
-    private FloatingActionButton[] buttons = new FloatingActionButton[4];
-    private VideoView videoView;
-    private ImageView imageView;
-    private PlayVideo webView;
     private boolean collapsing = false;
+    private FloatingActionButton[] buttons = new FloatingActionButton[4];
+    private ImageView imageView;
+    private HomeNavigation navigation;
+    private PlayVideo webView;
+    private VideoView videoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        //NavigationUI.setupWithNavController((Toolbar)findViewById(R.id.toolbar),
-        // HomeNavigation.getInstance().controller(this))
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
-
-        AppBarLayout appBar = findViewById(R.id.app_bar);
-        appBar.addOnOffsetChangedListener(this);
-
-        /* testing
-        TypedValue tv = new TypedValue();
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            DisplayMetrics dm = getResources().getDisplayMetrics();
-            int gap = TypedValue.complexToDimensionPixelSize(tv.data, dm);
-            int gap = (int) getResources().getDimension(R.dimen.small_gap);
-            int top = (int) getResources().getDimension(R.dimen.app_bar_layout_height) + gap;
-            panoramic(appBar, top);
-        } */
-
-        //BottomNavigationView bottom = findViewById(R.id.bottom);
-        /* Set navigation on bottom view
-        NavigationUI.setupWithNavController(bottom, HomeNavigation.getInstance().controller(this));
-        */
+        ((AppBarLayout)findViewById(R.id.app_bar)).addOnOffsetChangedListener(this);
+        DrawerLayout drawer = findViewById(R.id.drawer);
+        if (drawer != null) navigation = new HomeNavigation(drawer);
 
         // Container for media players
         FrameLayout frame = findViewById(R.id.players);
@@ -167,7 +151,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.toolbar_home, menu);
         return true;
     }
 
@@ -179,7 +163,8 @@ public class HomeActivity extends BaseActivity implements HomeView,
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.login) {
+            if (navigation != null) navigation.toggle();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -213,20 +198,20 @@ public class HomeActivity extends BaseActivity implements HomeView,
     @Override
     public void onClearItemDetails() {
         Fragment primary = primary();
-        if (primary instanceof WorkFragment) ((WorkFragment) primary).clear();
+        if (primary instanceof ItemFragment) ((ItemFragment) primary).clear();
     }
 
     @Override
     public void onFillItemDetails(Work work) {
         Fragment primary = primary();
-        if (primary instanceof WorkFragment) ((WorkFragment) primary).fill(work);
+        if (primary instanceof ItemFragment) ((ItemFragment) primary).fill(work);
     }
 
     @Override
     public void onSaveItem() {
         Fragment primary = primary();
         Log.d(TAG, "onSaveItem " + (primary.getClass().getSimpleName()));
-        if (primary instanceof WorkFragment) ((WorkFragment) primary).save();
+        if (primary instanceof ItemFragment) ((ItemFragment) primary).save();
     }
 
     @Override
@@ -235,7 +220,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     private void navigate(int action) {
-        HomeNavigation.getInstance().navigate(this, action);
+        HomeScenario.getInstance().navigate(this, action);
     }
 
     private void expand(FloatingActionButton fab) {
@@ -250,9 +235,9 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     private boolean back() {
-        if (HomeNavigation.getInstance().fragmentId(this) != R.id.homeFragment) {
+        if (HomeScenario.getInstance().fragmentId(this) != R.id.homeFragment) {
             expand((FloatingActionButton)findViewById(R.id.fab));
-            HomeNavigation.getInstance().pop(this);
+            HomeScenario.getInstance().pop(this);
             // TODO if (icPerson != null) icPerson.setIcon(R.drawable.ic_person);
             return true;
         } else return false;
@@ -263,7 +248,27 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     private Fragment primary() {
-        return HomeNavigation.getInstance().primary(this);
+        return HomeScenario.getInstance().primary(this);
+    }
+
+    private void testing() {
+        //NavigationUI.setupWithNavController((Toolbar)findViewById(R.id.toolbar),
+        // HomeScenario.getInstance().controller(this))
+
+        /* testing
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            DisplayMetrics dm = getResources().getDisplayMetrics();
+            int gap = TypedValue.complexToDimensionPixelSize(tv.data, dm);
+            int gap = (int) getResources().getDimension(R.dimen.small_gap);
+            int top = (int) getResources().getDimension(R.dimen.app_bar_layout_height) + gap;
+            panoramic(appBar, top);
+        } */
+
+        //BottomNavigationView bottom = findViewById(R.id.bottom);
+        /* Set navigation on bottom view
+        NavigationUI.setupWithNavController(bottom, HomeScenario.getInstance().controller(this));
+        */
     }
 
     static {

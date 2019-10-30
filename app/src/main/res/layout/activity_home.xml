@@ -8,110 +8,23 @@
     android:fitsSystemWindows="true"
     tools:context=".home.HomeActivity">
 
-    <include layout="@layout/top_home"/>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/primaryPageColor"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        tools:openDrawer="end">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <include layout="@layout/content_home"/>
 
-            <FrameLayout
-                android:id="@+id/header"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@color/primaryDark"/>
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@drawable/bg_drawer"
+            app:headerLayout="@layout/header_right"
+            app:menu="@menu/drawer_end_home" />
 
-            <FrameLayout
-                android:id="@+id/nav_host_guideline"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tiny_gap"
-                android:background="@color/primary"/>
-
-            <fragment
-                android:id="@+id/nav_host_fragment"
-                android:name="androidx.navigation.fragment.NavHostFragment"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                app:defaultNavHost="true"
-                app:navGraph="@navigation/storyboard" />
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-    <LinearLayout
-        android:id="@+id/dial"
-        style="@style/HorizontalSpeedDial"
-        android:visibility="invisible"
-        app:layout_anchor="@id/fab">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/clear_all"
-            style="@style/MiniButton"
-            app:srcCompat="@drawable/ic_clear_all" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/web_search"
-            style="@style/MiniButton"
-            app:srcCompat="@drawable/ic_web_search" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/save"
-            style="@style/MiniButton"
-            app:srcCompat="@drawable/ic_save" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="200dp"
-        android:layout_height="90dp"
-        android:layout_marginStart="-70dp"
-        android:gravity="top"
-        android:orientation="vertical"
-        app:layout_anchor="@id/nav_host_guideline"
-        app:layout_anchorGravity="bottom|start">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image_1"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:tint="@color/primary"
-            android:padding="@dimen/default_gap"/>
-
-    </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/primaryAccent"
-        app:layout_anchor="@id/nav_host_guideline"
-        app:layout_anchorGravity="bottom|end"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_add"
-        app:tint="@color/primaryTextDark" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/primaryDark"
-        app:itemIconTint="@color/primaryAccentLight"
-        app:itemTextColor="@color/primaryAccentLight"
-        app:menu="@menu/menu_home_bottom"
-        app:labelVisibilityMode="selected"
-        app:layout_anchor="@+id/nav_host_fragment"
-        app:layout_anchorGravity="bottom"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

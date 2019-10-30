@@ -8,22 +8,12 @@
         <item>Autre</item>
     </string-array>
 
-    <string-array name="array_work_type">
-        <item>Image</item>
-        <item>Video</item>
-    </string-array>
-
     <string-array name="array_song_mix_version">
         <item>Undefined</item>
         <item>Mix</item>
         <item>Extended</item>
         <item>Remix</item>
         <item>Extended Remix</item>
-    </string-array>
-
-    <string-array name="page_tabs">
-        <item>@string/tab_start</item>
-        <item>@string/tab_right</item>
     </string-array>
 
 </resources>

@@ -37,7 +37,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        HomePager pager = new HomePager(getContext(), getChildFragmentManager());
+        HomePager pager = new HomePager(getChildFragmentManager());
         ((ViewPager) view.findViewById(R.id.view_pager)).setAdapter(pager);
     }
 
