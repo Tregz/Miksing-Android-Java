@@ -6,4 +6,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="large_toolbar_height">112dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
 </resources>

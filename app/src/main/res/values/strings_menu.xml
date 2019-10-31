@@ -16,4 +16,6 @@
     <string name="main_bottom_digit">Number</string>
     <string name="main_bottom_fresh">Date</string>
 
+    <string name="nav_drawer_mine">PLAYLISTS</string>
+
 </resources>

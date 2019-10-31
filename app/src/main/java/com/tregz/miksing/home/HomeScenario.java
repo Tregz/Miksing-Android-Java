@@ -38,7 +38,7 @@ class HomeScenario {
         return destination != null ? destination.getId() : null;
     }
 
-    private NavController controller(AppCompatActivity activity) {
+    NavController controller(AppCompatActivity activity) {
         return Navigation.findNavController(activity, HOST);
     }
 

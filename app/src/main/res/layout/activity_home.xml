@@ -11,10 +11,18 @@
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:openDrawer="end">
+        android:layout_height="match_parent">
 
         <include layout="@layout/content_home"/>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_start"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@drawable/bg_drawer"
+            app:headerLayout="@layout/header_start"
+            app:menu="@menu/drawer_start_home" />
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_right"

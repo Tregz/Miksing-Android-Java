@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="bottom"
     android:fitsSystemWindows="true"
     tools:context=".home.HomeActivity">
 
-    <include layout="@layout/top_home"/>
+    <com.tregz.miksing.base.play.PlayVideo
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <VideoView
+        android:id="@+id/video_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</FrameLayout>

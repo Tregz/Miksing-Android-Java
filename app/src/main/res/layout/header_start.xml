@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/side_nav_bar"
+    android:padding="@dimen/text_margin"
+    android:orientation="vertical">
+
+    <com.tregz.miksing.base.text.TextUniform
+        android:id="@+id/header_type"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nav_header_height"
+        android:gravity="center_horizontal|top"
+        android:textColor="@android:color/white"
+        android:shadowColor="@color/primaryText"
+        android:shadowRadius="5"
+        android:shadowDy="-2.0"
+        android:shadowDx="1.0"
+        android:rotation="-4"
+        android:text="@string/nav_drawer_mine" />
+
+    <FrameLayout
+        android:id="@+id/container_start"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>
