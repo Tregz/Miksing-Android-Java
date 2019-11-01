@@ -28,8 +28,8 @@ import java.util.Date;
 class HomeDialog extends BaseDialog {
     private final String TAG = HomeDialog.class.getSimpleName();
 
-    HomeDialog(@NonNull final WebView webView) {
-        super(webView.getContext());
+    HomeDialog(@NonNull final Context context, @NonNull final WebView webView) {
+        super(context);
         builder.setTitle(webView.getContext().getString(R.string.request_youtube));
         final EditText input = input();
         builder.setPositiveButton(okay, new DialogInterface.OnClickListener() {
