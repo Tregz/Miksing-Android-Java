@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="LoginTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/primaryText</item>
+        <item name="colorControlNormal">@color/primaryTextDark</item>
+        <item name="colorControlActivated">@color/primaryTextDark</item>
+        <item name="colorControlHighlight">@color/primaryTextDark</item>
+        <item name="android:textColorPrimary">@color/primaryTextDark</item>
+        <item name="colorError">@android:color/black</item>
+        <item name="android:windowBackground">@color/primaryLight</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="FirebaseUI.TextInputLayout" parent="Widget.Design.TextInputLayout">
+        <item name="android:textColorHint">@color/primaryText</item>
+        <item name="hintTextColor">@color/primaryTextDark</item>
+    </style>
+
+</resources>

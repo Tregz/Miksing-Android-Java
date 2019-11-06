@@ -13,6 +13,17 @@
         <item name="primaryDarkColor">@color/primaryDark</item>
         <item name="colorAccent">@color/primaryAccent</item>
         <item name="primaryPageColor">@color/primaryPage</item>
+        <item name="android:listPreferredItemHeightSmall">40dp</item>
+        <item name="snackbarStyle">@style/SnackbarStyle</item>
+        <item name="snackbarTextViewStyle">@style/SnackbarTextView</item>
+    </style>
+
+    <style name="SnackbarTextView" parent="Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/primaryPageLight</item>
+    </style>
+
+    <style name="SnackbarStyle" parent="Widget.MaterialComponents.Snackbar.FullWidth">
+        <item name="android:background">@color/primary</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -54,19 +65,8 @@
         <item name="colorAccent">@color/primaryShadow</item>
     </style>
 
-    <style name="TextInputEditText">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:textColor">@color/primaryText</item>
-    </style>
-
-    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/sh_rounded_light</item>
-        <item name="android:textColor">@color/primaryTextDark</item>
-        <item name="android:textColorHint">@color/primaryDark</item>
-        <item name="hintTextColor">@color/primaryText</item>
+    <style name="NavigationTheme" parent="AppTheme">
+        <item name="listPreferredItemHeightSmall">40dp</item>
     </style>
 
 </resources>

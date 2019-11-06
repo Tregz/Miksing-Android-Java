@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <include layout="@layout/top_home"/>
 
@@ -12,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/primaryPageColor"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -35,7 +37,7 @@
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="1000dp"
                 app:defaultNavHost="true"
                 app:navGraph="@navigation/storyboard" />
 
@@ -85,6 +87,14 @@
 
     </LinearLayout>
 
+    <com.tregz.miksing.base.text.TextUniform
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="DEMO"
+        app:layout_anchor="@id/nav_host_guideline"
+        app:layout_anchorGravity="bottom|center"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -97,11 +107,10 @@
         app:srcCompat="@drawable/ic_add"
         app:tint="@color/primaryTextDark" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <com.tregz.miksing.base.foot.FootNavigation
         android:id="@+id/bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:background="@color/primaryDark"
         app:itemIconTint="@color/primaryAccentLight"
         app:itemTextColor="@color/primaryAccentLight"
@@ -109,6 +118,6 @@
         app:labelVisibilityMode="selected"
         app:layout_anchor="@+id/nav_host_fragment"
         app:layout_anchorGravity="bottom"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
+        app:layout_behavior=".base.foot.FootBehavior"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/MatchWrap">
+
+    <FrameLayout style="@style/MatchMatch"
+        android:id="@+id/map"/>
+
+    <LinearLayout style="@style/MatchMatch.Vertical"
+        android:id="@+id/sunglasses">
+
+        <FrameLayout style="@style/MatchWeight.Two"
+            android:background="@drawable/bg_sunglasses"/>
+
+        <FrameLayout style="@style/MatchWeight.One"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/MatchMatch.Vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/go_back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/nav_user_profile"
+                android:layout_marginStart="@dimen/drawer_horizontal_margin"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_arrow_back" />
+
+            <LinearLayout style="@style/MatchMatch.Horizontal"
+                android:id="@+id/profile">
+
+                <LinearLayout style="@style/WeightMatch"
+                    android:layout_marginEnd="@dimen/default_gap"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/MatchTwenty.White"
+                        android:id="@+id/title"
+                        android:gravity="end"
+                        android:text="@string/nav_drawer_title"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                    <TextView style="@style/MatchTwenty.White"
+                        android:id="@+id/subtitle"
+                        android:gravity="clip_horizontal|end"
+                        android:text="@string/nav_drawer_sub" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/person"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="@dimen/drawer_horizontal_margin"
+                    android:contentDescription="@string/nav_header_desc"
+                    app:srcCompat="@mipmap/ic_launcher_logo_round" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/MatchMatch.Vertical"
+            android:id="@+id/editor"
+            android:visibility="gone"
+            android:padding="@dimen/text_margin"
+            android:theme="@style/TextTheme">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputLayout">
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/MatchWrap.EditText"
+                    android:id="@+id/user_name"
+                    android:gravity="bottom"
+                    android:hint="@string/user_name" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout style="@style/MatchWrap.Horizontal">
+
+                <FrameLayout style="@style/WeightWrap">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextInputLayout">
+                        <com.google.android.material.textfield.TextInputEditText
+                            style="@style/MatchWrap.EditText"
+                            android:id="@+id/user_home"
+                            android:gravity="bottom"
+                            android:hint="@string/user_area" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextInputLayout"
+                        android:visibility="gone">
+                        <com.google.android.material.textfield.TextInputEditText
+                            style="@style/MatchWrap.EditText"
+                            android:id="@+id/user_icon"
+                            android:gravity="bottom"
+                            android:hint="@string/user_face" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <Button style="@style/Widget.MaterialComponents.Button.Icon.Custom"
+                android:id="@+id/save_button"
+                android:layout_marginStart="@dimen/default_gap"
+                android:layout_marginEnd="8dip"
+                android:layout_marginTop="@dimen/default_gap"
+                android:layout_gravity="end"
+                android:text="@string/save" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/user_face"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/user_face_draw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/drawer_img_margin_bottom"
+            android:contentDescription="@string/user_draw"
+            android:scaleType="fitEnd"
+            app:srcCompat="@mipmap/ic_launcher_logo_round"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <!-- Login progress -->
+    <ProgressBar
+        android:id="@+id/login_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+</FrameLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextInputEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">@color/primaryText</item>
+    </style>
+
+    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/sh_rounded_light</item>
+        <item name="android:textColor">@color/primaryTextDark</item>
+        <item name="android:textColorHint">@color/primaryDark</item>
+        <item name="hintTextColor">@color/primaryText</item>
+    </style>
+
+</resources>

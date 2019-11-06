@@ -29,13 +29,11 @@ public class TextUniform extends AppCompatTextView {
     }
 
     private void init(Context context) {
-        setPadding(5,0,5,0);
         setTypeface(ResourcesCompat.getFont(context, R.font.medula_one), Typeface.NORMAL);
         int minTextSize = 8;
         int maxTextSize = 144;
         int step = 1;
         int unit = TypedValue.COMPLEX_UNIT_SP;
-        int gravity = Gravity.CENTER;
         setAutoSizeTextTypeUniformWithConfiguration(minTextSize, maxTextSize, step, unit);
     }
 

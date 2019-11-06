@@ -1,0 +1,33 @@
+<resources>
+
+    <style name="MatchTwenty.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="WrapWrap.Black">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="WrapWrap.White">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="WrapWrap.DarkBold">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/secondaryDark</item>
+    </style>
+
+    <style name="WrapWrap.LightBold">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primaryTextLight</item>
+    </style>
+
+    <style name="MatchWrap.EditText">
+        <item name="android:textColor">@color/primaryTextDark</item>
+    </style>
+
+    <style name="TextTheme">
+        <item name="colorPrimary">@color/primaryText</item>
+    </style>
+
+</resources>

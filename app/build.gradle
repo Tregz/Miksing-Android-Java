@@ -8,7 +8,7 @@ android {
         applicationId "com.tregz.miksing"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 20191019
+        versionCode 20191022
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -36,6 +36,12 @@ dependencies {
 
     def play_version = '17.0.0'
     implementation "com.google.android.gms:play-services-flags:$play_version"
+
+    // Facebook
+    implementation 'com.facebook.android:facebook-android-sdk:5.2.0' // Facebook sign support
+
+    def fcm_version = '4.1.0'
+    implementation "com.firebaseui:firebase-ui-auth:$fcm_version"
     implementation "com.firebaseui:firebase-ui-storage:4.3.2"
 
     // Bumptech's

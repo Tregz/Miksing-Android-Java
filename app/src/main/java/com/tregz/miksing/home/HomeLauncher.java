@@ -1,6 +1,5 @@
 package com.tregz.miksing.home;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,8 +8,9 @@ import android.view.WindowManager;
 import androidx.annotation.Nullable;
 
 import com.tregz.miksing.R;
+import com.tregz.miksing.base.BaseActivity;
 
-public class HomeLauncher extends Activity {
+public class HomeLauncher extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,6 +23,6 @@ public class HomeLauncher extends Activity {
             public void run() {
                 startActivity(intent);
             }
-        }, 2000);
+        }, 1000);
     }
 }

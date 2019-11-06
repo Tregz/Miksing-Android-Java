@@ -7,6 +7,8 @@
 
     <string name="nav_login_title">Login</string>
 
+    <string name="nav_logout_title">Logout</string>
+
     <string name="clear">Clear</string>
     <string name="save">Save</string>
 
@@ -16,6 +18,18 @@
     <string name="main_bottom_digit">Number</string>
     <string name="main_bottom_fresh">Date</string>
 
+    <string name="nav_drawer_back">Up</string>
+    <string name="nav_drawer_items">Items</string>
     <string name="nav_drawer_mine">PLAYLISTS</string>
+    <string name="nav_drawer_title">Mobile app development demo</string>
+    <string name="nav_drawer_sub">by Tregz (jerome@tregz.com)</string>
+    <string name="nav_user_profile">Profile</string>
+    <string name="nav_header_title">Mobile app development demo</string>
+    <string name="nav_header_subtitle">by Tregz (jerome@tregz.com)</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="user_name">Username</string>
+    <string name="user_area">Location</string>
+    <string name="user_draw">Avatar</string>
+    <string name="user_face">Picture (http://)</string>
 
 </resources>

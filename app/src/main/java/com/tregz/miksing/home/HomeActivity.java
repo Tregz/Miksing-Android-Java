@@ -1,19 +1,29 @@
 package com.tregz.miksing.home;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.FirebaseUiException;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
+import com.tregz.miksing.arch.user.UserShared;
 import com.tregz.miksing.base.BaseActivity;
+import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.data.work.Work;
 import com.tregz.miksing.home.item.ItemFragment;
@@ -23,25 +33,32 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavGraph;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import static android.view.View.GONE;
+import static com.tregz.miksing.home.HomeNavigation.SIGN_IN;
+
 public class HomeActivity extends BaseActivity implements HomeView,
-        AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout> {
+        AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout>,
+        FragmentManager.OnBackStackChangedListener {
 
     private boolean collapsing = false;
-    private FloatingActionButton[] buttons = new FloatingActionButton[4];
+    private FloatingActionButton[] buttons = new FloatingActionButton[Button.values().length];
     private ImageView imageView;
     private HomeNavigation navigation;
     private PlayVideo webView;
@@ -49,59 +66,86 @@ public class HomeActivity extends BaseActivity implements HomeView,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         if (portrait()) {
-            DrawerLayout drawer = findViewById(R.id.drawer);
-            ((AppBarLayout)findViewById(R.id.app_bar)).addOnOffsetChangedListener(this);
-            setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
-            NavController controller = HomeScenario.getInstance().controller(this);
-            NavigationUI.setupActionBarWithNavController(this, controller, drawer);
-            NavigationView navigationView = findViewById(R.id.nav_start);
-            if (drawer != null) navigation = new HomeNavigation(drawer, navigationView);
-            logo();
+            // Top menu
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            // Hamburger menu item for start (gravity) drawer
+            NavGraph graph = controller().getGraph();
+            AppBarConfiguration.Builder builder = new AppBarConfiguration.Builder(graph);
+            DrawerLayout dl = findViewById(R.id.drawerLayout);
+            AppBarConfiguration abc = builder.setDrawerLayout(dl).build();
+            CollapsingToolbarLayout ctl = findViewById(R.id.toolbar_layout);
+            // Setup including auto update of the collapsing toolbar's title
+            NavigationUI.setupWithNavController(ctl, toolbar, controller(), abc);
+            // DrawerListener & OnNavigationItemSelectedListener
+            NavigationView[] drawers = new NavigationView[Drawer.values().length];
+            drawers[Drawer.RIGHT.ordinal()] = findViewById(R.id.nav_right);
+            drawers[Drawer.START.ordinal()] = findViewById(R.id.nav_start);
+            if (dl != null) navigation = new HomeNavigation(this, dl, drawers);
+            host().getChildFragmentManager().addOnBackStackChangedListener(this);
 
-            // Container for media players
-            FrameLayout frame = findViewById(R.id.players);
-            panoramic(frame, 0);
+            // Panoramic height for the container of the media players
+            FrameLayout players = findViewById(R.id.players);
+            ViewGroup.LayoutParams params = players.getLayoutParams();
+            params.height = (int) (getResources().getDisplayMetrics().widthPixels * 0.5625);
+            players.setLayoutParams(params);
 
-            // Listeners
-            buttons[0] = findViewById(R.id.fab);
-            buttons[0].setOnClickListener(new View.OnClickListener() {
+            // Content menu's floating action buttons and logo image
+            imageView = findViewById(R.id.image_1);
+            String logo = "draw/Cshawi-logo-mini.png";
+            task(logo).addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    image(uri, R.id.image_1);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (e.getMessage() != null) toast(e.getMessage());
+                }
+            });
+            buttons[Button.FAB.ordinal()] = findViewById(R.id.fab);
+            buttons[Button.FAB.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!back()) {
-                        navigate(R.id.action_homeFragment_to_workFragment);
+                        controller().navigate(R.id.action_homeFragment_to_workFragment);
                         expand((FloatingActionButton)v);
+                        ((FootNavigation)findViewById(R.id.bottom)).hide();
                     }
                 }
             });
-            buttons[1] = findViewById(R.id.clear_all);
-            buttons[1].setOnClickListener(new View.OnClickListener() {
+            buttons[Button.CLEAR.ordinal()] = findViewById(R.id.clear_all);
+            buttons[Button.CLEAR.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ((HomeDialog)add(new HomeDialog(HomeActivity.this))).clear();
                 }
             });
-            buttons[2] = findViewById(R.id.save);
-            buttons[2].setOnClickListener(new View.OnClickListener() {
+            buttons[Button.SAVE.ordinal()] = findViewById(R.id.save);
+            buttons[Button.SAVE.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ((HomeDialog)add(new HomeDialog(HomeActivity.this))).save();
                 }
             });
-            buttons[3] = findViewById(R.id.web_search);
-            buttons[3].setOnClickListener(new View.OnClickListener() {
+            buttons[Button.SEARCH.ordinal()] = findViewById(R.id.web_search);
+            buttons[Button.SEARCH.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     add(new HomeDialog(HomeActivity.this, webView));
                 }
             });
+            // Scroll listener, to show/hide options while collapsing
+            ((AppBarLayout)findViewById(R.id.app_bar)).addOnOffsetChangedListener(this);
         }
 
-        /* Video player */
+        // Stream video player
+        webView = findViewById(R.id.webview);
+        // Stock video player
         videoView = findViewById(R.id.video_1);
         videoView.setMediaController(new MediaController(this));
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -116,9 +160,8 @@ public class HomeActivity extends BaseActivity implements HomeView,
                 mp.start(); // loop
             }
         });
-        String path1 = "anim/Miksing_Logo-Animated.mp4";
-        Task<Uri> t1 = FirebaseStorage.getInstance().getReference().child(path1).getDownloadUrl();
-        t1.addOnSuccessListener(new OnSuccessListener<Uri>() {
+        String anim = "anim/Miksing_Logo-Animated.mp4";
+        task(anim).addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 videoView.setVideoURI(uri);
@@ -132,13 +175,10 @@ public class HomeActivity extends BaseActivity implements HomeView,
         videoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoView.setVisibility(View.GONE);
+                videoView.setVisibility(GONE);
                 webView.load("5-q3meXJ6W4"); // testing
             }
         });
-
-        // Web video player
-        webView = findViewById(R.id.webview);
     }
 
     @Override
@@ -161,6 +201,44 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SIGN_IN) {
+             if (resultCode == Activity.RESULT_OK) {
+                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                 if (user != null) {
+                     UserShared.getInstance(this).setUsername(user.getDisplayName());
+                     UserShared.getInstance(this).setEmail(user.getEmail());
+                 }
+                 navigation.update();
+             } else {
+                 IdpResponse response = IdpResponse.fromResultIntent(data);
+                 if (response != null) {
+                     FirebaseUiException exception = response.getError();
+                     if (exception != null) {
+                         if (exception.getErrorCode() == ErrorCodes.NO_NETWORK)
+                             snack(getString(R.string.no_internet_connection));
+                         if (exception.getMessage() != null) Log.e(TAG, exception.getMessage());
+                     }
+                 }
+             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        back();
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        if (portrait() && root()) {
+            expand((FloatingActionButton)findViewById(R.id.fab));
+            ((FootNavigation)findViewById(R.id.bottom)).show();
+        }
+    }
+
+    @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         Log.d(TAG, "OffsetChanged " + verticalOffset);
         if (portrait()) {
@@ -169,20 +247,31 @@ public class HomeActivity extends BaseActivity implements HomeView,
             if (collapsing) {
                 if (buttons[0].getVisibility() == View.VISIBLE) {
                     imageView.setVisibility(View.INVISIBLE);
-                    if (buttons[0].isExpanded()) for (FloatingActionButton fab : buttons) fab.hide();
+                    if (buttons[0].isExpanded())
+                        for (FloatingActionButton fab : buttons) fab.hide();
                     else buttons[0].hide();
                 }
-            } else if (buttons[0].getVisibility() == View.GONE) {
+            } else if (buttons[0].getVisibility() == GONE) {
                 imageView.setVisibility(View.VISIBLE);
-                if (buttons[0].isExpanded()) for (FloatingActionButton fab : buttons) fab.show();
+                if (buttons[0].isExpanded())
+                    for (FloatingActionButton fab : buttons) fab.show();
                 else buttons[0].show();
             }
         }
     }
 
     @Override
-    public void onBackPressed() {
-        back();
+    public void commit(int container, Fragment fragment, String tag) {
+        getSupportFragmentManager().beginTransaction().add(container, fragment, tag).commit();
+    }
+
+    @Override
+    public void remove(String tag) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.remove(fragment).commitAllowingStateLoss();
+        }
     }
 
     @Override
@@ -209,73 +298,40 @@ public class HomeActivity extends BaseActivity implements HomeView,
         back();
     }
 
-    private void navigate(int action) {
-        HomeScenario.getInstance().navigate(this, action);
-    }
-
     private void expand(FloatingActionButton fab) {
         fab.setExpanded(!fab.isExpanded());
         fab.setImageResource(fab.isExpanded() ? R.drawable.ic_close : R.drawable.ic_add);
     }
 
-    private void panoramic(View view, int top) {
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.height = ((int)(getResources().getDisplayMetrics().widthPixels * 0.5625)) + top;
-        view.setLayoutParams(params);
+    private Task<Uri> task(String path) {
+        return FirebaseStorage.getInstance().getReference().child(path).getDownloadUrl();
     }
 
     private boolean back() {
-        if (portrait() && HomeScenario.getInstance().fragmentId(this) != R.id.homeFragment) {
-            expand((FloatingActionButton)findViewById(R.id.fab));
-            HomeScenario.getInstance().pop(this);
-            // TODO if (icPerson != null) icPerson.setIcon(R.drawable.ic_person);
+        if (portrait() && !root()) {
+            controller().popBackStack();
             return true;
         } else return false;
-    }
-
-    private void logo() {
-        /* Image viewer */
-        imageView = findViewById(R.id.image_1);
-        String path2 = "draw/Cshawi-logo-mini.png";
-        Task<Uri> t2 = FirebaseStorage.getInstance().getReference().child(path2).getDownloadUrl();
-        t2.addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                image(uri, R.id.image_1);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e.getMessage() != null) toast(e.getMessage());
-            }
-        });
     }
 
     private boolean portrait() {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
-    private Fragment primary() {
-        return HomeScenario.getInstance().primary(this);
+    enum Drawer {
+        START,
+        RIGHT
     }
 
-    /* testing
-    private void testing() {
-        TypedValue tv = new TypedValue();
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            DisplayMetrics dm = getResources().getDisplayMetrics();
-            int gap = TypedValue.complexToDimensionPixelSize(tv.data, dm);
-            int gap = (int) getResources().getDimension(R.dimen.small_gap);
-            int top = (int) getResources().getDimension(R.dimen.app_bar_layout_height) + gap;
-            panoramic(appBar, top);
-        } */
-
-        //BottomNavigationView bottom = findViewById(R.id.bottom);
-        /* Set navigation on bottom view
-        NavigationUI.setupWithNavController(bottom, HomeScenario.getInstance().controller(this));
-    } */
+    private enum Button {
+        FAB,
+        CLEAR,
+        SEARCH,
+        SAVE
+    }
 
     static {
         TAG = HomeActivity.class.getSimpleName();
+        PRIMARY = R.id.homeFragment;
     }
 }
