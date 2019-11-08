@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
+import com.tregz.miksing.arch.note.NoteUtil;
 import com.tregz.miksing.arch.user.UserShared;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootNavigation;
@@ -209,6 +210,8 @@ public class HomeActivity extends BaseActivity implements HomeView,
                  if (user != null) {
                      UserShared.getInstance(this).setUsername(user.getDisplayName());
                      UserShared.getInstance(this).setEmail(user.getEmail());
+                     // Retrieve fcm token for testing (result printed to Logcat)
+                     new NoteUtil().fcmTokenLog();
                  }
                  navigation.update();
              } else {

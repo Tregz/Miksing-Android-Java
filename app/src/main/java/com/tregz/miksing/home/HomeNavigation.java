@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeNavigation implements DrawerLayout.DrawerListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener,
+        OnCompleteListener<Void> {
     private final String TAG = HomeNavigation.class.getSimpleName();
     final static int SIGN_IN = 101;
 
@@ -49,25 +50,31 @@ public class HomeNavigation implements DrawerLayout.DrawerListener,
     }
 
     @Override
+    public void onComplete(@NonNull Task<Void> task) {
+        UserShared.getInstance(layout.getContext()).setUsername("");
+        UserShared.getInstance(layout.getContext()).setEmail("");
+        update();
+    }
+
+    @Override
     public void onDrawerClosed(@NonNull View drawerView) {
-        if (drawerView.getId() == drawers[RIGHT].getId()) {
-            view.remove(UserFragment.TAG);
-        }
+        //if (drawerView.getId() == drawers[RIGHT].getId()) view.remove(UserFragment.TAG);
     }
 
     @Override
     public void onDrawerOpened(@NonNull View drawerView) {
-        Log.d(TAG, "onDrawerOpened");
         if (drawerView.getId() == drawers[RIGHT].getId()) {
-            if (profile == null) profile = new UserFragment();
-            view.commit(R.id.container_right, profile, UserFragment.TAG);
+            if (profile == null) {
+                profile = new UserFragment();
+                view.commit(R.id.container_right, profile, UserFragment.TAG);
+            }
             update();
         }
     }
 
     @Override
     public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-        Log.d(TAG, "onDrawerSlide");
+        // do nothing
     }
 
     @Override
@@ -81,24 +88,26 @@ public class HomeNavigation implements DrawerLayout.DrawerListener,
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_login) {
-            if (logged()) {
-                AuthUI.getInstance().signOut(layout.getContext()).addOnCompleteListener(out);
-            }
-            else {
+            if (!logged()) {
                 AuthUI.SignInIntentBuilder sib = AuthUI.getInstance().createSignInIntentBuilder();
                 List<AuthUI.IdpConfig> providers = new ArrayList<>();
                 providers.add(new AuthUI.IdpConfig.EmailBuilder().build());
-                providers.add(new AuthUI.IdpConfig.PhoneBuilder().build());
                 providers.add(new AuthUI.IdpConfig.GoogleBuilder().build());
+                // if Facebook dev account id is set in Firebase console
                 providers.add(new AuthUI.IdpConfig.FacebookBuilder().build());
+                // release build only: if app certificate is set in Firebase console
+                providers.add(new AuthUI.IdpConfig.PhoneBuilder().build());
+                sib.setIsSmartLockEnabled(false); // smart lock not well supported by FirebaseUI
                 sib.setAvailableProviders(providers);
                 sib.setLogo(R.mipmap.ic_launcher_logo);
                 sib.setTheme(R.style.LoginTheme);
+                // optional terms of use (tos) and privacy policy
                 String terms = "http://www.tregz.com/miksing/aide/en/privacy.pdf"; // TODO: terms
                 String policy = "http://www.tregz.com/miksing/aide/en/privacy.pdf";
                 sib.setTosAndPrivacyPolicyUrls(terms, policy);
                 view.startActivityForResult(sib.build(), SIGN_IN);
             }
+            else { AuthUI.getInstance().signOut(layout.getContext()).addOnCompleteListener(this); }
         }
         return false;
     }
@@ -109,6 +118,7 @@ public class HomeNavigation implements DrawerLayout.DrawerListener,
     }
 
     void update() {
+        profile.update();
         MenuItem item = drawers[RIGHT].getMenu().getItem(0);
         if (logged()) {
             if (item.getTitle() != logout) {
@@ -127,7 +137,7 @@ public class HomeNavigation implements DrawerLayout.DrawerListener,
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
-    /* Height of drawer's header */
+    /* Proportional height of drawer's header */
     private void headerHeight(int position) {
         TypedValue tv = new TypedValue();
         Context context = drawers[position].getContext();
@@ -141,13 +151,4 @@ public class HomeNavigation implements DrawerLayout.DrawerListener,
             header.setLayoutParams(params);
         }
     }
-
-    private OnCompleteListener<Void> out = new OnCompleteListener<Void>() {
-        @Override
-        public void onComplete(@NonNull Task<Void> task) {
-            UserShared.getInstance(layout.getContext()).setUsername("");
-            UserShared.getInstance(layout.getContext()).setEmail("");
-            update();
-        }
-    };
 }

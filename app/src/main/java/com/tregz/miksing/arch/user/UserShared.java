@@ -11,7 +11,8 @@ public class UserShared {
     private static UserShared instance;
 
     public static UserShared getInstance(Context context) {
-        if (instance == null) instance = new UserShared(context.getApplicationContext());
+        if (instance == null && context != null)
+            instance = new UserShared(context.getApplicationContext());
         return instance;
     }
 

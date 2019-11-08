@@ -20,6 +20,9 @@ import static android.view.View.VISIBLE;
 public class UserFragment extends BaseFragment {
     public final static String TAG = UserFragment.class.getSimpleName();
 
+    private TextView txEmail;
+    private TextView txUsername;
+
     @Nullable
     @Override
     public View onCreateView(
@@ -41,12 +44,18 @@ public class UserFragment extends BaseFragment {
                     editor.setVisibility(v.isSelected() ? VISIBLE : GONE);
             }
         });
-        final TextView txUsername = view.findViewById(R.id.user_name);
-        txUsername.setText(UserShared.getInstance(getContext()).getUsername());
-        final TextView txEmail = view.findViewById(R.id.subtitle);
-        String email = UserShared.getInstance(getContext()).getEmail();
-        if (email.isEmpty() && getContext() != null)
-            email = getContext().getString(R.string.nav_drawer_sub);
-        txEmail.setText(email);
+        txUsername = view.findViewById(R.id.user_name);
+        txEmail = view.findViewById(R.id.subtitle);
+        update();
+    }
+
+    public void update() {
+        if (getContext() != null) {
+            txUsername.setText(UserShared.getInstance(getContext()).getUsername());
+            String email = UserShared.getInstance(getContext()).getEmail();
+            if ((email == null || email.isEmpty()) && getContext() != null)
+                email = getContext().getString(R.string.nav_drawer_sub);
+            txEmail.setText(email);
+        }
     }
 }

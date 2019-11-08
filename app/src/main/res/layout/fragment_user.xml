@@ -109,12 +109,14 @@
 
             </LinearLayout>
 
-            <Button style="@style/Widget.MaterialComponents.Button.Icon.Custom"
+            <Button
+                style="@style/Widget.MaterialComponents.Button.Icon.Custom"
                 android:id="@+id/save_button"
                 android:layout_marginStart="@dimen/default_gap"
                 android:layout_marginEnd="8dip"
                 android:layout_marginTop="@dimen/default_gap"
                 android:layout_gravity="end"
+                android:textColor="@android:color/white"
                 android:text="@string/save" />
 
         </LinearLayout>
