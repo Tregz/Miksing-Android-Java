@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tregz.miksing.R;
-import com.tregz.miksing.arch.user.UserShared;
+import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseFragment;
 
 import static android.view.View.GONE;
@@ -51,8 +51,8 @@ public class UserFragment extends BaseFragment {
 
     public void update() {
         if (getContext() != null) {
-            txUsername.setText(UserShared.getInstance(getContext()).getUsername());
-            String email = UserShared.getInstance(getContext()).getEmail();
+            txUsername.setText(PrefShared.getInstance(getContext()).getUsername());
+            String email = PrefShared.getInstance(getContext()).getEmail();
             if ((email == null || email.isEmpty()) && getContext() != null)
                 email = getContext().getString(R.string.nav_drawer_sub);
             txEmail.setText(email);

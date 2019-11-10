@@ -3,7 +3,6 @@ package com.tregz.miksing.home;
 import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tregz.miksing.R;
-import com.tregz.miksing.arch.user.UserShared;
+import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.home.user.UserFragment;
 
 import java.util.ArrayList;
@@ -51,8 +50,8 @@ public class HomeNavigation implements DrawerLayout.DrawerListener,
 
     @Override
     public void onComplete(@NonNull Task<Void> task) {
-        UserShared.getInstance(layout.getContext()).setUsername("");
-        UserShared.getInstance(layout.getContext()).setEmail("");
+        PrefShared.getInstance(layout.getContext()).setUsername("");
+        PrefShared.getInstance(layout.getContext()).setEmail("");
         update();
     }
 

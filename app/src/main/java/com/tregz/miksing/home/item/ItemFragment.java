@@ -16,16 +16,23 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.core.date.DateUtil;
-import com.tregz.miksing.data.work.Work;
-import com.tregz.miksing.data.work.song.Song;
-import com.tregz.miksing.data.work.take.Take;
+import com.tregz.miksing.data.item.Item;
+import com.tregz.miksing.data.item.work.Work;
+import com.tregz.miksing.data.item.work.song.Song;
+import com.tregz.miksing.data.item.work.song.SongInsert;
+import com.tregz.miksing.data.item.work.take.Take;
 import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.list.ListCollection;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -136,39 +143,64 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
         if (spMixVersion != null) spMixVersion.setSelection(0);
     }
 
-    public void fill(Work work) {
-        etArtist.setText(work.getArtist());
-        etReleaseDate.setText(DateUtil.dayOfYear(null, work.getReleasedAt()));
-        etTitle.setText(work.getTitle());
-        if (work instanceof Song) {
-            mix = ((Song) work).getMix();
-            mixedBy = ((Song) work).getMixedBy();
-            spWorkType.setSelection(ItemType.SONG.ordinal());
-        } else if (work instanceof Take) {
-            spWorkType.setSelection(ItemType.TAKE.ordinal());
+    public void fill(Item item) {
+        if (item instanceof Work) {
+            etArtist.setText(((Work)item).getArtist());
+            etReleaseDate.setText(DateUtil.dayOfYear(null, ((Work)item).getReleasedAt()));
+            etTitle.setText(((Work)item).getTitle());
+            if (item instanceof Song) {
+                mix = ((Song) item).getMix();
+                mixedBy = ((Song) item).getMixedBy();
+                spWorkType.setSelection(ItemType.SONG.ordinal());
+                cbDirty.setSelected(((Song) item).getDirty());
+            } else if (item instanceof Take) {
+                spWorkType.setSelection(ItemType.TAKE.ordinal());
+            }
         }
     }
 
     public void save() {
-        Work work = null;
+        Work item = null;
         ItemType type = ItemType.values()[spWorkType.getSelectedItemPosition()];
         if (type == ItemType.TAKE) {
-            work = new Take(new Date());
+            item = new Take("Undefined", new Date());
             Log.d(TAG, "TAKE");
         }
         else if (type == ItemType.SONG) {
-            work = new Song(new Date());
-            if (etMixedBy != null) ((Song) work).setMixedBy(etMixedBy.getText().toString());
-            if (cbDirty != null) ((Song) work).setDirty(cbDirty.isChecked());
-            if (spMixVersion != null) ((Song) work).setMix(spMixVersion.getSelectedItemPosition());
+            item = new Song("Undefined", new Date());
+            if (etMixedBy != null) ((Song) item).setMixedBy(etMixedBy.getText().toString());
+            if (cbDirty != null) ((Song) item).setDirty(cbDirty.isChecked());
+            if (spMixVersion != null) ((Song) item).setMix(spMixVersion.getSelectedItemPosition());
         }
-        if (work != null) {
-            work.setArtist(etArtist.getText().toString());
-            work.setReleasedAt(releasedAt);
-            work.setTitle(etTitle.getText().toString());
-            ListCollection.getInstance().add(work);
+        if (item != null) {
+            item.setArtist(etArtist.getText().toString());
+            item.setReleasedAt(releasedAt);
+            item.setTitle(etTitle.getText().toString());
+            ListCollection.getInstance().add(item);
+            if (item instanceof Song) insert((Song) item);
             listener.onSaved();
         }
+    }
+
+    private void insert(final Song item) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("test").push();
+        if (ref.getKey() != null) item.setId(ref.getKey());
+        ref.setValue(map(item)).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                new SongInsert(getContext(), item);
+            }
+        });
+    }
+
+    private HashMap<String, Object> map(Song song) {
+        HashMap<String, Object> map = new HashMap<>();
+        if (song.getArtist() != null) map.put(Song.ARTIST, song.getArtist());
+        map.put(Song.KIND, song.getKind());
+        if (song.getMixedBy() != null) map.put(Song.MIXED_BY, song.getMixedBy());
+        if (song.getReleasedAt() != null) map.put(Song.RELEASED_AT, song.getReleasedAt().getTime());
+        if (song.getTitle() != null) map.put(Song.TITLE, song.getTitle());
+        return map;
     }
 
     private void onWorkTypeSelected(int position) {
@@ -208,9 +240,8 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
 
     private void setAdapter(Spinner spinner, int array) {
         int layout = R.layout.spinner_label;
-        if (getContext() != null) {
+        if (getContext() != null)
             spinner.setAdapter(ArrayAdapter.createFromResource(getContext(), array, layout));
-        }
         spinner.setOnItemSelectedListener(this);
     }
 

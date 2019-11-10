@@ -22,11 +22,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
 import com.tregz.miksing.arch.note.NoteUtil;
-import com.tregz.miksing.arch.user.UserShared;
+import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.play.PlayVideo;
-import com.tregz.miksing.data.work.Work;
+import com.tregz.miksing.data.item.Item;
 import com.tregz.miksing.home.item.ItemFragment;
 
 import android.util.Log;
@@ -69,6 +69,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        new NoteUtil().fcmTokenLog();
         if (portrait()) {
             // Top menu
             Toolbar toolbar = findViewById(R.id.toolbar);
@@ -208,8 +209,8 @@ public class HomeActivity extends BaseActivity implements HomeView,
              if (resultCode == Activity.RESULT_OK) {
                  FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                  if (user != null) {
-                     UserShared.getInstance(this).setUsername(user.getDisplayName());
-                     UserShared.getInstance(this).setEmail(user.getEmail());
+                     PrefShared.getInstance(this).setUsername(user.getDisplayName());
+                     PrefShared.getInstance(this).setEmail(user.getEmail());
                      // Retrieve fcm token for testing (result printed to Logcat)
                      new NoteUtil().fcmTokenLog();
                  }
@@ -284,9 +285,9 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
-    public void onFillItemDetails(Work work) {
+    public void onFillItemDetails(Item item) {
         Fragment primary = primary();
-        if (primary instanceof ItemFragment) ((ItemFragment) primary).fill(work);
+        if (primary instanceof ItemFragment) ((ItemFragment) primary).fill(item);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.tregz.miksing.home.list;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +8,26 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
-import com.tregz.miksing.data.work.Work;
-import com.tregz.miksing.data.work.song.Song;
-import com.tregz.miksing.data.work.take.Take;
+import com.tregz.miksing.data.Data;
+import com.tregz.miksing.data.DataAccess;
+import com.tregz.miksing.data.item.work.Work;
+import com.tregz.miksing.data.item.work.song.Song;
+import com.tregz.miksing.data.item.work.song.SongRealtime;
 import com.tregz.miksing.home.item.ItemType;
 
-public class ListFragment extends BaseFragment {
+import java.util.List;
+
+public class ListFragment extends BaseFragment implements Observer<List<Song>> {
 
     private TextView log;
     private int type;
+    private LiveData<List<Song>> songLiveData;
+    private List<Song> songs;
 
     public static ListFragment newInstance(ItemType type) {
         ListFragment fragment = new ListFragment();
@@ -36,17 +43,14 @@ public class ListFragment extends BaseFragment {
         if (getArguments() != null)
             type = getArguments().getInt(ItemType.class.getSimpleName(), 0);
         else type = 0;
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        update();
+        if (type == ItemType.SONG.ordinal()) {
+            if (songLiveData == null)
+                songLiveData = DataAccess.getInstance(getContext()).songAccess().all();
+            if (songLiveData.hasObservers()) songLiveData.removeObserver(this);
+            songLiveData.observe(this, this);
+            new SongRealtime(getContext());
+        }
     }
 
     @Nullable
@@ -65,18 +69,31 @@ public class ListFragment extends BaseFragment {
         log = view.findViewById(R.id.log);
     }
 
-    private void update() {
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (log.getText().toString().isEmpty() && songs != null) listing();
+    }
+
+    @Override
+    public void onChanged(List<Song> songs) {
+        this.songs = songs;
         log.setText("");
-        Log.d(TAG, "List size " + ListCollection.getInstance().getList().size());
-        for (Work work : ListCollection.getInstance().getList()) {
-            if (type == ItemType.SONG.ordinal() && work instanceof Song ||
-                    type == ItemType.TAKE.ordinal() && work instanceof Take) {
-                log.append(work.getArtist() + " - " + work.getTitle());
-                if (work instanceof Song) log.append(" (" + ItemType.SONG.getType() + ")\n");
-                else log.append(" (" + ItemType.TAKE.getType() + ")\n");
-                // TODO more info
-            }
+        listing();
+    }
+
+    private void append(Data item) {
+        if (type == ItemType.SONG.ordinal() || type == ItemType.TAKE.ordinal()
+                && item instanceof Work) {
+            log.append(((Work)item).getArtist() + " - " + ((Work)item).getTitle());
+            if (item instanceof Song) log.append(" (" + ItemType.SONG.getType() + ")\n");
+            else log.append(" (" + ItemType.TAKE.getType() + ")\n");
+            // TODO more info
         }
+    }
+
+    private void listing() {
+        for (Song song : songs) append(song);
     }
 
     static {

@@ -13,8 +13,8 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseDialog;
 import com.tregz.miksing.core.date.DateUtil;
 import com.tregz.miksing.core.text.TextUtil;
-import com.tregz.miksing.data.work.Work;
-import com.tregz.miksing.data.work.song.Song;
+import com.tregz.miksing.data.item.work.Work;
+import com.tregz.miksing.data.item.work.song.Song;
 import com.tregz.miksing.home.list.ListCollection;
 
 import org.json.JSONArray;
@@ -143,8 +143,7 @@ class HomeDialog extends BaseDialog {
                     JSONObject resourceId = json.getJSONObject("resourceId");
                     id = TextUtil.stripQuotes(resourceId.getString("videoId"));
                 } else id = TextUtil.stripQuotes(array.getJSONObject(i).getString("id"));
-                Work song = new Song(new Date());
-                song.setKey(id);
+                Work song = new Song(id, new Date());
                 if (born != null) Log.d(TAG, born.toString());
                 song.setReleasedAt(born);
                 song.setArtist(author);

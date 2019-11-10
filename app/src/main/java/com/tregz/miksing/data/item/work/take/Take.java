@@ -1,15 +1,17 @@
-package com.tregz.miksing.data.work.take;
+package com.tregz.miksing.data.item.work.take;
 
 import android.os.Parcel;
 
-import com.tregz.miksing.data.work.Work;
+import androidx.annotation.NonNull;
+
+import com.tregz.miksing.data.item.work.Work;
 
 import java.util.Date;
 
 public class Take extends Work {
 
-    public Take(Date createAt) {
-        copy = createAt;
+    public Take(@NonNull String id, @NonNull Date createAt) {
+        super(id, createAt);
     }
 
     @Override

@@ -1,22 +1,22 @@
-package com.tregz.miksing.arch.user;
+package com.tregz.miksing.arch.pref;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class UserShared {
-    //private final String TAG = UserShared.class.getSimpleName();
+public class PrefShared {
+    //private final String TAG = PrefShared.class.getSimpleName();
     private final String USERNAME = "username";
     private final String EMAIL = "email";
 
-    private static UserShared instance;
+    private static PrefShared instance;
 
-    public static UserShared getInstance(Context context) {
+    public static PrefShared getInstance(Context context) {
         if (instance == null && context != null)
-            instance = new UserShared(context.getApplicationContext());
+            instance = new PrefShared(context.getApplicationContext());
         return instance;
     }
 
-    private UserShared(Context context) {
+    private PrefShared(Context context) {
         String authority = context.getPackageName() + ".pref";
         sp = context.getSharedPreferences(authority, Context.MODE_PRIVATE);
     }

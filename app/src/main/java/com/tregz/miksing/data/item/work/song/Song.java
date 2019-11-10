@@ -1,29 +1,26 @@
-package com.tregz.miksing.data.work.song;
+package com.tregz.miksing.data.item.work.song;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.tregz.miksing.data.work.Work;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+
+import com.tregz.miksing.data.item.work.Work;
 
 import java.util.Date;
 
+@Entity(tableName = Song.TABLE)
 public class Song extends Work {
+    final static String TABLE = "song";
+    public static final String MIXED_BY = SongField.JACK.getName();
+
+    public Song(@NonNull String id, @NonNull Date createdAt) {
+        super(id, createdAt);
+    }
 
     private String mixedBy;
-    private int kind = 0;
-
-    public Song(Date createdAt) {
-        copy = createdAt;
-    }
-
-    public String getMixedBy() {
-        return mixedBy;
-    }
-
-    public void setMixedBy(String mixedBy) {
-        this.mixedBy = mixedBy;
-    }
-
+    
     public int getMix() {
         return kind - (getDirty() ? 5 : 0);
     }
@@ -39,6 +36,14 @@ public class Song extends Work {
     public void setDirty(boolean value) {
         if (value && !getDirty()) { kind += Kind.UNDEFINED_DIRTY.ordinal(); }
         else if (!value && getDirty()) { kind -= Kind.UNDEFINED_DIRTY.ordinal(); }
+    }
+    
+    public String getMixedBy() {
+        return mixedBy;
+    }
+
+    public void setMixedBy(String mixedBy) {
+        this.mixedBy = mixedBy;
     }
 
     @Override
@@ -70,6 +75,18 @@ public class Song extends Work {
             return new Song[i];
         }
     };
+
+    protected enum SongField {
+        JACK("jack");
+
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        SongField(String name) { this.name = name; }
+    }
 
     private enum Kind {
         UNDEFINED,

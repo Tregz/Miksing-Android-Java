@@ -47,6 +47,7 @@
             android:layout_height="200dp"
             android:layout_gravity="bottom">
 
+            <!-- TODO identify compatibily bug; crashed on API 22 -->
             <com.tregz.miksing.base.play.PlayVideo
                 android:id="@+id/webview"
                 android:layout_width="match_parent"

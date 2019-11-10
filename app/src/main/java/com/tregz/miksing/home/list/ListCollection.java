@@ -4,12 +4,10 @@ import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
-import com.tregz.miksing.data.work.Work;
+import com.tregz.miksing.data.Data;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ListCollection {
     private static final ListCollection sInstance = new ListCollection();
@@ -21,38 +19,31 @@ public class ListCollection {
     private ListCollection() {
     }
 
-    private final List<Work> list = new ArrayList<>();
-    private final Set<Work> set = new HashSet<>();
-    private final SparseArray<Work> map = new SparseArray<>();
+    private final List<Data> list = new ArrayList<>();
+    private final SparseArray<Data> map = new SparseArray<>();
 
     public int getListCount() {
         return list.size();
     }
 
-    public int getSetCount() {
-        return set.size();
-    }
-
     public void clear() {
         list.clear();
-        set.clear();
         map.clear();
     }
 
-    List<Work> getList() {
+    List<Data> getList() {
         return list;
     }
 
-    public Work add(@NonNull Work work) {
-        list.add(work);
-        set.add(work);
-        map.put(map.size(), work);
-        return work;
+    public Data add(@NonNull Data item) {
+        list.add(item);
+        map.put(map.size(), item);
+        return item;
     }
 
-    Work add(@NonNull Work work, int position) {
-        map.put(position, work);
-        return work;
+    Data add(@NonNull Data item, int position) {
+        map.put(position, item);
+        return item;
     }
 
 }

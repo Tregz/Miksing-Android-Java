@@ -4,13 +4,13 @@ import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 
-import com.tregz.miksing.data.work.Work;
+import com.tregz.miksing.data.item.Item;
 
 public interface HomeView {
 
     void onClearItemDetails();
 
-    void onFillItemDetails(Work work);
+    void onFillItemDetails(Item item);
 
     void startActivityForResult(Intent intent, int requestCode);
 

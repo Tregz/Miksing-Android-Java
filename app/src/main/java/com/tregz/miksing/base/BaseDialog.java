@@ -1,5 +1,6 @@
 package com.tregz.miksing.base;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
@@ -64,13 +65,12 @@ public abstract class BaseDialog implements DialogInterface.OnShowListener {
         }
     }
 
-    @SuppressWarnings("DEPRECATED")
     private Drawable icon(int resource, int tint) {
         Drawable drawable = ContextCompat.getDrawable(context, resource);
         if (drawable != null) {
             int color = ContextCompat.getColor(context, tint);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
-                drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP); // no inspection
             else drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
         }
         return drawable;
