@@ -7,8 +7,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.tregz.miksing.data.item.user.User;
-
 import java.util.List;
 
 import io.reactivex.Maybe;

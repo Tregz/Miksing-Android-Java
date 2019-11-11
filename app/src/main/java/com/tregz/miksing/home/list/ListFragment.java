@@ -45,11 +45,8 @@ public class ListFragment extends BaseFragment implements Observer<List<Song>> {
         else type = 0;
 
         if (type == ItemType.SONG.ordinal()) {
-            if (songLiveData == null)
-                songLiveData = DataAccess.getInstance(getContext()).songAccess().all();
-            if (songLiveData.hasObservers()) songLiveData.removeObserver(this);
-            songLiveData.observe(this, this);
             new SongRealtime(getContext());
+            observe();
         }
     }
 
@@ -94,6 +91,13 @@ public class ListFragment extends BaseFragment implements Observer<List<Song>> {
 
     private void listing() {
         for (Song song : songs) append(song);
+    }
+
+    private void observe() {
+        if (songLiveData == null)
+            songLiveData = DataAccess.getInstance(getContext()).songAccess().all();
+        if (songLiveData.hasObservers()) songLiveData.removeObserver(this);
+        songLiveData.observe(this, this);
     }
 
     static {

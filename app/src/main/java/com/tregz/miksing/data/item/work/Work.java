@@ -8,11 +8,7 @@ import com.tregz.miksing.data.item.Item;
 import java.util.Date;
 
 public abstract class Work extends Item {
-    public static final String ARTIST = ItemField.MARK.getName();
-    public static final String KIND = WorkField.KIND.getName();
-    public static final String RELEASED_AT = ItemField.BORN.getName();
-    public static final String TITLE = ItemField.NAME.getName();
-    private static final String COLUMN_KIND = "kind";
+    private static final String KIND = "kind";
 
     protected Work() {}
 
@@ -24,7 +20,7 @@ public abstract class Work extends Item {
         this.kind = kind;
     }
 
-    @ColumnInfo(name = COLUMN_KIND) protected int kind = 0;
+    @ColumnInfo(name = KIND) protected int kind = 0;
 
     protected Work(@NonNull String id, @NonNull Date createdAt) {
         super(id, createdAt);
@@ -54,15 +50,9 @@ public abstract class Work extends Item {
         born = releasedAt;
     }
 
-    protected enum WorkField {
-        KIND(COLUMN_KIND);
-
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        WorkField(String name) { this.name = name; }
+    static {
+        BORN_SINCE = "releasedAt";
+        MARK_BRAND = "artist";
+        NAME_GIVEN = "title";
     }
 }

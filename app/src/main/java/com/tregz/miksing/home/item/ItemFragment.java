@@ -152,7 +152,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
                 mix = ((Song) item).getMix();
                 mixedBy = ((Song) item).getMixedBy();
                 spWorkType.setSelection(ItemType.SONG.ordinal());
-                cbDirty.setSelected(((Song) item).getDirty());
+                cbDirty.setSelected(((Song) item).isDirty());
             } else if (item instanceof Take) {
                 spWorkType.setSelection(ItemType.TAKE.ordinal());
             }
@@ -185,21 +185,19 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
     private void insert(final Song item) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("test").push();
         if (ref.getKey() != null) item.setId(ref.getKey());
-        ref.setValue(map(item)).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                new SongInsert(getContext(), item);
-            }
-        });
+        ref.setValue(map(item));
+        // song will be inserted onChildAdded
+        // new SongInsert(getContext(), item);
     }
 
     private HashMap<String, Object> map(Song song) {
         HashMap<String, Object> map = new HashMap<>();
-        if (song.getArtist() != null) map.put(Song.ARTIST, song.getArtist());
-        map.put(Song.KIND, song.getKind());
-        if (song.getMixedBy() != null) map.put(Song.MIXED_BY, song.getMixedBy());
-        if (song.getReleasedAt() != null) map.put(Song.RELEASED_AT, song.getReleasedAt().getTime());
-        if (song.getTitle() != null) map.put(Song.TITLE, song.getTitle());
+        if (song.getArtist() != null) map.put(Song.MARK_BRAND, song.getArtist());
+        map.put(Song.RADIO_EDIT, song.isDirty());
+        map.put(Song.MIX_RECORD, song.getMix());
+        if (song.getMixedBy() != null) map.put(Song.PROD_MAKER, song.getMixedBy());
+        if (song.getReleasedAt() != null) map.put(Song.BORN_SINCE, song.getReleasedAt().getTime());
+        if (song.getTitle() != null) map.put(Song.NAME_GIVEN, song.getTitle());
         return map;
     }
 

@@ -1,15 +1,15 @@
 package com.tregz.miksing.data.item.work.song;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.tregz.miksing.data.DataAccess;
-import com.tregz.miksing.data.item.work.song.SongAccess;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
 public abstract class SongSingle<T> implements SingleObserver<T> {
-    //private String TAG = SongSingle.class.getSimpleName();
+    protected String TAG = SongSingle.class.getSimpleName();
 
     private Context context;
 
@@ -24,7 +24,7 @@ public abstract class SongSingle<T> implements SingleObserver<T> {
 
     @Override
     public void onSuccess(T t) {
-        // do nothing
+        Log.d(TAG, t.toString());
     }
 
     @Override

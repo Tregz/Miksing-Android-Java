@@ -10,9 +10,12 @@ import com.tregz.miksing.data.Data;
 import java.util.Date;
 
 public abstract class Item extends Data {
-    private static final String COLUMN_BORN = "born";
-    private static final String COLUMN_MARK = "mark";
-    private static final String COLUMN_NAME = "name";
+    private static final String BORN = "born";
+    private static final String MARK = "mark";
+    private static final String NAME = "name";
+    public static String BORN_SINCE = "bornSince";
+    public static String MARK_BRAND = "markBrand";
+    public static String NAME_GIVEN = "nameGiven";
 
     protected Item(@NonNull String id, @NonNull Date createdAt) {
         super(id, createdAt);
@@ -42,9 +45,9 @@ public abstract class Item extends Data {
         this.born = born;
     }
 
-    @ColumnInfo(name = COLUMN_BORN) protected Date born;
-    @ColumnInfo(name = COLUMN_MARK) protected String mark;
-    @ColumnInfo(name = COLUMN_NAME) protected String name;
+    @ColumnInfo(name = BORN) protected Date born;
+    @ColumnInfo(name = MARK) protected String mark;
+    @ColumnInfo(name = NAME) protected String name;
 
     protected Item() {}
 
@@ -62,19 +65,5 @@ public abstract class Item extends Data {
         parcel.writeString(mark);
         parcel.writeString(name);
         super.read(parcel);
-    }
-
-    protected enum ItemField {
-        BORN(COLUMN_BORN),
-        MARK(COLUMN_MARK),
-        NAME(COLUMN_NAME);
-
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        ItemField(String name) { this.name = name; }
     }
 }

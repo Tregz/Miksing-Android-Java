@@ -26,4 +26,9 @@ public abstract class BaseRealtime implements ChildEventListener {
     protected String getString(DataSnapshot snap, String key) {
         return snap.child(key).getValue(String.class);
     }
+
+    protected boolean getBoolean(DataSnapshot snap, String key) {
+        Boolean value = snap.child(key).getValue(Boolean.class);
+        return value != null ? value : false;
+    }
 }

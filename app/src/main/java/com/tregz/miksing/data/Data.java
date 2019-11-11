@@ -10,8 +10,10 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 public abstract class Data implements Parcelable {
-    private static final String COLUMN_KEY = "_key";
-    private static final String COLUMN_CREATED_AT = "copy";
+    private static final String _KEY = "_key";
+    private static final String COPY = "copy";
+    public static final String PRIMARY_ID = "primaryId";
+    public static final String CREATED_AT = "createdAt";
 
     protected Data(@NonNull String id, @NonNull Date createdAt) {
         this.id = id;
@@ -20,8 +22,8 @@ public abstract class Data implements Parcelable {
 
     protected Data() {}
 
-    @PrimaryKey @NonNull @ColumnInfo(name = COLUMN_KEY) private String id = "Undefined";
-    @ColumnInfo(name = COLUMN_CREATED_AT) private Date createdAt;
+    @PrimaryKey @NonNull @ColumnInfo(name = _KEY) private String id = "Undefined";
+    @ColumnInfo(name = COPY) private Date createdAt;
 
     @NonNull
     public String getId() {
@@ -50,18 +52,5 @@ public abstract class Data implements Parcelable {
     protected void read(Parcel parcel) {
         parcel.writeString(id);
         parcel.writeSerializable(createdAt);
-    }
-
-    protected enum DataField {
-        BORN(COLUMN_KEY),
-        MARK(COLUMN_CREATED_AT);
-
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        DataField(String name) { this.name = name; }
     }
 }

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
 import com.tregz.miksing.data.item.work.Work;
@@ -13,29 +14,32 @@ import java.util.Date;
 @Entity(tableName = Song.TABLE)
 public class Song extends Work {
     final static String TABLE = "song";
-    public static final String MIXED_BY = SongField.JACK.getName();
+    private static final String PROD = "prod";
+    public static final String PROD_MAKER = "mixedBy"; // producer
+    public static final String RADIO_EDIT = "clean"; // edited out
+    public static final String MIX_RECORD = "version"; // recording
 
     public Song(@NonNull String id, @NonNull Date createdAt) {
         super(id, createdAt);
     }
 
-    private String mixedBy;
+    @ColumnInfo(name = PROD) private String mixedBy;
     
     public int getMix() {
-        return kind - (getDirty() ? 5 : 0);
+        return kind - (isDirty() ? 5 : 0);
     }
 
     public void setMix(int value) {
-        kind = value + (getDirty() ? 5 : 0);
+        kind = value + (isDirty() ? 5 : 0);
     }
 
-    public boolean getDirty() {
+    public boolean isDirty() {
         return kind >= Kind.UNDEFINED_DIRTY.ordinal();
     }
 
     public void setDirty(boolean value) {
-        if (value && !getDirty()) { kind += Kind.UNDEFINED_DIRTY.ordinal(); }
-        else if (!value && getDirty()) { kind -= Kind.UNDEFINED_DIRTY.ordinal(); }
+        if (value && !isDirty()) { kind += Kind.UNDEFINED_DIRTY.ordinal(); }
+        else if (!value && isDirty()) { kind -= Kind.UNDEFINED_DIRTY.ordinal(); }
     }
     
     public String getMixedBy() {
@@ -75,18 +79,6 @@ public class Song extends Work {
             return new Song[i];
         }
     };
-
-    protected enum SongField {
-        JACK("jack");
-
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        SongField(String name) { this.name = name; }
-    }
 
     private enum Kind {
         UNDEFINED,
