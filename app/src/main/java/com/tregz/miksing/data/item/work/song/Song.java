@@ -7,39 +7,46 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
+import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.item.work.Work;
 
 import java.util.Date;
 
 @Entity(tableName = Song.TABLE)
 public class Song extends Work {
-    final static String TABLE = "song";
-    private static final String PROD = "prod";
-    public static final String PROD_MAKER = "mixedBy"; // producer
-    public static final String RADIO_EDIT = "clean"; // edited out
-    public static final String MIX_RECORD = "version"; // recording
+
+    public static final String TABLE = "song";
 
     public Song(@NonNull String id, @NonNull Date createdAt) {
         super(id, createdAt);
     }
 
-    @ColumnInfo(name = PROD) private String mixedBy;
-    
+    @ColumnInfo(name = DataNotation.L) private String mixedBy;
+    @ColumnInfo(name = DataNotation.F) private String featuring;
+
+    public String getFeaturing() {
+        return featuring;
+    }
+
+    public void setFeaturing(String featuring) {
+        this.featuring = featuring;
+    }
+
     public int getMix() {
-        return kind - (isDirty() ? 5 : 0);
+        return what - (!isClean() ? 5 : 0);
     }
 
     public void setMix(int value) {
-        kind = value + (isDirty() ? 5 : 0);
+        what = value + (isClean() ? 5 : 0);
     }
 
-    public boolean isDirty() {
-        return kind >= Kind.UNDEFINED_DIRTY.ordinal();
+    public boolean isClean() {
+        return what < What.UNDEFINED_DIRTY.ordinal();
     }
 
-    public void setDirty(boolean value) {
-        if (value && !isDirty()) { kind += Kind.UNDEFINED_DIRTY.ordinal(); }
-        else if (!value && isDirty()) { kind -= Kind.UNDEFINED_DIRTY.ordinal(); }
+    public void setClean(boolean value) {
+        if (value && !isClean()) { what -= What.UNDEFINED_DIRTY.ordinal(); }
+        else if (!value && isClean()) { what += What.UNDEFINED_DIRTY.ordinal(); }
     }
     
     public String getMixedBy() {
@@ -58,13 +65,13 @@ public class Song extends Work {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(mixedBy);
-        parcel.writeInt(kind);
+        parcel.writeInt(what);
         super.writeToParcel(parcel, i);
     }
 
     private Song(Parcel parcel) {
         mixedBy = parcel.readString();
-        kind = parcel.readInt();
+        what = parcel.readInt();
         read(parcel);
     }
 
@@ -80,7 +87,7 @@ public class Song extends Work {
         }
     };
 
-    private enum Kind {
+    public enum What {
         UNDEFINED,
         MIX_CLEAN,
         EXTENDED_CLEAN,

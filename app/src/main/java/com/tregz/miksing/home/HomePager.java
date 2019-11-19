@@ -9,25 +9,28 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.item.ItemType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomePager extends FragmentStatePagerAdapter {
 
-    private ListFragment[] pages = new ListFragment[2];
+    private List<ListFragment> pages = new ArrayList<>();
 
     HomePager(FragmentManager manager) {
         super(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        pages[0] = ListFragment.newInstance(ItemType.values()[0]);
-        pages[1] = ListFragment.newInstance(ItemType.values()[1]);
+        pages.add(ListFragment.newInstance(ItemType.values()[0]));
+        pages.add(ListFragment.newInstance(ItemType.values()[1]));
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        return pages[position];
+        return pages.get(position);
     }
 
     @Override
     public int getCount() {
-        return pages.length;
+        return pages.size();
     }
 
     @Nullable

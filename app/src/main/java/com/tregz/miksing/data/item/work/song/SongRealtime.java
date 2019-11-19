@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.base.BaseRealtime;
+import com.tregz.miksing.data.DataNotation;
 
 import java.util.Date;
 
@@ -18,19 +19,20 @@ public class SongRealtime extends BaseRealtime {
 
     public SongRealtime(Context context) {
         this.context = context;
-        FirebaseDatabase.getInstance().getReference("test").addChildEventListener(this);
+        FirebaseDatabase.getInstance().getReference("song").addChildEventListener(this);
     }
 
     @Override
     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
         if (snapshot.getKey() != null) {
-            Song song = new Song(snapshot.getKey(), new Date());
-            song.setArtist(getString(snapshot, Song.MARK_BRAND));
-            song.setDirty(!getBoolean(snapshot, Song.RADIO_EDIT));
-            song.setMix(getInt(snapshot, Song.MIX_RECORD));
-            song.setMixedBy(getString(snapshot, Song.PROD_MAKER));
-            song.setReleasedAt(new Date(getLong(snapshot, Song.BORN_SINCE)));
-            song.setTitle(getString(snapshot, Song.NAME_GIVEN));
+            Song song = new Song(snapshot.getKey(), new Date(getLong(snapshot, DataNotation.C)));
+            song.setReleasedAt(new Date(getLong(snapshot, DataNotation.B)));
+            song.setUpdatedAt(new Date(getLong(snapshot, DataNotation.E)));
+            song.setFeaturing(getString(snapshot, DataNotation.F));
+            song.setMixedBy(getString(snapshot, DataNotation.L));
+            song.setArtist(getString(snapshot, DataNotation.M));
+            song.setTitle(getString(snapshot, DataNotation.N));
+            song.setWhat(getInt(snapshot, DataNotation.W));
             Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
             new SongInsert(context, song);
         }

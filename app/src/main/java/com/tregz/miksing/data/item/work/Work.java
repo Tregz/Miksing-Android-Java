@@ -1,58 +1,75 @@
 package com.tregz.miksing.data.item.work;
 
+import android.os.Parcel;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 
+import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.item.Item;
 
 import java.util.Date;
 
 public abstract class Work extends Item {
-    private static final String KIND = "kind";
 
     protected Work() {}
-
-    public int getKind() {
-        return kind;
-    }
-
-    public void setKind(int kind) {
-        this.kind = kind;
-    }
-
-    @ColumnInfo(name = KIND) protected int kind = 0;
 
     protected Work(@NonNull String id, @NonNull Date createdAt) {
         super(id, createdAt);
     }
 
+    @ColumnInfo(name = DataNotation.B)
+    private Date releasedAt;
+    @ColumnInfo(name = DataNotation.M)
+    private String artist;
+
     public String getArtist() {
-        return mark;
+        return artist;
     }
 
-    public void setArtist(String mark) {
-        this.mark = mark;
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public Date getReleasedAt() {
+        return releasedAt;
+    }
+
+    public void setReleasedAt(Date releasedAt) {
+        this.releasedAt = releasedAt;
     }
 
     public String getTitle() {
         return name;
     }
 
-    public void setTitle(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.name = title;
     }
 
-    public Date getReleasedAt() {
-        return born;
+    protected int what = 0;
+
+    public int getWhat() {
+        return what;
     }
 
-    public void setReleasedAt(Date releasedAt) {
-        born = releasedAt;
+    public void setWhat(int what) {
+        this.what = what;
     }
 
-    static {
-        BORN_SINCE = "releasedAt";
-        MARK_BRAND = "artist";
-        NAME_GIVEN = "title";
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        releasedAt = (Date) parcel.readSerializable();
+        artist = parcel.readString();
+        what = parcel.readInt();
+        super.writeToParcel(parcel, i);
+    }
+
+    @Override
+    protected void read(Parcel parcel) {
+        parcel.writeSerializable(releasedAt);
+        parcel.writeString(artist);
+        parcel.writeInt(what);
+        super.read(parcel);
     }
 }

@@ -28,6 +28,7 @@ import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.data.item.Item;
 import com.tregz.miksing.home.item.ItemFragment;
+import com.tregz.miksing.home.list.ListFragment;
 
 import android.util.Log;
 import android.view.Menu;
@@ -77,16 +78,17 @@ public class HomeActivity extends BaseActivity implements HomeView,
             // Hamburger menu item for start (gravity) drawer
             NavGraph graph = controller().getGraph();
             AppBarConfiguration.Builder builder = new AppBarConfiguration.Builder(graph);
-            DrawerLayout dl = findViewById(R.id.drawerLayout);
-            AppBarConfiguration abc = builder.setDrawerLayout(dl).build();
+            DrawerLayout layout = findViewById(R.id.drawerLayout);
+            AppBarConfiguration abc = builder.setDrawerLayout(layout).build();
             CollapsingToolbarLayout ctl = findViewById(R.id.toolbar_layout);
-            // Setup including auto update of the collapsing toolbar's title
+            // Toolbar setup including auto update of the collapsing toolbar's title
             NavigationUI.setupWithNavController(ctl, toolbar, controller(), abc);
             // DrawerListener & OnNavigationItemSelectedListener
             NavigationView[] drawers = new NavigationView[Drawer.values().length];
             drawers[Drawer.RIGHT.ordinal()] = findViewById(R.id.nav_right);
             drawers[Drawer.START.ordinal()] = findViewById(R.id.nav_start);
-            if (dl != null) navigation = new HomeNavigation(this, dl, drawers);
+            final FootNavigation bottom = findViewById(R.id.bottom);
+            if (layout != null) navigation = new HomeNavigation(this, bottom, layout, drawers);
             host().getChildFragmentManager().addOnBackStackChangedListener(this);
 
             // Panoramic height for the container of the media players
@@ -116,7 +118,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
                     if (!back()) {
                         controller().navigate(R.id.action_homeFragment_to_workFragment);
                         expand((FloatingActionButton)v);
-                        ((FootNavigation)findViewById(R.id.bottom)).hide();
+                        bottom.hide();
                     }
                 }
             });
@@ -149,7 +151,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
         webView = findViewById(R.id.webview);
         // Stock video player
         videoView = findViewById(R.id.video_1);
-        videoView.setMediaController(new MediaController(this));
+        //videoView.setMediaController(new MediaController(this));
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
@@ -305,6 +307,13 @@ public class HomeActivity extends BaseActivity implements HomeView,
     private void expand(FloatingActionButton fab) {
         fab.setExpanded(!fab.isExpanded());
         fab.setImageResource(fab.isExpanded() ? R.drawable.ic_close : R.drawable.ic_add);
+    }
+
+    @Override
+    public void sort() {
+        Fragment primary = primary();
+        Log.d(TAG, "Primary? " + (primary instanceof HomeFragment));
+        if (primary instanceof HomeFragment) ((HomeFragment) primary).sort();
     }
 
     private Task<Uri> task(String path) {

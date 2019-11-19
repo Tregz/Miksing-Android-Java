@@ -22,4 +22,6 @@ public interface HomeView {
 
     void remove(String tag);
 
+    void sort();
+
 }

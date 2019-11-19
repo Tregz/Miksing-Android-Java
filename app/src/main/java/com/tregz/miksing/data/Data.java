@@ -10,20 +10,32 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 public abstract class Data implements Parcelable {
-    private static final String _KEY = "_key";
-    private static final String COPY = "copy";
-    public static final String PRIMARY_ID = "primaryId";
-    public static final String CREATED_AT = "createdAt";
+
+    protected Data() {
+    }
 
     protected Data(@NonNull String id, @NonNull Date createdAt) {
         this.id = id;
         this.createdAt = createdAt;
     }
 
-    protected Data() {}
+    @PrimaryKey
+    @NonNull
+    private String id = "Undefined";
+    @NonNull
+    @ColumnInfo(name = DataNotation.C)
+    private Date createdAt = new Date();
+    @ColumnInfo(name = DataNotation.E)
+    private Date updatedAt;
 
-    @PrimaryKey @NonNull @ColumnInfo(name = _KEY) private String id = "Undefined";
-    @ColumnInfo(name = COPY) private Date createdAt;
+    @NonNull
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(@NonNull Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
     @NonNull
     public String getId() {
@@ -34,23 +46,26 @@ public abstract class Data implements Parcelable {
         this.id = id;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         String key = parcel.readString();
         id = key != null ? key : "Undefined";
-        createdAt = (Date) parcel.readSerializable();
+        Date copy = (Date) parcel.readSerializable();
+        createdAt = copy != null ? copy : new Date();
+        updatedAt = (Date) parcel.readSerializable();
     }
 
     protected void read(Parcel parcel) {
         parcel.writeString(id);
         parcel.writeSerializable(createdAt);
+        parcel.writeSerializable(updatedAt);
     }
 }

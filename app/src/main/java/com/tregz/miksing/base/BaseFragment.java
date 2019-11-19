@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import com.tregz.miksing.home.HomeView;
 
 public abstract class BaseFragment extends Fragment {
-    protected static String TAG = BaseFragment.class.getSimpleName();
 
     protected HomeView listener;
 

@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.tregz.miksing.data.DataAccess;
+import com.tregz.miksing.data.DataReference;
 
 import org.junit.After;
 import org.junit.Before;
@@ -39,17 +39,17 @@ public class SongInsertAndroidTest {
     private final String TAG = SongInsertAndroidTest.class.getSimpleName();
 
     private CountDownLatch latch = new CountDownLatch(1);
-    private DataAccess db;
+    private DataReference db;
     private SongAccess access;
     private Song song;
 
     @Before
     public void createDb() {
         Context context = ApplicationProvider.getApplicationContext();
-        db = Room.databaseBuilder(context, DataAccess.class, "testDatabase"
+        db = Room.databaseBuilder(context, DataReference.class, "testDatabase"
         ).fallbackToDestructiveMigration().build();
         db.clearAllTables();
-        access = db.songAccess();
+        access = db.accessSong();
     }
 
     @Test
@@ -115,8 +115,8 @@ public class SongInsertAndroidTest {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             //new SongNotation(context, dataSnapshot);
             song = new Song(dataSnapshot.getKey(), new Date());
-            song.setArtist(getString(dataSnapshot, "mark"));
-            Log.d(TAG, "childAdded " + getString(dataSnapshot, "mark"));
+            song.setArtist(getString(dataSnapshot, "last"));
+            Log.d(TAG, "childAdded " + getString(dataSnapshot, "last"));
             access.insert(song).subscribeOn(Schedulers.io()).subscribe(singleObserver);
             access.query(dataSnapshot.getKey()).subscribeOn(Schedulers.io()).subscribe(maybeObserver);
         }

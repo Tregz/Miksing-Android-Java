@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foregroundGravity="center_vertical"
+    android:layout_marginBottom="-2dp"
+    card_view:cardBackgroundColor="@android:color/transparent"
+    card_view:cardElevation="0dp"
+    app:cardUseCompatPadding="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/itemCard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/ivIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitXY"
+                android:contentDescription="@string/thumbnail"
+                android:src="@mipmap/ic_launcher_logo" />
+
+            <LinearLayout
+                android:id="@+id/llCard"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/WrapWrap.DarkBold"
+                        android:id="@+id/tvName"
+                        android:maxLines="1"
+                        android:text="@string/card_name" />
+
+                    <TextView style="@style/WrapWrap.Black"
+                        android:id="@+id/tvWhat"
+                        android:layout_marginStart="5dp"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/WrapWrap.Black"
+                        android:id="@+id/tvFrom"
+                        android:maxLines="1"
+                        android:text="@string/card_mark"
+                        android:textStyle="italic" />
+
+                    <TextView style="@style/WrapWrap.Black"
+                        android:id="@+id/tvMark"
+                        android:layout_marginStart="5dp"
+                        android:maxLines="1"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/WrapWrap.Black"
+                        android:id="@+id/tvFeat"
+                        android:maxLines="1"
+                        android:text="@string/card_info" />
+
+                    <TextView style="@style/WrapWrap.Black"
+                        android:id="@+id/tvDate"
+                        android:layout_marginStart="5dp"
+                        android:maxLines="1"
+                        android:text="@string/card_born" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</androidx.cardview.widget.CardView>

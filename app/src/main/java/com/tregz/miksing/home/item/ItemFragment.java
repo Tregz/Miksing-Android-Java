@@ -16,17 +16,15 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.core.date.DateUtil;
+import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.item.Item;
 import com.tregz.miksing.data.item.work.Work;
 import com.tregz.miksing.data.item.work.song.Song;
-import com.tregz.miksing.data.item.work.song.SongInsert;
 import com.tregz.miksing.data.item.work.take.Take;
 import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.list.ListCollection;
@@ -39,6 +37,7 @@ import static android.view.View.VISIBLE;
 
 public class ItemFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,
         ItemView {
+    private final String TAG = ItemFragment.class.getSimpleName();
 
     private boolean dirty = false;
     private Date releasedAt = null;
@@ -152,7 +151,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
                 mix = ((Song) item).getMix();
                 mixedBy = ((Song) item).getMixedBy();
                 spWorkType.setSelection(ItemType.SONG.ordinal());
-                cbDirty.setSelected(((Song) item).isDirty());
+                cbDirty.setSelected(((Song) item).isClean());
             } else if (item instanceof Take) {
                 spWorkType.setSelection(ItemType.TAKE.ordinal());
             }
@@ -161,43 +160,41 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
 
     public void save() {
         Work item = null;
-        ItemType type = ItemType.values()[spWorkType.getSelectedItemPosition()];
-        if (type == ItemType.TAKE) {
-            item = new Take("Undefined", new Date());
-            Log.d(TAG, "TAKE");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("song").push();
+        if (ref.getKey() != null) {
+            ItemType type = ItemType.values()[spWorkType.getSelectedItemPosition()];
+            if (type == ItemType.TAKE) {
+                item = new Take(ref.getKey(), new Date());
+                Log.d(TAG, "TAKE");
+            }
+            else if (type == ItemType.SONG) {
+                item = new Song(ref.getKey(), new Date());
+                if (etMixedBy != null) ((Song) item).setMixedBy(etMixedBy.getText().toString());
+                if (cbDirty != null) ((Song) item).setClean(cbDirty.isChecked());
+                if (spMixVersion != null)
+                    ((Song) item).setMix(spMixVersion.getSelectedItemPosition());
+            }
+            if (item != null) {
+                item.setArtist(etArtist.getText().toString());
+                item.setReleasedAt(releasedAt);
+                item.setTitle(etTitle.getText().toString());
+                ListCollection.getInstance().add(item);
+                if (item instanceof Song)
+                    // song will be inserted on local database onChildAdded
+                    ref.setValue(map((Song)item));
+                listener.onSaved();
+            }
         }
-        else if (type == ItemType.SONG) {
-            item = new Song("Undefined", new Date());
-            if (etMixedBy != null) ((Song) item).setMixedBy(etMixedBy.getText().toString());
-            if (cbDirty != null) ((Song) item).setDirty(cbDirty.isChecked());
-            if (spMixVersion != null) ((Song) item).setMix(spMixVersion.getSelectedItemPosition());
-        }
-        if (item != null) {
-            item.setArtist(etArtist.getText().toString());
-            item.setReleasedAt(releasedAt);
-            item.setTitle(etTitle.getText().toString());
-            ListCollection.getInstance().add(item);
-            if (item instanceof Song) insert((Song) item);
-            listener.onSaved();
-        }
-    }
-
-    private void insert(final Song item) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("test").push();
-        if (ref.getKey() != null) item.setId(ref.getKey());
-        ref.setValue(map(item));
-        // song will be inserted onChildAdded
-        // new SongInsert(getContext(), item);
     }
 
     private HashMap<String, Object> map(Song song) {
         HashMap<String, Object> map = new HashMap<>();
-        if (song.getArtist() != null) map.put(Song.MARK_BRAND, song.getArtist());
-        map.put(Song.RADIO_EDIT, song.isDirty());
-        map.put(Song.MIX_RECORD, song.getMix());
-        if (song.getMixedBy() != null) map.put(Song.PROD_MAKER, song.getMixedBy());
-        if (song.getReleasedAt() != null) map.put(Song.BORN_SINCE, song.getReleasedAt().getTime());
-        if (song.getTitle() != null) map.put(Song.NAME_GIVEN, song.getTitle());
+        if (song.getReleasedAt() != null) map.put(DataNotation.B, song.getReleasedAt().getTime());
+        if (song.getFeaturing() != null) map.put(DataNotation.F, song.getFeaturing());
+        if (song.getArtist() != null) map.put(DataNotation.M, song.getArtist());
+        if (song.getMixedBy() != null) map.put(DataNotation.L, song.getMixedBy());
+        if (song.getTitle() != null) map.put(DataNotation.N, song.getTitle());
+        map.put(DataNotation.W, song.getWhat());
         return map;
     }
 
@@ -251,9 +248,5 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
             spinner.setAdapter(adapter);
         }
         spinner.setOnItemSelectedListener(this);
-    }
-
-    static {
-        TAG = ItemFragment.class.getSimpleName();
     }
 }

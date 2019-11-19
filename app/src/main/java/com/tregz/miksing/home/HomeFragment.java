@@ -11,8 +11,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
+import com.tregz.miksing.home.list.ListFragment;
 
 public class HomeFragment extends BaseFragment {
+    //private final String TAG = HomeFragment.class.getSimpleName();
+
+    private ViewPager pager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,6 +28,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+        sort();
     }
 
     @Nullable
@@ -39,11 +44,14 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        HomePager pager = new HomePager(getChildFragmentManager());
-        ((ViewPager) view.findViewById(R.id.view_pager)).setAdapter(pager);
+        pager = view.findViewById(R.id.view_pager);
+        pager.setAdapter(new HomePager(getChildFragmentManager()));
     }
 
-    static {
-        TAG = HomeFragment.class.getSimpleName();
+    void sort() {
+        if (getActivity() != null && pager.getAdapter() != null) {
+            Object fragment = pager.getAdapter().instantiateItem(pager, pager.getCurrentItem());
+            if (fragment instanceof ListFragment) ((ListFragment) fragment).sort();
+        }
     }
 }
