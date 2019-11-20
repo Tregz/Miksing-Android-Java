@@ -42,17 +42,11 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "android.arch.persistence.room:rxjava2:$room_version"
 
-
     // Google's Firebase
-    implementation 'com.facebook.android:facebook-android-sdk:5.2.0' // Facebook sign support
-
     def firebase_ui_version = "6.0.2"
     implementation "com.firebaseui:firebase-ui-storage:$firebase_ui_version"
-    // implementation "com.firebaseui:firebase-ui-database:$firebase_ui_version"
     implementation "com.firebaseui:firebase-ui-auth:$firebase_ui_version"
-
-    //def play_version = '17.0.0'
-    //implementation "com.google.android.gms:play-services-base:$play_version"
+    implementation 'com.facebook.android:facebook-android-sdk:5.2.0' // Facebook sign support
     implementation 'com.google.android.material:material:1.2.0-alpha01'
     implementation 'com.google.firebase:firebase-database:19.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.1'

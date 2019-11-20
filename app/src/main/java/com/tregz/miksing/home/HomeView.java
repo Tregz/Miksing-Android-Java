@@ -8,11 +8,11 @@ import com.tregz.miksing.data.item.Item;
 
 public interface HomeView {
 
+    void startActivityForResult(Intent intent, int requestCode);
+
     void onClearItemDetails();
 
     void onFillItemDetails(Item item);
-
-    void startActivityForResult(Intent intent, int requestCode);
 
     void onSaved();
 
@@ -20,8 +20,8 @@ public interface HomeView {
 
     void commit(int container, Fragment fragment, String tag);
 
-    void remove(String tag);
-
     void sort();
+
+    void search(String query);
 
 }

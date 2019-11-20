@@ -22,7 +22,7 @@ public interface UserSongAccess {
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
 
     //@Query(SELECT_FROM_TABLE)
-    @Query(SELECT_FROM_TABLE + " INNER JOIN " + Song.TABLE + " ON song.id = user_song.song_id")
+    @Query(SELECT_FROM_TABLE + " INNER JOIN " + Song.TABLE + " ON song.id = user_song.song_id ORDER BY user_song.spot")
     LiveData<List<UserSongRelation>> all();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

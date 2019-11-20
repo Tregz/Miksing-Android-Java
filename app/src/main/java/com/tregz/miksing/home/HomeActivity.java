@@ -28,7 +28,6 @@ import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.data.item.Item;
 import com.tregz.miksing.home.item.ItemFragment;
-import com.tregz.miksing.home.list.ListFragment;
 
 import android.util.Log;
 import android.view.Menu;
@@ -37,17 +36,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavGraph;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -68,6 +66,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // to delete all song data from sql table: new SongWipe(getContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         new NoteUtil().fcmTokenLog();
@@ -151,7 +150,6 @@ public class HomeActivity extends BaseActivity implements HomeView,
         webView = findViewById(R.id.webview);
         // Stock video player
         videoView = findViewById(R.id.video_1);
-        //videoView.setMediaController(new MediaController(this));
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
@@ -187,7 +185,10 @@ public class HomeActivity extends BaseActivity implements HomeView,
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (portrait()) getMenuInflater().inflate(R.menu.toolbar_home, menu);
+        if (portrait()) {
+            getMenuInflater().inflate(R.menu.toolbar_home, menu);
+            new HomeSearch(this, (SearchView) menu.findItem(R.id.search).getActionView());
+        }
         return true;
     }
 
@@ -246,7 +247,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        Log.d(TAG, "OffsetChanged " + verticalOffset);
+        Log.d(TAG, "OffsetChanged " + verticalOffset); // TODO: adjust for device sizes
         if (portrait()) {
             if (verticalOffset < -300) { if (!collapsing) collapsing = true; }
             else if (collapsing) collapsing = false;
@@ -272,15 +273,6 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
-    public void remove(String tag) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-        if (fragment != null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.remove(fragment).commitAllowingStateLoss();
-        }
-    }
-
-    @Override
     public void onClearItemDetails() {
         Fragment primary = primary();
         if (primary instanceof ItemFragment) ((ItemFragment) primary).clear();
@@ -295,7 +287,6 @@ public class HomeActivity extends BaseActivity implements HomeView,
     @Override
     public void onSaveItem() {
         Fragment primary = primary();
-        Log.d(TAG, "onSaveItem " + (primary.getClass().getSimpleName()));
         if (primary instanceof ItemFragment) ((ItemFragment) primary).save();
     }
 
@@ -310,9 +301,14 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
+    public void search(String query) {
+        Fragment primary = primary();
+        if (primary instanceof HomeFragment) ((HomeFragment) primary).search(query);
+    }
+
+    @Override
     public void sort() {
         Fragment primary = primary();
-        Log.d(TAG, "Primary? " + (primary instanceof HomeFragment));
         if (primary instanceof HomeFragment) ((HomeFragment) primary).sort();
     }
 

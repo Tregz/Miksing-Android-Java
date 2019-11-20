@@ -18,19 +18,6 @@ public class HomeFragment extends BaseFragment {
 
     private ViewPager pager;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // testing:
-        //new SongWipe(getContext());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        sort();
-    }
-
     @Nullable
     @Override
     public View onCreateView(
@@ -52,6 +39,13 @@ public class HomeFragment extends BaseFragment {
         if (getActivity() != null && pager.getAdapter() != null) {
             Object fragment = pager.getAdapter().instantiateItem(pager, pager.getCurrentItem());
             if (fragment instanceof ListFragment) ((ListFragment) fragment).sort();
+        }
+    }
+
+    void search(String query) {
+        if (getActivity() != null && pager.getAdapter() != null) {
+            Object fragment = pager.getAdapter().instantiateItem(pager, pager.getCurrentItem());
+            if (fragment instanceof ListFragment) ((ListFragment) fragment).search(query);
         }
     }
 }

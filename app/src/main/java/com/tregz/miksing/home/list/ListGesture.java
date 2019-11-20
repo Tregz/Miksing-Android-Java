@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tregz.miksing.base.list.ListSorted;
+import com.tregz.miksing.data.join.work.song.user.UserSongRelation;
 
 public class ListGesture extends ItemTouchHelper.Callback {
     //private String TAG = ListGesture.class.getSimpleName();
@@ -20,7 +21,7 @@ public class ListGesture extends ItemTouchHelper.Callback {
             @NonNull RecyclerView recycler,
             @NonNull RecyclerView.ViewHolder holder) {
         super.clearView(recycler, holder);
-        view.onGestureClear(holder.getAdapterPosition());
+        view.onGestureClear(holder.getOldPosition(), holder.getAdapterPosition());
     }
 
     @Override
@@ -41,9 +42,7 @@ public class ListGesture extends ItemTouchHelper.Callback {
             @NonNull RecyclerView.ViewHolder holder,
             @NonNull RecyclerView.ViewHolder target
     ) {
-        int from = holder.getAdapterPosition();
-        int to = target.getAdapterPosition();
-        if (from >= 0) view.onItemMoved(from, to);
+        view.onItemMoved(holder.getAdapterPosition(), target.getAdapterPosition());
         return false;
     }
 

@@ -73,11 +73,11 @@ public class ListSorted<T> extends SortedListAdapterCallback<T> {
     }
 
     private int compare(String s1, String s2) {
-        return s1 != null && s2 != null ? s1.toLowerCase().compareTo(s2.toLowerCase()) : 0;
+        return s1 != null && s2 != null ? s1.toLowerCase().compareTo(s2.toLowerCase()) : -1;
     }
 
     private int compare(Date d1, Date d2) {
-        return d1 != null && d2 != null ? d1.compareTo(d2) : 0;
+        return d1 != null && d2 != null ? d1.compareTo(d2) : -1;
     }
 
     public enum Order {
