@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tregz.miksing.base.list.ListSorted;
-import com.tregz.miksing.data.join.work.song.user.UserSongRelation;
 
 public class ListGesture extends ItemTouchHelper.Callback {
     //private String TAG = ListGesture.class.getSimpleName();

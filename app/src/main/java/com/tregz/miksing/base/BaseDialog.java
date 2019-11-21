@@ -1,6 +1,5 @@
 package com.tregz.miksing.base;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;

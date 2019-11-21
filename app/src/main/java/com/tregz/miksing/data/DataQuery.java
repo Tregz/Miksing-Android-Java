@@ -1,9 +1,5 @@
 package com.tregz.miksing.data;
 
-import androidx.sqlite.db.SimpleSQLiteQuery;
-
-import io.reactivex.schedulers.Schedulers;
-
 public class DataQuery<T> {
 
     DataAccess access;

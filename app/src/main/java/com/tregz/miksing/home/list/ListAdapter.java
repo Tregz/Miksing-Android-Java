@@ -37,8 +37,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListHolder> {
             final UserSongRelation relation = items.get(position);
             final Song song = relation.song;
             if (song != null) {
+                // Download thumbnail with Glide dependency
                 String thumb = "https://img.youtube.com/vi/" + song.getId() + "/0.jpg";
                 Glide.with(holder.itemView.getContext()).load(thumb).into(holder.ivIcon);
+
                 holder.tvName.setText(song.getTitle());
                 holder.tvMark.setText(song.getArtist());
                 if (song.getReleasedAt() != null) {

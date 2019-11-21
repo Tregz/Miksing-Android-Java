@@ -7,6 +7,7 @@ public class PrefShared {
     //private final String TAG = PrefShared.class.getSimpleName();
     private final String USERNAME = "username";
     private final String EMAIL = "email";
+    private SharedPreferences sp;
 
     private static PrefShared instance;
 
@@ -20,8 +21,6 @@ public class PrefShared {
         String authority = context.getPackageName() + ".pref";
         sp = context.getSharedPreferences(authority, Context.MODE_PRIVATE);
     }
-
-    private SharedPreferences sp;
 
     public String getEmail() {
         return sp.getString(EMAIL, null);

@@ -33,6 +33,7 @@ public abstract class DataReference extends RoomDatabase {
 
     private static DataReference newInstance(final Context context) {
         return Room.databaseBuilder(context, DataReference.class, "miksing-db")
+                // do not do this in production: .allowMainThreadQueries()
                 .fallbackToDestructiveMigration().build();
     }
 
