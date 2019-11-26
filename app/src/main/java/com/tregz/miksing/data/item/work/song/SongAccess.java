@@ -30,7 +30,7 @@ public interface SongAccess extends DataAccess<Song> {
     Single<Integer> update(Song...songs);
 
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    Maybe<Song> query(String key);
+    LiveData<Song> query(String key); // or Maybe<Song>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<List<Long>> insert(Song...songs);

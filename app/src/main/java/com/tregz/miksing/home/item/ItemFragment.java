@@ -1,5 +1,6 @@
 package com.tregz.miksing.home.item;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,8 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,29 +25,33 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.core.date.DateUtil;
 import com.tregz.miksing.data.DataNotation;
+import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.item.Item;
 import com.tregz.miksing.data.item.work.Work;
 import com.tregz.miksing.data.item.work.song.Song;
 import com.tregz.miksing.data.item.work.take.Take;
 import com.tregz.miksing.home.HomeActivity;
+import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListCollection;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class ItemFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,
-        ItemView {
+        ItemView, Observer<Song> {
     private final String TAG = ItemFragment.class.getSimpleName();
 
     private boolean dirty = false;
     private Date releasedAt = null;
     private String mixedBy;
     private int mix = 0;
+    private String id;
 
-    // UI ref
+    // UI references
     private CheckBox cbDirty;
     private EditText etArtist;
     private EditText etMixedBy;
@@ -52,6 +59,25 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
     private EditText etTitle;
     private Spinner spMixVersion;
     private Spinner spWorkType;
+
+    private HomeView listener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            listener = (HomeView) context;
+        } catch (ClassCastException e) {
+            String name = HomeView.class.getSimpleName();
+            throw new ClassCastException(context.toString() + " must implement " + name);
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) id = getArguments().getString("id");
+    }
 
     @Nullable
     @Override
@@ -101,6 +127,15 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
         setAdapter(spWorkType, types);
 
         // Update UI
+        if (id != null) {
+            LiveData<Song> song = DataReference.getInstance(getContext()).accessSong().query(id);
+            song.observe(this, this);
+        }
+    }
+
+    @Override
+    public void onChanged(Song song) {
+        fill(song);
     }
 
     private void dialog() {
@@ -151,7 +186,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
                 mix = ((Song) item).getMix();
                 mixedBy = ((Song) item).getMixedBy();
                 spWorkType.setSelection(ItemType.SONG.ordinal());
-                cbDirty.setSelected(((Song) item).isClean());
+                if (cbDirty != null) cbDirty.setSelected(((Song) item).isClean());
             } else if (item instanceof Take) {
                 spWorkType.setSelection(ItemType.TAKE.ordinal());
             }
@@ -248,5 +283,13 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
             spinner.setAdapter(adapter);
         }
         spinner.setOnItemSelectedListener(this);
+    }
+
+    public static ItemFragment newInstance(String id) {
+        ItemFragment fragment = new ItemFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 }

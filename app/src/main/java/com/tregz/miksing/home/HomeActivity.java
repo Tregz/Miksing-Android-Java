@@ -29,7 +29,9 @@ import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.data.item.Item;
+import com.tregz.miksing.data.item.work.song.Song;
 import com.tregz.miksing.home.item.ItemFragment;
+import com.tregz.miksing.home.list.song.SongFragment;
 import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
 
@@ -60,17 +62,24 @@ import static com.tregz.miksing.home.HomeNavigation.SIGN_IN;
 
 public class HomeActivity extends BaseActivity implements HomeView,
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout>,
-        FragmentManager.OnBackStackChangedListener {
+        FragmentManager.OnBackStackChangedListener, SongFragment.OnItem {
 
     private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
     private CollapsingToolbarLayout ctl;
     private FloatingActionButton[] buttons = new FloatingActionButton[Button.values().length];
+    private FootNavigation bottom;
     private ImageView imageView;
     private HomeNavigation navigation;
     private PlayVideo webView;
-    private SearchView searchView;
     private VideoView videoView;
+
+    @Override
+    public void onItemInteraction(Song song) {
+        String id = song.getId();
+        controller().navigate(HomeFragmentDirections.actionHomeFragmentToWorkFragment(id));
+        bottom.hide();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +103,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
             NavigationView[] drawers = new NavigationView[Drawer.values().length];
             drawers[Drawer.RIGHT.ordinal()] = findViewById(R.id.nav_right);
             drawers[Drawer.START.ordinal()] = findViewById(R.id.nav_start);
-            final FootNavigation bottom = findViewById(R.id.bottom);
+            bottom = findViewById(R.id.bottom);
             if (layout != null) navigation = new HomeNavigation(this, bottom, layout, drawers);
             host().getChildFragmentManager().addOnBackStackChangedListener(this);
 
@@ -201,8 +210,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     public boolean onCreateOptionsMenu(Menu menu) {
         if (portrait()) {
             getMenuInflater().inflate(R.menu.toolbar_home, menu);
-            searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-            new HomeSearch(this, searchView);
+            new HomeSearch(this, (SearchView) menu.findItem(R.id.search).getActionView());
         }
         return true;
     }
@@ -293,11 +301,6 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
-    public void commit(int container, Fragment fragment, String tag) {
-        getSupportFragmentManager().beginTransaction().add(container, fragment, tag).commit();
-    }
-
-    @Override
     public void onClearItemDetails() {
         Fragment primary = primary();
         if (primary instanceof ItemFragment) ((ItemFragment) primary).clear();
@@ -327,7 +330,6 @@ public class HomeActivity extends BaseActivity implements HomeView,
 
     @Override
     public void search(String query) {
-
         Fragment primary = primary();
         if (primary instanceof HomeFragment) ((HomeFragment) primary).search(query);
     }
@@ -363,6 +365,8 @@ public class HomeActivity extends BaseActivity implements HomeView,
         FragmentManager fm = manager(R.id.nav_area_fragment);
         return fm != null ? (UserMap) fm.getPrimaryNavigationFragment() : null;
     }
+
+
 
     private Task<Uri> task(String path) {
         return FirebaseStorage.getInstance().getReference().child(path).getDownloadUrl();

@@ -1,4 +1,4 @@
-package com.tregz.miksing.home.list;
+package com.tregz.miksing.home.list.song;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tregz.miksing.R;
 
-public class ListHolder extends RecyclerView.ViewHolder {
+public class SongHolder extends RecyclerView.ViewHolder {
 
     ImageView ivIcon;
     TextView tvWhat;
@@ -17,7 +17,7 @@ public class ListHolder extends RecyclerView.ViewHolder {
     TextView tvFeat;
     TextView tvMark;
 
-    ListHolder(View view) {
+    SongHolder(View view) {
         super(view);
         tvDate = view.findViewById(R.id.tvDate);
         tvFeat = view.findViewById(R.id.tvFeat);

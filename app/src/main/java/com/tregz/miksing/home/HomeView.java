@@ -8,8 +8,11 @@ import androidx.navigation.Navigation;
 
 import com.tregz.miksing.R;
 import com.tregz.miksing.data.item.Item;
+import com.tregz.miksing.data.item.work.song.Song;
 import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
+
+import java.util.List;
 
 public interface HomeView {
 
@@ -22,8 +25,6 @@ public interface HomeView {
     void onSaved();
 
     void onSaveItem();
-
-    void commit(int container, Fragment fragment, String tag);
 
     void sort();
 

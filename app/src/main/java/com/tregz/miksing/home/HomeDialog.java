@@ -5,7 +5,10 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
@@ -15,15 +18,17 @@ import com.tregz.miksing.core.date.DateUtil;
 import com.tregz.miksing.core.text.TextUtil;
 import com.tregz.miksing.data.item.work.Work;
 import com.tregz.miksing.data.item.work.song.Song;
-import com.tregz.miksing.home.list.ListCollection;
+import com.tregz.miksing.home.list.ListArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 class HomeDialog extends BaseDialog {
     private final String TAG = HomeDialog.class.getSimpleName();
@@ -32,6 +37,13 @@ class HomeDialog extends BaseDialog {
         super(context);
         builder.setTitle(webView.getContext().getString(R.string.request_youtube));
         final EditText input = input();
+
+        // testing
+        String testYT = "https://www.youtube.com/watch?v=";
+        String testId = "dMK_npDG12Q&list=PLqFMT2yxu9RRT578WXXzWtax30n1xIv1X";
+        String tester = testYT + testId;
+        input.setText(tester);
+
         builder.setPositiveButton(okay, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -72,6 +84,13 @@ class HomeDialog extends BaseDialog {
         show();
     }
 
+    private void playlist(List<Song> songs) {
+        ListView view = new ListView(context);
+        view.setAdapter(new ListArray(context, new ArrayList<Work>(songs)));
+        builder.setView(view);
+        show();
+    }
+
     private void request(WebView webView, String id, Boolean list) {
         String key = webView.getResources().getString(R.string.browser_key);
         String api = "https://www.googleapis.com/youtube/v3/";
@@ -98,7 +117,7 @@ class HomeDialog extends BaseDialog {
         return id;
     }
 
-    private void getData(final WebView webView, final boolean list) {
+    private void getData(final WebView webView, final boolean isList) {
         final String script = "(function(){return data;})()"; // try to get data from youtube api
         new android.os.Handler().postDelayed(new Runnable() {
             public void run() {
@@ -109,18 +128,19 @@ class HomeDialog extends BaseDialog {
                         if (!TextUtil.stripQuotes(value).equals("null")) {
                             if (TextUtil.stripQuotes(value).equals("error")) {
                                 Log.e(TAG, "Error!");
-                            } else readYouTubeData(value, list);
-                        } else getData(webView, list);
+                            } else readYouTubeData(value, isList);
+                        } else getData(webView, isList);
                     }
                 });
             }
         }, 1000); // if data not yet available, delayed loop to try again
     }
 
-    private void readYouTubeData(String data, boolean list) {
+    private void readYouTubeData(String data, boolean isList) {
         try {
             JSONObject jsonObject = new JSONObject(data);
             JSONArray array = new JSONArray(jsonObject.getString("items"));
+            List<Song> songs = new ArrayList<>();
             for (int i = 0; i < array.length(); i++) {
                 String title, author = "", id;
                 JSONObject json = array.getJSONObject(i).getJSONObject("snippet");
@@ -139,21 +159,21 @@ class HomeDialog extends BaseDialog {
                 } catch (ParseException e) {
                     if (e.getMessage() != null) Log.e(TAG, e.getMessage());
                 }
-                if (list) {
+                if (isList) {
                     JSONObject resourceId = json.getJSONObject("resourceId");
                     id = TextUtil.stripQuotes(resourceId.getString("videoId"));
                 } else id = TextUtil.stripQuotes(array.getJSONObject(i).getString("id"));
-                Work song = new Song(id, new Date());
+                Song song = new Song(id, new Date());
                 if (born != null) Log.d(TAG, born.toString());
                 song.setReleasedAt(born);
                 song.setArtist(author);
                 song.setTitle(title);
-                ListCollection.getInstance().add(song);
-                if (array.length() == 1) {
-                    if (context instanceof HomeView) ((HomeView) context).onFillItemDetails(song);
-                } else {
-                    if (context instanceof HomeView) ((HomeView) context).onSaved();
-                }
+                songs.add(song);
+            }
+            if (array.length() == 1) {
+                if (context != null) ((HomeView) context).onFillItemDetails(songs.get(0));
+            } else {
+                playlist(songs);
             }
         } catch (JSONException e) {
             if (e.getMessage() != null) Log.e(TAG, e.getMessage());

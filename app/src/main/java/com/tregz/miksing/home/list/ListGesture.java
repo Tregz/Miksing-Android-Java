@@ -11,7 +11,7 @@ public class ListGesture extends ItemTouchHelper.Callback {
 
     private ListView view;
 
-    ListGesture(ListView view) {
+    public ListGesture(ListView view) {
         this.view = view;
     }
 

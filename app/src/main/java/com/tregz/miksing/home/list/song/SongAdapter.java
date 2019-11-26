@@ -1,6 +1,7 @@
-package com.tregz.miksing.home.list;
+package com.tregz.miksing.home.list.song;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -18,21 +19,26 @@ import com.tregz.miksing.data.join.work.song.user.UserSongRelation;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 
-public class ListAdapter extends RecyclerView.Adapter<ListHolder> {
-    public final String TAG = ListAdapter.class.getSimpleName();
+public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
+    public final String TAG = SongAdapter.class.getSimpleName();
 
+    private SongFragment.OnItem listener;
     private SortedListAdapterCallback<UserSongRelation> callback = new ListSorted<>(this);
     SortedList<UserSongRelation> items = new SortedList<>(UserSongRelation.class, callback);
 
+    public SongAdapter(SongFragment.OnItem listener) {
+        this.listener = listener;
+    }
+
     @NonNull
     @Override
-    public ListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SongHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ListHolder(inflater.inflate(R.layout.card_song, parent, false));
+        return new SongHolder(inflater.inflate(R.layout.card_work, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull SongHolder holder, final int position) {
         if (items.get(position) != null) {
             final UserSongRelation relation = items.get(position);
             final Song song = relation.song;
@@ -55,6 +61,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListHolder> {
                 if (song.getWhat() > 0)
                     holder.tvWhat.setText(Song.What.values()[song.getMix()].name());
             }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemInteraction(song);
+                }
+            });
         }
     }
 
