@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.tregz.miksing.R;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseFragment;
+import com.tregz.miksing.home.HomeActivity;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -46,7 +48,23 @@ public class UserFragment extends BaseFragment {
         });
         txUsername = view.findViewById(R.id.user_name);
         txEmail = view.findViewById(R.id.subtitle);
+        view.findViewById(R.id.my_location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserMap map = map();
+                if (map != null) map.fromLastLocation();
+            }
+        });
         update();
+        final EditText home = view.findViewById(R.id.user_home);
+        view.findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String location = home.getText().toString();
+                UserMap map = map();
+                if (map != null) map.fromLocationName(location);
+            }
+        });
     }
 
     public void update() {
@@ -57,5 +75,9 @@ public class UserFragment extends BaseFragment {
                 email = getContext().getString(R.string.nav_drawer_sub);
             txEmail.setText(email);
         }
+    }
+
+    private UserMap map() {
+        return getActivity() != null ? ((HomeActivity) getActivity()).areaFragment() : null;
     }
 }

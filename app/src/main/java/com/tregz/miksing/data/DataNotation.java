@@ -3,7 +3,7 @@ package com.tregz.miksing.data;
 public class DataNotation {
 
     // unused yet. private static String A = "auth";  // authenticator / publisher
-    public static final String B = "born"; // date of origin
+    public static final String B = "born"; // date of origin / birth day
     public static final String C = "copy"; // created at
     public static final String D = "dead"; // soft deleted
     public static final String E = "edit"; // updated at

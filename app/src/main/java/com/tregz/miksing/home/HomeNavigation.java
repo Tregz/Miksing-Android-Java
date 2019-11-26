@@ -22,7 +22,6 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.list.ListSorted;
-import com.tregz.miksing.home.user.UserFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +35,11 @@ public class HomeNavigation implements
     final static int SIGN_IN = 101;
 
     private final int RIGHT = HomeActivity.Drawer.RIGHT.ordinal();
-    //private final int START = HomeActivity.Drawer.START.ordinal();
     private String login, logout;
     private boolean initialized = false;
     private HomeView view;
     private DrawerLayout layout;
     private NavigationView[] drawers;
-    private UserFragment profile;
 
     HomeNavigation(
             @NonNull HomeView view,
@@ -69,18 +66,12 @@ public class HomeNavigation implements
 
     @Override
     public void onDrawerClosed(@NonNull View drawerView) {
-        //if (drawerView.getId() == drawers[RIGHT].getId()) view.remove(UserFragment.TAG);
+        // do nothing
     }
 
     @Override
     public void onDrawerOpened(@NonNull View drawerView) {
-        if (drawerView.getId() == drawers[RIGHT].getId()) {
-            if (profile == null) {
-                profile = new UserFragment();
-                view.commit(R.id.container_right, profile, UserFragment.TAG);
-            }
-            update();
-        }
+        if (drawerView.getId() == drawers[RIGHT].getId()) update();
     }
 
     @Override
@@ -145,7 +136,7 @@ public class HomeNavigation implements
     }
 
     void update() {
-        profile.update();
+        view.userFragment().update();
         MenuItem item = drawers[RIGHT].getMenu().getItem(0);
         if (logged()) {
             if (item.getTitle() != logout) {

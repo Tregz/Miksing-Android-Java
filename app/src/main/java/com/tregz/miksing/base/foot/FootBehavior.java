@@ -51,7 +51,9 @@ public class FootBehavior<V extends View> extends HideBottomViewOnScrollBehavior
             int type,
             @NonNull int[] consumed
     ) {
-        if (child instanceof FootNavigation && ((FootNavigation) child).shown)
-            super.onNestedScroll(parent, child, target, dx0, dy0, dx1, dy1, type, consumed);
+        if (child instanceof FootNavigation && ((FootNavigation) child).shown) {
+            if (dy0 > dy1) slideUp(child);
+            if (dy0 < dy1) slideDown(child);
+        }
     }
 }

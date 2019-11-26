@@ -4,11 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class FootNavigation extends BottomNavigationView {
-    private final String TAG = FootNavigation.class.getSimpleName();
+    //private final String TAG = FootNavigation.class.getSimpleName();
 
     public boolean shown = true;
 
@@ -19,10 +18,12 @@ public class FootNavigation extends BottomNavigationView {
     public void hide() {
         shown = false;
         setTranslationY(getHeight());
+        setVisibility(View.GONE);
     }
 
     public void show() {
         shown = true;
+        setVisibility(View.VISIBLE);
         setTranslationY(0);
     }
 }

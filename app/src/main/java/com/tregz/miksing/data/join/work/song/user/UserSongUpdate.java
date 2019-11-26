@@ -2,8 +2,6 @@ package com.tregz.miksing.data.join.work.song.user;
 
 import android.content.Context;
 
-import java.util.List;
-
 import io.reactivex.schedulers.Schedulers;
 
 public class UserSongUpdate extends UserSongSingle<Integer> {

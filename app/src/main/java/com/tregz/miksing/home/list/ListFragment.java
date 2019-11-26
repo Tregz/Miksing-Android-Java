@@ -76,7 +76,6 @@ public class ListFragment extends BaseFragment implements Observer<List<UserSong
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recycler = view.findViewById(R.id.recycler);
-        recycler.setItemViewCacheSize(0);
         adapter = new ListAdapter();
         recycler.setAdapter(adapter);
         if (columns() <= 1) recycler.setLayoutManager(new LinearLayoutManager(getContext()));

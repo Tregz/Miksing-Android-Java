@@ -1,5 +1,6 @@
 package com.tregz.miksing.base;
 
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -55,6 +58,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public ViewGroup getViewGroup() {
         return getWindow().getDecorView().findViewById(android.R.id.content);
+    }
+
+    public FragmentManager manager(int host) {
+        NavHostFragment nhf = (NavHostFragment) getSupportFragmentManager().findFragmentById(host);
+        return nhf != null ? nhf.getChildFragmentManager() : null;
+    }
+
+    protected boolean check(String permission) {
+        int granted = PackageManager.PERMISSION_GRANTED;
+        return ActivityCompat.checkSelfPermission(this, permission) == granted;
     }
 
     protected void image(Uri uri, int resource) {

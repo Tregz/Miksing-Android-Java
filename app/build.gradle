@@ -8,7 +8,7 @@ android {
         applicationId "com.tregz.miksing"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 20191023
+        versionCode 20191122
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -37,7 +37,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment:$navigation_version"
     implementation "androidx.navigation:navigation-ui:$navigation_version"
 
-    def room_version = "2.2.1"
+    def room_version = "2.2.2"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "android.arch.persistence.room:rxjava2:$room_version"
@@ -46,8 +46,15 @@ dependencies {
     def firebase_ui_version = "6.0.2"
     implementation "com.firebaseui:firebase-ui-storage:$firebase_ui_version"
     implementation "com.firebaseui:firebase-ui-auth:$firebase_ui_version"
+
     implementation 'com.facebook.android:facebook-android-sdk:5.2.0' // Facebook sign support
-    implementation 'com.google.android.material:material:1.2.0-alpha01'
+
+    def play_version = '17.0.0'
+    implementation "com.google.android.gms:play-services-maps:$play_version"
+    implementation "com.google.android.gms:play-services-location:$play_version"
+
+    implementation 'com.google.android.material:material:1.2.0-alpha02'
+
     implementation 'com.google.firebase:firebase-database:19.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.1'
 

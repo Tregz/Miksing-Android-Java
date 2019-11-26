@@ -37,9 +37,9 @@
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
-                android:layout_height="1000dp"
+                android:layout_height="wrap_content"
                 app:defaultNavHost="true"
-                app:navGraph="@navigation/storyboard_main" />
+                app:navGraph="@navigation/storyboard_home" />
 
         </LinearLayout>
 

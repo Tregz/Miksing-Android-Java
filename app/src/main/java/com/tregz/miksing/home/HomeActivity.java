@@ -1,7 +1,9 @@
 package com.tregz.miksing.home;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -28,6 +30,8 @@ import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.data.item.Item;
 import com.tregz.miksing.home.item.ItemFragment;
+import com.tregz.miksing.home.user.UserFragment;
+import com.tregz.miksing.home.user.UserMap;
 
 import android.util.Log;
 import android.view.Menu;
@@ -42,6 +46,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -58,10 +63,13 @@ public class HomeActivity extends BaseActivity implements HomeView,
         FragmentManager.OnBackStackChangedListener {
 
     private boolean collapsing = false;
+    private final int LOCATION_CODE = 103;
+    private CollapsingToolbarLayout ctl;
     private FloatingActionButton[] buttons = new FloatingActionButton[Button.values().length];
     private ImageView imageView;
     private HomeNavigation navigation;
     private PlayVideo webView;
+    private SearchView searchView;
     private VideoView videoView;
 
     @Override
@@ -79,7 +87,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
             AppBarConfiguration.Builder builder = new AppBarConfiguration.Builder(graph);
             DrawerLayout layout = findViewById(R.id.drawerLayout);
             AppBarConfiguration abc = builder.setDrawerLayout(layout).build();
-            CollapsingToolbarLayout ctl = findViewById(R.id.toolbar_layout);
+            ctl = findViewById(R.id.toolbar_layout);
             // Toolbar setup including auto update of the collapsing toolbar's title
             NavigationUI.setupWithNavController(ctl, toolbar, controller(), abc);
             // DrawerListener & OnNavigationItemSelectedListener
@@ -181,13 +189,20 @@ public class HomeActivity extends BaseActivity implements HomeView,
                 webView.load("5-q3meXJ6W4"); // testing
             }
         });
+
+        // Check Google Map permission
+        if (!check(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            String[] permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION };
+            ActivityCompat.requestPermissions(this, permissions, LOCATION_CODE);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (portrait()) {
             getMenuInflater().inflate(R.menu.toolbar_home, menu);
-            new HomeSearch(this, (SearchView) menu.findItem(R.id.search).getActionView());
+            searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+            new HomeSearch(this, searchView);
         }
         return true;
     }
@@ -268,6 +283,16 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
+    public void onRequestPermissionsResult(int code, @NonNull String[] asks, @NonNull int[] grant) {
+        super.onRequestPermissionsResult(code, asks, grant);
+        if (code == LOCATION_CODE) {
+            if (grant.length > 0 && grant[0] == PackageManager.PERMISSION_GRANTED) {
+                toast("Google map location enable");
+            }
+        }
+    }
+
+    @Override
     public void commit(int container, Fragment fragment, String tag) {
         getSupportFragmentManager().beginTransaction().add(container, fragment, tag).commit();
     }
@@ -302,14 +327,41 @@ public class HomeActivity extends BaseActivity implements HomeView,
 
     @Override
     public void search(String query) {
+
         Fragment primary = primary();
         if (primary instanceof HomeFragment) ((HomeFragment) primary).search(query);
+    }
+
+    @Override
+    public void search(boolean focused) {
+        ViewGroup.LayoutParams toolbarParams = ctl.getLayoutParams();
+        int largeToolbar = (int) getResources().getDimension(R.dimen.large_toolbar_height);
+        int normalToolbar = (int) getResources().getDimension(R.dimen.normal_toolbar_height);
+        toolbarParams.height = focused ? normalToolbar : largeToolbar;
+        ctl.setLayoutParams(toolbarParams);
+        FrameLayout header = findViewById(R.id.header);
+        ViewGroup.LayoutParams headerParams = header.getLayoutParams();
+        int normalHeader = (int) getResources().getDimension(R.dimen.normal_header_height);
+        headerParams.height = focused ? 0 : normalHeader;
+        header.setLayoutParams(headerParams);
     }
 
     @Override
     public void sort() {
         Fragment primary = primary();
         if (primary instanceof HomeFragment) ((HomeFragment) primary).sort();
+    }
+
+    @Override
+    public UserFragment userFragment() {
+        FragmentManager fm = manager(R.id.nav_user_fragment);
+        return fm != null ? (UserFragment) fm.getPrimaryNavigationFragment() : null;
+    }
+
+    @Override
+    public UserMap areaFragment() {
+        FragmentManager fm = manager(R.id.nav_area_fragment);
+        return fm != null ? (UserMap) fm.getPrimaryNavigationFragment() : null;
     }
 
     private Task<Uri> task(String path) {

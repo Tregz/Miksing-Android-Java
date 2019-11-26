@@ -69,9 +69,10 @@
 
         <LinearLayout style="@style/MatchMatch.Vertical"
             android:id="@+id/editor"
-            android:visibility="gone"
             android:padding="@dimen/text_margin"
             android:theme="@style/TextTheme">
+            <!-- TODO
+            android:visibility="gone" -->
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/TextInputLayout">
@@ -86,14 +87,26 @@
 
                 <FrameLayout style="@style/WeightWrap">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/TextInputLayout">
-                        <com.google.android.material.textfield.TextInputEditText
-                            style="@style/MatchWrap.EditText"
-                            android:id="@+id/user_home"
-                            android:gravity="bottom"
-                            android:hint="@string/user_area" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/TextInputLayout">
+                            <com.google.android.material.textfield.TextInputEditText
+                                style="@style/MatchWrap.EditText"
+                                android:id="@+id/user_home"
+                                android:gravity="bottom"
+                                android:hint="@string/user_area" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/my_location"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical|end"
+                            android:background="@android:color/transparent"
+                            app:srcCompat="@drawable/ic_my_location"
+                            app:tint="?attr/primaryTextColor"/>
+                    </FrameLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/TextInputLayout"
