@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Miksing</string>
+
+    <string name="song_artist">Artiste</string>
+    <string name="song_title">Titre</string>
+    <string name="song_mixed_by">Mixé par</string>
+    <string name="song_release_date">Date de parution</string>
+    <string name="song_dirty">Paroles vulgaires</string>
+    <string name="song_version">Version</string>
+
+    <string name="user_email">Courriel</string>
+
+    <string name="cancel">Annuler</string>
+    <string name="ok">OK</string>
+
+</resources>

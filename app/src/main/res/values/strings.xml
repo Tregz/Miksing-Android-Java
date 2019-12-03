@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">Miksing</string>
 
     <string name="song_artist">Artist</string>
@@ -8,7 +9,7 @@
     <string name="song_dirty">Dirty lyrics</string>
     <string name="song_version">Version</string>
 
-    <string name="user_email">Courriel</string>
+    <string name="user_email">Email</string>
 
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>

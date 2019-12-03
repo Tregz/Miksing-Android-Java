@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_login">Authentification</string>
+    <string name="action_search">Recherche</string>
+    <string name="action_settings">Paramètres</string>
+
+    <string name="nav_login_title">Se connecter</string>
+
+    <string name="nav_logout_title">Déconnexion</string>
+
+    <string name="clear">Effacer</string>
+    <string name="save">Sauvegarder</string>
+
+    <string name="request_youtube">Charger un vidéo ou une liste YouTube depuis un lien</string>
+
+    <string name="main_bottom_alpha">Alpha</string>
+    <string name="main_bottom_digit">Nombre</string>
+    <string name="main_bottom_fresh">Date</string>
+
+    <string name="nav_drawer_back">Up</string>
+    <string name="nav_drawer_items">Items</string>
+    <string name="nav_drawer_mine">PLAYLISTS</string>
+    <string name="nav_drawer_title">Démo d\'application mobile</string>
+    <string name="nav_drawer_sub">par Tregz (jerome@tregz.com)</string>
+    <string name="nav_user_profile">Profil</string>
+    <string name="nav_header_desc">Entête de navigation</string>
+    <string name="user_name">Nom d\'utilisateur</string>
+    <string name="user_area">Localisation</string>
+
+</resources>

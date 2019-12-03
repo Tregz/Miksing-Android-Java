@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="card_born">[Date]</string>
+    <string name="thumbnail">Miniature</string>
+    <string name="card_feat">avec</string>
+    <string name="card_info">Info</string>
+    <string name="card_mark">De</string>
+    <string name="card_name">Nom</string>
+    <string name="card_what">(Mix)</string>
+
+</resources>
