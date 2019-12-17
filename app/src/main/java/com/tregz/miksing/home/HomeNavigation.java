@@ -98,7 +98,10 @@ public class HomeNavigation implements
                     providers.add(new AuthUI.IdpConfig.EmailBuilder().build());
                     providers.add(new AuthUI.IdpConfig.GoogleBuilder().build());
                     // if Facebook dev account id is set in Firebase console
-                    providers.add(new AuthUI.IdpConfig.FacebookBuilder().build());
+
+                    // TODO restore Facebook dev account
+                    // providers.add(new AuthUI.IdpConfig.FacebookBuilder().build());
+
                     // release build only: if app certificate is set in Firebase console
                     providers.add(new AuthUI.IdpConfig.PhoneBuilder().build());
                     ui.setIsSmartLockEnabled(false); // smart lock not well supported by FirebaseUI

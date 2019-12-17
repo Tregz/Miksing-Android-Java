@@ -41,7 +41,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -69,13 +68,20 @@ public class HomeActivity extends BaseActivity implements HomeView,
     private CollapsingToolbarLayout ctl;
     private FloatingActionButton[] buttons = new FloatingActionButton[Button.values().length];
     private FootNavigation bottom;
-    private ImageView imageView;
+    //private ImageView imageView;
     private HomeNavigation navigation;
     private PlayVideo webView;
     private VideoView videoView;
 
     @Override
-    public void onItemInteraction(Song song) {
+    public void onItemClick(Song song) {
+        videoView.setVisibility(GONE);
+        webView.mix(song.getId()); // testing
+        Log.d(TAG, "song.getId(): " + song.getId());
+    }
+
+    @Override
+    public void onItemLongClick(Song song) {
         String id = song.getId();
         controller().navigate(HomeFragmentDirections.actionHomeFragmentToWorkFragment(id));
         bottom.hide();
@@ -114,7 +120,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
             players.setLayoutParams(params);
 
             // Content menu's floating action buttons and logo image
-            imageView = findViewById(R.id.image_1);
+            /* imageView = findViewById(R.id.image_1);
             String logo = "draw/Cshawi-logo-mini.png";
             task(logo).addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
@@ -126,7 +132,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
                 public void onFailure(@NonNull Exception e) {
                     if (e.getMessage() != null) toast(e.getMessage());
                 }
-            });
+            }); */
             buttons[Button.FAB.ordinal()] = findViewById(R.id.fab);
             buttons[Button.FAB.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -196,6 +202,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
             public void onClick(View v) {
                 videoView.setVisibility(GONE);
                 webView.load("5-q3meXJ6W4"); // testing
+                webView.setListing("'5-q3meXJ6W4'");
             }
         });
 
@@ -276,13 +283,13 @@ public class HomeActivity extends BaseActivity implements HomeView,
             else if (collapsing) collapsing = false;
             if (collapsing) {
                 if (buttons[0].getVisibility() == View.VISIBLE) {
-                    imageView.setVisibility(View.INVISIBLE);
+                    //imageView.setVisibility(View.INVISIBLE);
                     if (buttons[0].isExpanded())
                         for (FloatingActionButton fab : buttons) fab.hide();
                     else buttons[0].hide();
                 }
             } else if (buttons[0].getVisibility() == GONE) {
-                imageView.setVisibility(View.VISIBLE);
+                //imageView.setVisibility(View.VISIBLE);
                 if (buttons[0].isExpanded())
                     for (FloatingActionButton fab : buttons) fab.show();
                 else buttons[0].show();

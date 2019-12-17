@@ -26,7 +26,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
     private SortedListAdapterCallback<UserSongRelation> callback = new ListSorted<>(this);
     SortedList<UserSongRelation> items = new SortedList<>(UserSongRelation.class, callback);
 
-    public SongAdapter(SongFragment.OnItem listener) {
+    SongAdapter(SongFragment.OnItem listener) {
         this.listener = listener;
     }
 
@@ -64,7 +64,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onItemInteraction(song);
+                    listener.onItemClick(song);
+                }
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    listener.onItemLongClick(song);
+                    return false;
                 }
             });
         }

@@ -126,8 +126,10 @@ public class SongFragment extends ListFragment implements Observer<List<UserSong
         songLiveData.observe(this, this);
     }
 
+    // Allow an interaction to be communicated to the activity
     public interface OnItem {
-        /** To allow an interaction in this fragment to be communicated to the activity */
-        void onItemInteraction(Song song);
+        void onItemClick(Song song);
+
+        void onItemLongClick(Song song);
     }
 }

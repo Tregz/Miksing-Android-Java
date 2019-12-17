@@ -5,9 +5,7 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
