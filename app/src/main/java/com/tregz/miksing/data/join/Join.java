@@ -19,7 +19,7 @@ public abstract class Join implements Parcelable {
         this.position = position;
     }
 
-    @ColumnInfo(name = DataNotation.S)
+    @ColumnInfo(name = DataNotation.SI)
     private int position;
 
     @Override

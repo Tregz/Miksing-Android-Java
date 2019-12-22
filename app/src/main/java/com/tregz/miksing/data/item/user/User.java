@@ -16,9 +16,9 @@ import java.util.Date;
 @Entity(tableName = User.TABLE)
 public class User extends Item {
 
-    final static String TABLE = "user";
+    public final static String TABLE = "user";
 
-    @ColumnInfo(name = DataNotation.B)
+    @ColumnInfo(name = DataNotation.BD)
     private Date birthDay;
 
     public Date getBirthDay() {

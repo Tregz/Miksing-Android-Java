@@ -18,9 +18,9 @@ public abstract class Item extends Data {
         super(id, createdAt);
     }
 
-    @ColumnInfo(name = DataNotation.D)
+    @ColumnInfo(name = DataNotation.DD)
     private Date deletedAt;
-    @ColumnInfo(name = DataNotation.N)
+    @ColumnInfo(name = DataNotation.NS)
     protected String name;
 
     public String getName() {

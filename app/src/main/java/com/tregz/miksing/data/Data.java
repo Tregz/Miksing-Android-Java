@@ -23,9 +23,9 @@ public abstract class Data implements Parcelable {
     @NonNull
     private String id = "Undefined";
     @NonNull
-    @ColumnInfo(name = DataNotation.C)
+    @ColumnInfo(name = DataNotation.CD)
     private Date createdAt = new Date();
-    @ColumnInfo(name = DataNotation.E)
+    @ColumnInfo(name = DataNotation.ED)
     private Date updatedAt;
 
     @NonNull

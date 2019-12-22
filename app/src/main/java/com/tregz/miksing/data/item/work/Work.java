@@ -18,9 +18,9 @@ public abstract class Work extends Item {
         super(id, createdAt);
     }
 
-    @ColumnInfo(name = DataNotation.B)
+    @ColumnInfo(name = DataNotation.BD)
     private Date releasedAt;
-    @ColumnInfo(name = DataNotation.M)
+    @ColumnInfo(name = DataNotation.MS)
     private String artist;
 
     public String getArtist() {

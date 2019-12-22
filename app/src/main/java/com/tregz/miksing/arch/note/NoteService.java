@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -51,9 +53,9 @@ public class NoteService extends FirebaseMessagingService {
                 int request = 0; // code to retrieve the pending intent
                 PendingIntent tap = PendingIntent.getActivity(this, request, intent, once);
                 builder.setContentIntent(tap); // action when touched
-                //Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                //builder.setSound(soundUri);
-                //builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                builder.setSound(soundUri);
+                builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
                 int nId = 0; // notification id
                 manager().notify(nId, builder.build());
             }

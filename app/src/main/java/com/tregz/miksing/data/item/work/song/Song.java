@@ -21,8 +21,8 @@ public class Song extends Work {
         super(id, createdAt);
     }
 
-    @ColumnInfo(name = DataNotation.L) private String mixedBy;
-    @ColumnInfo(name = DataNotation.F) private String featuring;
+    @ColumnInfo(name = DataNotation.LS) private String mixedBy;
+    @ColumnInfo(name = DataNotation.FS) private String featuring;
 
     public String getFeaturing() {
         return featuring;

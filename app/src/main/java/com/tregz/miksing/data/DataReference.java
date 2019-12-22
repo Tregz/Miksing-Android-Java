@@ -18,7 +18,7 @@ import com.tregz.miksing.data.join.work.song.user.UserSongAccess;
         User.class,
         Song.class,
         UserSong.class
-}, version = 12, exportSchema = false)
+}, version = 13, exportSchema = false)
 @TypeConverters({DataConverter.class})
 public abstract class DataReference extends RoomDatabase {
 

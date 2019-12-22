@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.RawQuery;
+import androidx.room.Transaction;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
@@ -22,7 +23,8 @@ public interface UserSongAccess {
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
 
     //@Query(SELECT_FROM_TABLE)
-    @Query(SELECT_FROM_TABLE + " INNER JOIN " + Song.TABLE + " ON song.id = user_song.song_id ORDER BY user_song.spot")
+    @Transaction
+    @Query(SELECT_FROM_TABLE) //" INNER JOIN " + Song.TABLE + " ON song.id = user_song.song ORDER BY user_song.spot")
     LiveData<List<UserSongRelation>> all();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

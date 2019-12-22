@@ -25,14 +25,14 @@ public class SongRealtime extends BaseRealtime {
     @Override
     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
         if (snapshot.getKey() != null) {
-            Song song = new Song(snapshot.getKey(), new Date(getLong(snapshot, DataNotation.C)));
-            song.setReleasedAt(new Date(getLong(snapshot, DataNotation.B)));
-            song.setUpdatedAt(new Date(getLong(snapshot, DataNotation.E)));
-            song.setFeaturing(getString(snapshot, DataNotation.F));
-            song.setMixedBy(getString(snapshot, DataNotation.L));
-            song.setArtist(getString(snapshot, DataNotation.M));
-            song.setTitle(getString(snapshot, DataNotation.N));
-            song.setWhat(getInt(snapshot, DataNotation.W));
+            Song song = new Song(snapshot.getKey(), new Date(getLong(snapshot, DataNotation.CD)));
+            song.setReleasedAt(new Date(getLong(snapshot, DataNotation.BD)));
+            song.setUpdatedAt(new Date(getLong(snapshot, DataNotation.ED)));
+            song.setFeaturing(getString(snapshot, DataNotation.FS));
+            song.setMixedBy(getString(snapshot, DataNotation.LS));
+            song.setArtist(getString(snapshot, DataNotation.MS));
+            song.setTitle(getString(snapshot, DataNotation.NS));
+            song.setWhat(getInt(snapshot, DataNotation.WI));
             Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
             new SongInsert(context, song);
         }
