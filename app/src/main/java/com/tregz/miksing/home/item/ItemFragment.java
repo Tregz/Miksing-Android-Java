@@ -141,8 +141,8 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
             Date released = releasedAt != null ? releasedAt : new Date();
             ViewGroup group = ((HomeActivity)getActivity()).getViewGroup();
-            ItemDialog dialog = new ItemDialog(group, this, released);
-            ((HomeActivity)getActivity()).add(dialog);
+            ItemDialog dialog = new ItemDialog(this, released);
+            dialog.show(getActivity().getSupportFragmentManager(), ItemDialog.TAG);
         } else toast("Android version must Lollipop or higher");
     }
 

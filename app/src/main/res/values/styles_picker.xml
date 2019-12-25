@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Picker" parent="@style/ThemeOverlay.MaterialComponents.Light">
-        <!--<item name="showTitle">false</item> -->
+    <style name="Picker" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="colorControlActivated">?attr/primaryTextDarkColor</item>
         <item name="colorAccent">?attr/primaryColor</item>
         <item name="android:textColorPrimary">?attr/primaryTextColor</item>
         <item name="android:textColorSecondary">?attr/primaryTextColor</item>
         <item name="android:headerBackground">?attr/primaryShadowColor</item>
+        <item name="android:textColorPrimaryInverse">?attr/primaryPageColor</item>
+        <item name="android:textColorSecondaryInverse">?attr/primaryLightColor</item>
+        <item name="android:textColor">?attr/primaryDarkColor</item>
+    </style>
+
+    <style name="PickerSpinner" parent="Picker">
+        <item name="android:datePickerStyle">@style/PickerSpinnerStyle</item>
+    </style>
+
+    <style name="PickerSpinnerStyle" parent="Picker">
+        <item name="android:calendarViewShown">false</item>
+        <item name="android:spinnersShown">true</item>
     </style>
 
 </resources>
