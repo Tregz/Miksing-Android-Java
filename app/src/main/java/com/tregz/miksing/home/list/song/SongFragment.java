@@ -16,7 +16,6 @@ import com.tregz.miksing.data.item.work.song.Song;
 import com.tregz.miksing.data.item.work.song.SongRealtime;
 import com.tregz.miksing.data.join.work.song.user.UserSongRelation;
 import com.tregz.miksing.data.join.work.song.user.UserSongUpdate;
-import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListView;
@@ -39,7 +38,7 @@ public class SongFragment extends ListFragment implements Observer<List<UserSong
         try {
             listener = (OnItem) context;
         } catch (ClassCastException e) {
-            String name = HomeView.class.getSimpleName();
+            String name = OnItem.class.getSimpleName();
             throw new ClassCastException(context.toString() + " must implement " + name);
         }
     }

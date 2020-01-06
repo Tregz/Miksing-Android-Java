@@ -4,14 +4,10 @@ import android.content.Context;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.tregz.miksing.R;
@@ -22,13 +18,36 @@ import java.util.Date;
 
 public class ItemDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     public final static String TAG = ItemDialog.class.getSimpleName();
+    private final static String DATE = "date";
 
     private Date date;
     private ItemView listener;
 
-    ItemDialog(@NonNull final ItemView listener, @NonNull Date  date) {
-        this.date = date;
-        this.listener = listener;
+    static ItemDialog newInstance(@NonNull Date  date) {
+        ItemDialog dialog = new ItemDialog();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(DATE, date);
+        dialog.setArguments(bundle);
+        return dialog;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            listener = (ItemView) context;
+        } catch (ClassCastException e) {
+            String name = ItemView.class.getSimpleName();
+            throw new ClassCastException(context.toString() + " must implement " + name);
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            date = (Date) getArguments().getSerializable(DATE);
+        }
     }
 
     @NonNull

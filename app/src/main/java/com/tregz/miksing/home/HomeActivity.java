@@ -31,6 +31,7 @@ import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.data.item.Item;
 import com.tregz.miksing.data.item.work.song.Song;
 import com.tregz.miksing.home.item.ItemFragment;
+import com.tregz.miksing.home.item.ItemView;
 import com.tregz.miksing.home.list.song.SongFragment;
 import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
@@ -56,12 +57,14 @@ import androidx.navigation.NavGraph;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.Date;
+
 import static android.view.View.GONE;
 import static com.tregz.miksing.home.HomeNavigation.SIGN_IN;
 
 public class HomeActivity extends BaseActivity implements HomeView,
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout>,
-        FragmentManager.OnBackStackChangedListener, SongFragment.OnItem {
+        FragmentManager.OnBackStackChangedListener, SongFragment.OnItem, ItemView {
 
     private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
@@ -330,9 +333,10 @@ public class HomeActivity extends BaseActivity implements HomeView,
         back();
     }
 
-    private void expand(FloatingActionButton fab) {
-        fab.setExpanded(!fab.isExpanded());
-        fab.setImageResource(fab.isExpanded() ? R.drawable.ic_close : R.drawable.ic_add);
+    @Override
+    public void release(Date at) {
+        Fragment primary = primary();
+        if (primary instanceof ItemFragment) ((ItemFragment) primary).release(at);
     }
 
     @Override
@@ -373,7 +377,10 @@ public class HomeActivity extends BaseActivity implements HomeView,
         return fm != null ? (UserMap) fm.getPrimaryNavigationFragment() : null;
     }
 
-
+    private void expand(FloatingActionButton fab) {
+        fab.setExpanded(!fab.isExpanded());
+        fab.setImageResource(fab.isExpanded() ? R.drawable.ic_close : R.drawable.ic_add);
+    }
 
     private Task<Uri> task(String path) {
         return FirebaseStorage.getInstance().getReference().child(path).getDownloadUrl();

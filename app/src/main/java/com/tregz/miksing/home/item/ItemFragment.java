@@ -41,7 +41,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class ItemFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,
-        ItemView, Observer<Song> {
+        Observer<Song> {
     private final String TAG = ItemFragment.class.getSimpleName();
 
     private boolean dirty = false;
@@ -140,8 +140,8 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
     private void dialog() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
             Date released = releasedAt != null ? releasedAt : new Date();
-            ViewGroup group = ((HomeActivity)getActivity()).getViewGroup();
-            ItemDialog dialog = new ItemDialog(this, released);
+            //ViewGroup group = ((HomeActivity)getActivity()).getViewGroup();
+            ItemDialog dialog = ItemDialog.newInstance(released);
             dialog.show(getActivity().getSupportFragmentManager(), ItemDialog.TAG);
         } else toast("Android version must Lollipop or higher");
     }
@@ -161,7 +161,6 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
         // do nothing
     }
 
-    @Override
     public void release(Date at) {
         etReleaseDate.setText(DateUtil.dayOfYear(null, at));
         releasedAt = at;
@@ -282,13 +281,5 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
             spinner.setAdapter(adapter);
         }
         spinner.setOnItemSelectedListener(this);
-    }
-
-    public static ItemFragment newInstance(String id) {
-        ItemFragment fragment = new ItemFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("id", id);
-        fragment.setArguments(bundle);
-        return fragment;
     }
 }
