@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.join.work.song.user;
+package com.tregz.miksing.data.join.song.user;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -9,8 +9,6 @@ import androidx.room.RawQuery;
 import androidx.room.Transaction;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
-
-import com.tregz.miksing.data.item.work.song.Song;
 
 import java.util.List;
 

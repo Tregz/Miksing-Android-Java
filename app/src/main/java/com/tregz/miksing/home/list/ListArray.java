@@ -14,17 +14,17 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.tregz.miksing.R;
 import com.tregz.miksing.core.date.DateUtil;
-import com.tregz.miksing.data.item.work.Work;
+import com.tregz.miksing.data.item.song.Song;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListArray extends ArrayAdapter<Work> {
+public class ListArray extends ArrayAdapter<Song> {
 
     private Context context;
-    private List<Work> list;
+    private List<Song> list;
 
-    public ListArray(@NonNull Context context, ArrayList<Work> list) {
+    public ListArray(@NonNull Context context, ArrayList<Song> list) {
         super(context, 0, list);
         this.context = context;
         this.list = list;
@@ -38,12 +38,12 @@ public class ListArray extends ArrayAdapter<Work> {
             int layout = R.layout.card_work;
             view = LayoutInflater.from(context).inflate(layout, parent,false);
         }
-        Work work = list.get(position);
-        String thumb = "https://img.youtube.com/vi/" + work.getId() + "/0.jpg";
+        Song song = list.get(position);
+        String thumb = "https://img.youtube.com/vi/" + song.getId() + "/0.jpg";
         Glide.with(context).load(thumb).into((ImageView) view.findViewById(R.id.ivIcon));
-        ((TextView) view.findViewById(R.id.tvName)).setText(work.getTitle());
-        ((TextView) view.findViewById(R.id.tvMark)).setText(work.getArtist());
-        String when = "[" + DateUtil.dayOfYear(null, work.getReleasedAt()) + "]";
+        ((TextView) view.findViewById(R.id.tvName)).setText(song.getTitle());
+        ((TextView) view.findViewById(R.id.tvMark)).setText(song.getArtist());
+        String when = "[" + DateUtil.dayOfYear(null, song.getReleasedAt()) + "]";
         ((TextView) view.findViewById(R.id.tvFeat)).setText(when);
         return view;
     }

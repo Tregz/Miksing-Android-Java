@@ -29,7 +29,7 @@ import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.data.item.Item;
-import com.tregz.miksing.data.item.work.song.Song;
+import com.tregz.miksing.data.item.song.Song;
 import com.tregz.miksing.home.item.ItemFragment;
 import com.tregz.miksing.home.item.ItemView;
 import com.tregz.miksing.home.list.song.SongFragment;

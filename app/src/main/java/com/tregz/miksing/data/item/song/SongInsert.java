@@ -1,10 +1,9 @@
-package com.tregz.miksing.data.item.work.song;
+package com.tregz.miksing.data.item.song;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.tregz.miksing.data.join.work.song.user.UserSong;
-import com.tregz.miksing.data.join.work.song.user.UserSongInsert;
+import com.tregz.miksing.data.join.song.user.UserSong;
+import com.tregz.miksing.data.join.song.user.UserSongInsert;
 
 import java.util.List;
 

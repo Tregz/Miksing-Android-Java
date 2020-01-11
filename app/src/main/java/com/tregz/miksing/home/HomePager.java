@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.tregz.miksing.home.list.ListFragment;
-import com.tregz.miksing.home.item.ItemType;
 import com.tregz.miksing.home.list.song.SongFragment;
 import com.tregz.miksing.home.list.take.TakeFragment;
 
@@ -38,6 +37,6 @@ public class HomePager extends FragmentStatePagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return ItemType.values()[position].getType();
+        return HomeTab.values()[position].getTab();
     }
 }

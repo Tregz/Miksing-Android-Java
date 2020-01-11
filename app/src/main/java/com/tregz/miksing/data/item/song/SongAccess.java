@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item.work.song;
+package com.tregz.miksing.data.item.song;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -30,7 +30,10 @@ public interface SongAccess extends DataAccess<Song> {
     Single<Integer> update(Song...songs);
 
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    LiveData<Song> query(String key); // or Maybe<Song>
+    LiveData<Song> query(String key);
+
+    @Query(SELECT_FROM_TABLE + " WHERE id = :key")
+    Maybe<Song> testQuery(String key);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<List<Long>> insert(Song...songs);

@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item.work.song;
+package com.tregz.miksing.data.item.song;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

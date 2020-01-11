@@ -3,9 +3,9 @@ package com.tregz.miksing.base.list;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedListAdapterCallback;
 
-import com.tregz.miksing.data.item.work.song.Song;
-import com.tregz.miksing.data.join.work.song.user.UserSong;
-import com.tregz.miksing.data.join.work.song.user.UserSongRelation;
+import com.tregz.miksing.data.item.song.Song;
+import com.tregz.miksing.data.join.song.user.UserSong;
+import com.tregz.miksing.data.join.song.user.UserSongRelation;
 
 import java.util.Date;
 

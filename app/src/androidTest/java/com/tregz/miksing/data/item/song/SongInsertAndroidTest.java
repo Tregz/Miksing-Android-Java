@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item.work.song;
+package com.tregz.miksing.data.item.song;
 
 import android.content.Context;
 import android.util.Log;
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Maybe;
 import io.reactivex.MaybeObserver;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
@@ -113,12 +114,14 @@ public class SongInsertAndroidTest {
         }
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            //new SongNotation(context, dataSnapshot);
-            song = new Song(dataSnapshot.getKey(), new Date());
-            song.setArtist(getString(dataSnapshot, "last"));
-            Log.d(TAG, "childAdded " + getString(dataSnapshot, "last"));
-            access.insert(song).subscribeOn(Schedulers.io()).subscribe(singleObserver);
-            access.query(dataSnapshot.getKey()).subscribeOn(Schedulers.io()).subscribe(maybeObserver);
+            if (dataSnapshot.getKey() != null) {
+                song = new Song(dataSnapshot.getKey(), new Date());
+                song.setArtist(getString(dataSnapshot, "last"));
+                Log.d(TAG, "childAdded " + getString(dataSnapshot, "last"));
+                access.insert(song).subscribeOn(Schedulers.io()).subscribe(singleObserver);
+                Maybe<Song> test = access.testQuery(dataSnapshot.getKey());
+                test.subscribeOn(Schedulers.io()).subscribe(maybeObserver);
+            }
         }
         private String getString(DataSnapshot snap, String key) {
             return snap.child(key).getValue(String.class);

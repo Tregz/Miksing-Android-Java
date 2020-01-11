@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
-import com.tregz.miksing.data.item.work.song.Song;
-import com.tregz.miksing.data.item.work.song.SongRealtime;
-import com.tregz.miksing.data.join.work.song.user.UserSongRelation;
-import com.tregz.miksing.data.join.work.song.user.UserSongUpdate;
+import com.tregz.miksing.data.item.song.Song;
+import com.tregz.miksing.data.item.song.SongRealtime;
+import com.tregz.miksing.data.join.song.user.UserSongRelation;
+import com.tregz.miksing.data.join.song.user.UserSongUpdate;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListView;

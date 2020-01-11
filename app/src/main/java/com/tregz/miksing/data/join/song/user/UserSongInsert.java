@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.join.work.song.user;
+package com.tregz.miksing.data.join.song.user;
 
 import android.content.Context;
 

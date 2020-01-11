@@ -14,8 +14,7 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseDialog;
 import com.tregz.miksing.core.date.DateUtil;
 import com.tregz.miksing.core.text.TextUtil;
-import com.tregz.miksing.data.item.work.Work;
-import com.tregz.miksing.data.item.work.song.Song;
+import com.tregz.miksing.data.item.song.Song;
 import com.tregz.miksing.home.list.ListArray;
 
 import org.json.JSONArray;
@@ -84,7 +83,7 @@ class HomeDialog extends BaseDialog {
 
     private void playlist(List<Song> songs) {
         ListView view = new ListView(context);
-        view.setAdapter(new ListArray(context, new ArrayList<Work>(songs)));
+        view.setAdapter(new ListArray(context, new ArrayList<Song>(songs)));
         builder.setView(view);
         show();
     }

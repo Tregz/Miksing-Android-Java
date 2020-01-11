@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide;
 import com.tregz.miksing.R;
 import com.tregz.miksing.core.date.DateUtil;
 import com.tregz.miksing.base.list.ListSorted;
-import com.tregz.miksing.data.item.work.song.Song;
-import com.tregz.miksing.data.join.work.song.user.UserSongRelation;
+import com.tregz.miksing.data.item.song.Song;
+import com.tregz.miksing.data.join.song.user.UserSongRelation;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 

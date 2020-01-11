@@ -8,11 +8,11 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.tregz.miksing.data.item.user.UserAccess;
-import com.tregz.miksing.data.item.work.song.Song;
+import com.tregz.miksing.data.item.song.Song;
 import com.tregz.miksing.data.item.user.User;
-import com.tregz.miksing.data.item.work.song.SongAccess;
-import com.tregz.miksing.data.join.work.song.user.UserSong;
-import com.tregz.miksing.data.join.work.song.user.UserSongAccess;
+import com.tregz.miksing.data.item.song.SongAccess;
+import com.tregz.miksing.data.join.song.user.UserSong;
+import com.tregz.miksing.data.join.song.user.UserSongAccess;
 
 @Database(entities = {
         User.class,

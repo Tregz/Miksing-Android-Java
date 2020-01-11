@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.join.work.song.user;
+package com.tregz.miksing.data.join.song.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,7 +10,7 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import com.tregz.miksing.data.item.user.User;
-import com.tregz.miksing.data.item.work.song.Song;
+import com.tregz.miksing.data.item.song.Song;
 import com.tregz.miksing.data.join.Join;
 
 import static androidx.room.ForeignKey.CASCADE;
