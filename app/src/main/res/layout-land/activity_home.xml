@@ -8,12 +8,12 @@
     android:fitsSystemWindows="true"
     tools:context=".home.HomeActivity">
 
-    <com.tregz.miksing.base.play.PlayVideo
+    <com.tregz.miksing.base.play.PlayWeb
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <VideoView
+    <com.tregz.miksing.base.play.PlayVideo
         android:id="@+id/video_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -28,6 +28,7 @@ import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.play.PlayVideo;
+import com.tregz.miksing.base.play.PlayWeb;
 import com.tregz.miksing.data.item.Item;
 import com.tregz.miksing.data.item.song.Song;
 import com.tregz.miksing.home.item.ItemFragment;
@@ -39,10 +40,10 @@ import com.tregz.miksing.home.user.UserMap;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,8 +74,8 @@ public class HomeActivity extends BaseActivity implements HomeView,
     private FootNavigation bottom;
     //private ImageView imageView;
     private HomeNavigation navigation;
-    private PlayVideo webView;
-    private VideoView videoView;
+    private PlayWeb webView;
+    private PlayVideo videoView;
 
     @Override
     public void onItemClick(Song song) {
@@ -203,9 +204,21 @@ public class HomeActivity extends BaseActivity implements HomeView,
         videoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoView.setVisibility(GONE);
-                webView.load("5-q3meXJ6W4"); // testing
+                webView.load("'5-q3meXJ6W4'"); // testing
                 webView.setListing("'5-q3meXJ6W4'");
+            }
+        });
+        videoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        v.performClick();
+                        break;
+                }
+                return true;
             }
         });
 
