@@ -44,7 +44,7 @@
         <FrameLayout
             android:id="@+id/players"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="400dp"
             android:layout_gravity="bottom">
 
             <!-- TODO identify compatibily bug; crashed on API 22 -->

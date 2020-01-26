@@ -10,13 +10,10 @@ import android.webkit.WebView;
 public class PlayWeb extends WebView {
 
     //private final String TAG = PlayWeb.class.getSimpleName();
-    private final String ABSOLUTE = "position:absolute;";
-    private final String WIDTH = "width:100%;";
-    private final String HEIGHT = "height:100%;";
+    private final String ATTRIBUTES = "width:100%;height:100%;position:absolute;";
     private final String FRAMES = "iFrames";
     private final String LOADING = "loading";
-    private final String NEXT = "next";
-    private final String PLAYERS = "players";
+    private final String MIKSING = "miksing";
     private final String PREPARE = "prepare";
     private final String VIDEO_ID = "videoId";
 
@@ -41,48 +38,44 @@ public class PlayWeb extends WebView {
         getSettings().setMediaPlaybackRequiresUserGesture(false);
         getSettings().setJavaScriptEnabled(true);
 
-        final String CURRENT = "current", ENSUING = "ensuing";
+        final String CURRENT = "current", ENSUING = "ensuing", PLAYERS = "players";
         String var0 = "var " + CURRENT + "=0," + ENSUING + "=0," + FRAMES + "," + PLAYERS + ";";
         final String FADE_IN = "fadeIn", FADE_OUT = "fadeOut", LOOP = "loop", LOOP_OUT = "loopOut";
         String var1 = "var " + FADE_IN + "=0," + FADE_OUT + "=0," + LOOP + "," + LOOP_OUT + ";";
-        final String STARTED = "started";
-        String var2 = "var " + STARTED + "=true," + LOADING + "=false;";
-        final String DURATION = "duration", PRESENT = "present";
-        String var3 = "var " + DURATION + "=0," + PRESENT + "=0;";
+        String var2 = "var " + LOADING + "=false;";
+        final String COUNTDOWN = "countdown", DURATION = "duration", PRESENT = "present";
+        String var3 = "var " + COUNTDOWN + "," + DURATION + "=0," + PRESENT + "=0;";
         final String STEP_UP = "stepper", POSITION = "position";
-        String var4 = "var data;" + POSITION + "=0," + STEP_UP + "=10;";
-        String var5 = "var " + VIDEO_ID + "='';" + PREPARE + "=['5-q3meXJ6W4'];";
+        String var4 = "var data," + POSITION + "=0," + STEP_UP + "=10;";
+        String var5 = "var " + VIDEO_ID + "=''," + PREPARE + "=['5-q3meXJ6W4'];";
         String vars = var0 + var1 + var2 + var3 + var4 + var5;
 
+        final String NEXT = "next";
         String onReady = function("onPlayerReady(event)", "event.target.mute();");
         final String DELAYED = "delayed", RISE_UP = "riseUp";
         String hide = visibility(getElements("progress") + "[0]", "hidden");
         String ifProgress = ifVisible(getElements("progress") + "[0]") + "{" + hide + "}";
-        String started = STARTED + "=true;" + "setTimeout(" + DELAYED + ", 100);";
-        String playing = setInterval(200, RISE_UP, LOOP, FADE_IN) + started + ifProgress;
+        String started = LOADING + "=true;" + "setTimeout(" + DELAYED + ", 100);";
+        String playing = started + setInterval(200, RISE_UP, LOOP, FADE_IN) + ifProgress;
         String ifPlaying = ifState(playing, State.PLAYING.name());
         String onPlayerStateChange = function("onPlayerStateChange(yt)", ifPlaying);
 
-        final String MIKSING = "miksing";
-        String isStart = "if(" + STARTED + "){" + STARTED + "=false;}"; // fired once on load
-        String unStart = "else if(!" + LOADING + "){" + NEXT + "();}";
-        String ifStopped = ifState(isStart + unStart, State.UNSTARTED.name());
-        String mix = MIKSING + "();" + PLAYERS + "[" + Player.TESTING.ordinal() + "].stopVideo();";
-        String ifTested = ifState(STARTED + "=true;" + LOADING + "=true;" + mix, State.PLAYING.name());
-        String onTested = ifTested + "else " + ifStopped;
+        // unused
+        String mix = PLAYERS + "[" + Player.TESTING.ordinal() + "].pauseVideo();" + MIKSING + "();";
+        String start = LOADING + "=true;" + mix;
+        String onTested = ifState(start, State.PLAYING.name());
         String onTesterStateChange = function("onTesterStateChange(yt)", onTested);
 
-        String setIndex = "if(!" + LOADING + " && " + PREPARE + " !==undefined) {";
-        String ifLength = "if(" + PREPARE + ".length===" + POSITION + ") " + POSITION + " =0;"; //  alert('next');
-        String newIndex = setIndex + POSITION + "+=1;" + ifLength; // STARTED + "=true;" +
-        //String wait = "setTimeout(function(){" + NEXT + "();}, 5000);";
-        String setVideo = newIndex + VIDEO_ID + "=" + PREPARE + "[" + POSITION + "];";// + wait;
+        String setIndex = "if(" + PREPARE + " !==undefined) {";
+        String ifLength = "if(" + PREPARE + ".length===" + POSITION + ") " + POSITION + " =0;";
+        String newIndex = setIndex + POSITION + "+=1;" + ifLength;
+        String setVideo = newIndex + VIDEO_ID + "=" + PREPARE + "[" + POSITION + "];";
         String playNext = function(NEXT + "()", setVideo + testVideo() + "};");
         String api0 = onReady + onPlayerStateChange + onTesterStateChange + playNext;
 
         String testing = "'onReady':onPlayerReady,'onStateChange':onTesterStateChange";
         String onState = "'onStateChange':onPlayerStateChange";
-        String player0 = player(Player.TESTING.ordinal(), testing);
+        String player0 = player(Player.TESTING.ordinal(), testing); // unused.
         String player1 = player(Player.PLAYER1.ordinal(), onState);
         String player2 = player(Player.PLAYER2.ordinal(), onState);
         String players = player0 + player1 + player2 + PLAYERS + "=[player0,player1,player2];";
@@ -95,29 +88,38 @@ public class PlayWeb extends WebView {
         String insert = "script.parentNode.insertBefore(tag,script);";
         String api2 = create + element + insert;
 
-        String hiddenPlayer = PLAYERS + "[" + positionPlayerHidden() + "]";
-        String mixYouTube = function(MIKSING + "()", loadVideoById(hiddenPlayer, VIDEO_ID));
+        String getHidden = ENSUING + "=" + positionPlayerHidden() + ";";
+        String getShown = "if (" + ENSUING + "==1) {" + CURRENT + "=2 } else {" + CURRENT + "=1 };";
+        String loadVideo = loadVideoById(PLAYERS + "[" + ENSUING + "]", VIDEO_ID);
+        String notShown = "if(" + FRAMES + "[" + ENSUING + "].style.visibility==='hidden')";
+        String setSwitchTimeOut = "setTimeout(function(){" + notShown + NEXT + "();}, 2000);";
+        String mixer = getHidden + getShown + loadVideo + setSwitchTimeOut;
+        String mixYouTube = function(MIKSING + "()", mixer);
         // Continuous mix
-        final String TIMER = "timer", COUNTDOWN = "countdown";
+        final String TIMER = "timer";
+        final int SECONDS_BEFORE_END = 200;
         String visible = PLAYERS + "[" + positionPlayerVisible() + "]";
         String currentTime = PRESENT + "=" + visible + ".getCurrentTime();";
         String duration = DURATION + "=" + visible + ".getDuration();";
         String time = currentTime + duration;
-        String ending = "(" + DURATION + "-" + PRESENT + ")<10";
+        String ending = "(" + DURATION + "-" + PRESENT + ")<" + SECONDS_BEFORE_END;
         String ifEnding = time + "if(" + PRESENT + ">0 && " + DURATION + ">0 && " + ending + "){";
         String reset = LOADING + "=false;" + DURATION + "=0;" + PRESENT + "=0;";
-        String next = reset + NEXT + "();" + clearInterval(COUNTDOWN) + "}";
+
+        String next = reset + clearInterval(COUNTDOWN) + "}";
+        //String next = reset + NEXT + "();" + clearInterval(COUNTDOWN) + "}";
+
         String countdown = function(TIMER + "()", ifEnding + next);
         // Volume down fading
         final String GO_DOWN = "goDown";
-        String stopping = "var stopping = " + PLAYERS + "[" + positionPlayerHidden() + "];";
+        String stopping = "var stopping = " + PLAYERS + "[" + CURRENT + "];";
         String stop = clearInterval(LOOP_OUT) + ";" + FADE_OUT + "=0;" + "stopping.stopVideo();";
         String ifFadedDown = "if(" + FADE_OUT + "==100){" + stop + "}";
         String stepDown = ifFadedDown + "else{" + FADE_OUT + "+=" + STEP_UP + ";";
         String goDown = stepDown + "stopping.setVolume(100-" + FADE_OUT + ")}";
         String volumeDown = function(GO_DOWN + "()", stopping + goDown);
         // Volume up fading
-        String starting = "var starting = " + PLAYERS + "[" + positionPlayerVisible() + "];";
+        String starting = "var starting = " + PLAYERS + "[" + ENSUING + "];";
         String clear = "{" + clearInterval(LOOP) + ";" + FADE_IN + "=0;}";
         String ifFadedUp = "if(" + FADE_IN + "==100)" + clear;
         String stepUp = FADE_IN + "+=" + STEP_UP + ";starting.setVolume(" + FADE_IN + ");";
@@ -127,18 +129,16 @@ public class PlayWeb extends WebView {
         String goUp = starting + stepUp + ifFadedUp + setTimeOut;
         String volumeUp = function(RISE_UP + "()", goUp);
         // Delayed volume down fading
-        String getHidden = ENSUING + "=" + positionPlayerHidden() + ";";
-        String getVisible = CURRENT + "=" + positionPlayerVisible() + ";";
         String setHidden = visibility(FRAMES + "[" + CURRENT + "]", "hidden");
         String setVisible = visibility(FRAMES + "[" + ENSUING + "]", "visible");
         String setDelayedFadeOut = setInterval(400, GO_DOWN, LOOP_OUT, FADE_OUT);
-        String delayedFadeOut = getHidden + getVisible + setHidden + setVisible + setDelayedFadeOut;
+        String delayedFadeOut = setHidden + setVisible + setDelayedFadeOut;
         String delayedVolumeDown = function(DELAYED + "()", delayedFadeOut);
         String api3 = mixYouTube + countdown + volumeDown + volumeUp + delayedVolumeDown;
 
         String api = api0 + api1 + api2 + api3;
         String script = "<script type='text/javascript'>" + vars + api + "</script>";
-        String frames = div(0) + div(1) + div(2) + progress();
+        String frames = divTest() + div(1) + div(2) + progress();
         String body = "<body style='margin:0;padding:0;'>" + frames + script + "</body>";
         String html = "<html>" + body + "</html>";
         loadData(html, "text/html", null);
@@ -164,8 +164,13 @@ public class PlayWeb extends WebView {
     }
 
     private String div(int ordinal) {
-        String style = "style='" + WIDTH + HEIGHT + ABSOLUTE + "visibility:hidden;'";
-        return "<div id='player_" + ordinal + "'" + style + "></div>";
+        String style = "style='" + ATTRIBUTES + "visibility:hidden;'";
+        return "<div id='player_" + ordinal + "' " + style + "></div>";
+    }
+
+    private String divTest() {
+        String style = "style='" + ATTRIBUTES + "visibility:hidden;'";
+        return "<div id='player_" + 0 + "' " + style + "></div>";
     }
 
     private String function(String name, String command) {
@@ -176,6 +181,7 @@ public class PlayWeb extends WebView {
         return "document.getElementsByTagName('" + tag + "')";
     }
 
+    // when player is known
     private String ifState(String command, String state) {
         return "if(yt.data===YT.PlayerState." + state + "){" + command + "}";
     }
@@ -214,7 +220,7 @@ public class PlayWeb extends WebView {
     }
 
     private String progress() {
-        String style = "style='" + WIDTH + HEIGHT + ABSOLUTE + "visibility:visible;'";
+        String style = "style='" + ATTRIBUTES + "visibility:visible;'";
         return "<progress id='progress'" + style + "></progress>";
     }
 
@@ -225,8 +231,8 @@ public class PlayWeb extends WebView {
     }
 
     private String testVideo() {
-        String player = PLAYERS + "[" + Player.TESTING.ordinal() + "]";
-        return LOADING + "=false;" + loadVideoById(player, VIDEO_ID);
+        //String player = PLAYERS + "[" + Player.TESTING.ordinal() + "]";
+        return LOADING + "=false;" + MIKSING + "()"; //loadVideoById(player, VIDEO_ID);
     }
 
     private String visibility(String view, String visibility) {
@@ -239,8 +245,23 @@ public class PlayWeb extends WebView {
         PLAYER2
     }
 
+    /** https://developers.google.com/youtube/iframe_api_reference?hl=fr */
     private enum State {
-        UNSTARTED,
-        PLAYING
+        //UNSTARTED(-1),
+        //ENDED(0),
+        PLAYING //(1)
+        //PAUSED(2),
+        //BUFFERING(3),
+        //CUED(5);
+
+        /* private int value;
+
+        public int getValue() {
+            return value;
+        }
+
+        State(int value) {
+            this.value = value;
+        } */
     }
 }
