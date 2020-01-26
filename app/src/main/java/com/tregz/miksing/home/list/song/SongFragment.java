@@ -16,6 +16,7 @@ import com.tregz.miksing.data.item.song.Song;
 import com.tregz.miksing.data.item.song.SongRealtime;
 import com.tregz.miksing.data.join.song.user.UserSongRelation;
 import com.tregz.miksing.data.join.song.user.UserSongUpdate;
+import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListView;
@@ -61,6 +62,8 @@ public class SongFragment extends ListFragment implements Observer<List<UserSong
     @Override
     public void onChanged(List<UserSongRelation> relations) {
         this.relations = relations;
+        if (getActivity() instanceof HomeActivity)
+            ((HomeActivity) getActivity()).setPlaylist(relations);
         sort();
     }
 

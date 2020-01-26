@@ -31,6 +31,7 @@ import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.base.play.PlayWeb;
 import com.tregz.miksing.data.item.Item;
 import com.tregz.miksing.data.item.song.Song;
+import com.tregz.miksing.data.join.song.user.UserSongRelation;
 import com.tregz.miksing.home.item.ItemFragment;
 import com.tregz.miksing.home.item.ItemView;
 import com.tregz.miksing.home.list.song.SongFragment;
@@ -59,6 +60,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import java.util.Date;
+import java.util.List;
 
 import static android.view.View.GONE;
 import static com.tregz.miksing.home.HomeNavigation.SIGN_IN;
@@ -205,7 +207,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
             @Override
             public void onClick(View v) {
                 webView.load("'5-q3meXJ6W4'"); // testing
-                webView.setListing("'5-q3meXJ6W4'");
+                //webView.setListing("['5-q3meXJ6W4']");
             }
         });
         videoView.setOnTouchListener(new View.OnTouchListener() {
@@ -388,6 +390,19 @@ public class HomeActivity extends BaseActivity implements HomeView,
     public UserMap areaFragment() {
         FragmentManager fm = manager(R.id.nav_area_fragment);
         return fm != null ? (UserMap) fm.getPrimaryNavigationFragment() : null;
+    }
+
+    public void setPlaylist(List<UserSongRelation> relations) {
+        StringBuilder builder = new StringBuilder();
+        for (UserSongRelation relation : relations) {
+            if (builder.length() > 0) builder.append(",");
+            builder.append("'");
+            builder.append(relation.song.getId());
+            builder.append("'");
+        }
+        String playlist = "[" + builder.toString() + "]";
+        Log.d(TAG, playlist);
+        webView.setListing(playlist);
     }
 
     private void expand(FloatingActionButton fab) {

@@ -17,6 +17,8 @@ import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.item.song.Song;
 import com.tregz.miksing.data.join.song.user.UserSongRelation;
 
+import java.util.Date;
+
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 
 public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
@@ -50,7 +52,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
                 holder.tvName.setText(song.getTitle());
                 holder.tvMark.setText(song.getArtist());
                 if (song.getReleasedAt() != null) {
-                    String when = "[" + DateUtil.dayOfYear(null, song.getReleasedAt()) + "]";
+                    String dayOfYear = DateUtil.dayOfYear(null, song.getReleasedAt());
+                    String when = "[" + dayOfYear + "]";
                     holder.tvDate.setText(when);
                 }
                 if (song.getFeaturing() != null) {
