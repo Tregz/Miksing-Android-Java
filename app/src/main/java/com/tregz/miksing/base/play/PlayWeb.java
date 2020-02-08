@@ -43,19 +43,36 @@ public class PlayWeb extends WebView {
         final String FADE_IN = "fadeIn", FADE_OUT = "fadeOut", LOOP = "loop", LOOP_OUT = "loopOut";
         String var1 = "var " + FADE_IN + "=0," + FADE_OUT + "=0," + LOOP + "," + LOOP_OUT + ";";
         String var2 = "var " + LOADING + "=false;";
-        final String COUNTDOWN = "countdown", DURATION = "duration", PRESENT = "present";
-        String var3 = "var " + COUNTDOWN + "," + DURATION + "=0," + PRESENT + "=0;";
+        final String DURATION = "duration", PLAYING = "playingId", PRESENT = "present";
+        String var3 = "var " + DURATION + "=0," + PRESENT + "=0," + PLAYING + "='';";
         final String STEP_UP = "stepper", POSITION = "position";
-        String var4 = "var data," + POSITION + "=0," + STEP_UP + "=10;";
+        String var4 = "var data," + POSITION + "=0;var " + STEP_UP + "=10;";
         String var5 = "var " + VIDEO_ID + "=''," + PREPARE + "=['5-q3meXJ6W4'];";
-        String vars = var0 + var1 + var2 + var3 + var4 + var5;
 
+        // Continuous mix
+        final String TIMER = "timer";
+        final int SECONDS_BEFORE_END = 10;
+        String visible = PLAYERS + "[" + positionPlayerVisible() + "]";
+        String currentTime = PRESENT + "=" + visible + ".getCurrentTime();";
+        String duration = DURATION + "=" + visible + ".getDuration();";
+        String time = "else {" + currentTime + duration + "}}";
+        String isEnding = "(" + DURATION + "-" + PRESENT + ")<" + SECONDS_BEFORE_END;
+        String isPlaying = PLAYING + "===" + VIDEO_ID;
+        String isStarted = PRESENT + ">0 && " + DURATION + ">0";
+        String ifEnding = "if(" + isPlaying + "){if(" + isStarted + " && " + isEnding + "){";
+        String reset = DURATION + "=0;" + PRESENT + "=0," + PLAYING + "='';";
         final String NEXT = "next";
+        String next = reset + NEXT + "();}";
+        String countdown = function(TIMER + "()", ifEnding + next + time);
+        String var6 = countdown + "const countdown=setInterval(" + TIMER + ", 1000);";
+        String vars = var0 + var1 + var2 + var3 + var4 + var5 + var6;
+
         String onReady = function("onPlayerReady(event)", "event.target.mute();");
         final String DELAYED = "delayed", RISE_UP = "riseUp";
         String hide = visibility(getElements("progress") + "[0]", "hidden");
         String ifProgress = ifVisible(getElements("progress") + "[0]") + "{" + hide + "}";
-        String started = LOADING + "=true;" + "setTimeout(" + DELAYED + ", 100);";
+        String timeOut = "setTimeout(" + DELAYED + ", 100);";
+        String started = LOADING + "=true;" + timeOut + PLAYING + "=" + VIDEO_ID + ";";
         String playing = started + setInterval(200, RISE_UP, LOOP, FADE_IN) + ifProgress;
         String ifPlaying = ifState(playing, State.PLAYING.name());
         String onPlayerStateChange = function("onPlayerStateChange(yt)", ifPlaying);
@@ -95,21 +112,6 @@ public class PlayWeb extends WebView {
         String setSwitchTimeOut = "setTimeout(function(){" + notShown + NEXT + "();}, 2000);";
         String mixer = getHidden + getShown + loadVideo + setSwitchTimeOut;
         String mixYouTube = function(MIKSING + "()", mixer);
-        // Continuous mix
-        final String TIMER = "timer";
-        final int SECONDS_BEFORE_END = 200;
-        String visible = PLAYERS + "[" + positionPlayerVisible() + "]";
-        String currentTime = PRESENT + "=" + visible + ".getCurrentTime();";
-        String duration = DURATION + "=" + visible + ".getDuration();";
-        String time = currentTime + duration;
-        String ending = "(" + DURATION + "-" + PRESENT + ")<" + SECONDS_BEFORE_END;
-        String ifEnding = time + "if(" + PRESENT + ">0 && " + DURATION + ">0 && " + ending + "){";
-        String reset = LOADING + "=false;" + DURATION + "=0;" + PRESENT + "=0;";
-
-        String next = reset + clearInterval(COUNTDOWN) + "}";
-        //String next = reset + NEXT + "();" + clearInterval(COUNTDOWN) + "}";
-
-        String countdown = function(TIMER + "()", ifEnding + next);
         // Volume down fading
         final String GO_DOWN = "goDown";
         String stopping = "var stopping = " + PLAYERS + "[" + CURRENT + "];";
@@ -123,10 +125,7 @@ public class PlayWeb extends WebView {
         String clear = "{" + clearInterval(LOOP) + ";" + FADE_IN + "=0;}";
         String ifFadedUp = "if(" + FADE_IN + "==100)" + clear;
         String stepUp = FADE_IN + "+=" + STEP_UP + ";starting.setVolume(" + FADE_IN + ");";
-        String setCountdown = COUNTDOWN + "=setInterval(" + TIMER + ", 1000);";
-        // setInterval(1000, TIMER, COUNTDOWN, null); // TODO
-        String setTimeOut = "setTimeout(function(){" + setCountdown + "}, 2000);";
-        String goUp = starting + stepUp + ifFadedUp + setTimeOut;
+        String goUp = starting + stepUp + ifFadedUp;
         String volumeUp = function(RISE_UP + "()", goUp);
         // Delayed volume down fading
         String setHidden = visibility(FRAMES + "[" + CURRENT + "]", "hidden");
@@ -134,7 +133,7 @@ public class PlayWeb extends WebView {
         String setDelayedFadeOut = setInterval(400, GO_DOWN, LOOP_OUT, FADE_OUT);
         String delayedFadeOut = setHidden + setVisible + setDelayedFadeOut;
         String delayedVolumeDown = function(DELAYED + "()", delayedFadeOut);
-        String api3 = mixYouTube + countdown + volumeDown + volumeUp + delayedVolumeDown;
+        String api3 = mixYouTube + volumeDown + volumeUp + delayedVolumeDown;
 
         String api = api0 + api1 + api2 + api3;
         String script = "<script type='text/javascript'>" + vars + api + "</script>";
@@ -150,8 +149,6 @@ public class PlayWeb extends WebView {
 
     public void mix(String id) {
         String setId = VIDEO_ID + "='" + id + "';";
-        //String wait = "setTimeout(function(){" + NEXT + "();}, 5000);";
-        //loadUrl("javascript:(function(){" + setId + wait + testVideo() + "})()");
         loadUrl("javascript:(function(){" + setId + testVideo() + "})()");
     }
 
@@ -160,7 +157,7 @@ public class PlayWeb extends WebView {
     }
 
     private String clearInterval(String interval) {
-        return "if(" + interval + "!=='null'){clearInterval(" + interval + ");}";
+        return "if(" + interval + "){clearInterval(" + interval + ");}";
     }
 
     private String div(int ordinal) {
@@ -192,9 +189,8 @@ public class PlayWeb extends WebView {
     }
 
     private String ifVisible(String view) {
-        String notNull = "'null'!=" + view;
         String visible = view + ".style.visibility==='visible'";
-        return "if(" + notNull + " && " + visible + ")";
+        return "if(" + view + " && " + visible + ")";
     }
 
     private String loadVideoById(String player, String videoId) {
@@ -231,8 +227,7 @@ public class PlayWeb extends WebView {
     }
 
     private String testVideo() {
-        //String player = PLAYERS + "[" + Player.TESTING.ordinal() + "]";
-        return LOADING + "=false;" + MIKSING + "()"; //loadVideoById(player, VIDEO_ID);
+        return LOADING + "=false;" + MIKSING + "()";
     }
 
     private String visibility(String view, String visibility) {
