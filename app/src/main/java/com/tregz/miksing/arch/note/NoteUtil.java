@@ -4,19 +4,24 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import android.content.Context;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.tregz.miksing.data.item.song.SongRealtime;
 
 public class NoteUtil implements OnCompleteListener<InstanceIdResult>, OnFailureListener {
     private final static String TAG = NoteUtil.class.getSimpleName();
 
-    public void fcmTokenLog() {
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(this)
-                .addOnFailureListener(this);
+    private Context context;
+
+    public NoteUtil(Context context) {
+        this.context = context;
+        Task<InstanceIdResult> task = FirebaseInstanceId.getInstance().getInstanceId();
+        task.addOnCompleteListener(this);
+        task.addOnFailureListener(this);
     }
 
     @Override
@@ -32,6 +37,7 @@ public class NoteUtil implements OnCompleteListener<InstanceIdResult>, OnFailure
 
             // Log token
             Log.d(TAG, token);
+            new SongRealtime(context);
         }
     }
 

@@ -46,7 +46,7 @@ public class PlayWeb extends WebView {
         final String DURATION = "duration", PLAYING = "playingId", PRESENT = "present";
         String var3 = "var " + DURATION + "=0," + PRESENT + "=0," + PLAYING + "='';";
         final String STEP_UP = "stepper", POSITION = "position";
-        String var4 = "var data," + POSITION + "=0;var " + STEP_UP + "=10;";
+        String var4 = "var data," + POSITION + "=0;const " + STEP_UP + "=10;";
         String var5 = "var " + VIDEO_ID + "=''," + PREPARE + "=['5-q3meXJ6W4'];";
 
         // Continuous mix

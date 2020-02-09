@@ -98,7 +98,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
         // to delete all song data from sql table: new SongWipe(getContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        new NoteUtil().fcmTokenLog();
+        new NoteUtil(this);
         if (portrait()) {
             // Top menu
             Toolbar toolbar = findViewById(R.id.toolbar);
@@ -260,10 +260,12 @@ public class HomeActivity extends BaseActivity implements HomeView,
              if (resultCode == Activity.RESULT_OK) {
                  FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                  if (user != null) {
+                     Log.d(TAG, "set UID " + user.getUid());
+                     PrefShared.getInstance(this).setUid(user.getUid());
                      PrefShared.getInstance(this).setUsername(user.getDisplayName());
                      PrefShared.getInstance(this).setEmail(user.getEmail());
                      // Retrieve fcm token for testing (result printed to Logcat)
-                     new NoteUtil().fcmTokenLog();
+                     new NoteUtil(this);
                  }
                  navigation.update();
              } else {

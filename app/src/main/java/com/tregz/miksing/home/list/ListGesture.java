@@ -31,7 +31,7 @@ public class ListGesture extends ItemTouchHelper.Callback {
         if (ListSorted.customOrder()) {
             int vertical = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
             int horizontal = ItemTouchHelper.START | ItemTouchHelper.END;
-            return makeMovementFlags(vertical | horizontal, 0);
+            return makeMovementFlags(vertical | horizontal, horizontal);
         } else return 0;
     }
 
@@ -47,6 +47,6 @@ public class ListGesture extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder holder, int direction) {
-        // do nothing
+        view.onItemSwipe(holder.getAdapterPosition(), direction);
     }
 }

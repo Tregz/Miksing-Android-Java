@@ -10,10 +10,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
+import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.item.song.Song;
 import com.tregz.miksing.data.item.song.SongRealtime;
+import com.tregz.miksing.data.join.song.user.UserSong;
+import com.tregz.miksing.data.join.song.user.UserSongAccess;
 import com.tregz.miksing.data.join.song.user.UserSongRelation;
 import com.tregz.miksing.data.join.song.user.UserSongUpdate;
 import com.tregz.miksing.home.HomeActivity;
@@ -28,10 +31,20 @@ import java.util.List;
 public class SongFragment extends ListFragment implements Observer<List<UserSongRelation>>,
         ListView {
 
+    //private final String TAG = SongFragment.class.getSimpleName();
+    private final static String POSITION = "position";
     private LiveData<List<UserSongRelation>> songLiveData;
     private List<UserSongRelation> relations;
     private int destination = 0; // last gesture's target position
     private OnItem listener;
+
+    public static SongFragment newInstance(int position) {
+        Bundle args = new Bundle();
+        args.putInt(POSITION, position);
+        SongFragment fragment = new SongFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -47,7 +60,6 @@ public class SongFragment extends ListFragment implements Observer<List<UserSong
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new SongRealtime(getContext());
         observe();
     }
 
@@ -61,10 +73,12 @@ public class SongFragment extends ListFragment implements Observer<List<UserSong
 
     @Override
     public void onChanged(List<UserSongRelation> relations) {
+        if (this.relations == null || this.relations.size() != relations.size()) {
+            if (getActivity() instanceof HomeActivity)
+                ((HomeActivity) getActivity()).setPlaylist(relations);
+            sort();
+        }
         this.relations = relations;
-        if (getActivity() instanceof HomeActivity)
-            ((HomeActivity) getActivity()).setPlaylist(relations);
-        sort();
     }
 
     @Override
@@ -78,11 +92,16 @@ public class SongFragment extends ListFragment implements Observer<List<UserSong
         this.destination = destination;
         int start = from < destination ? from : destination;
         int end = from < destination ? destination : from;
-        for (int i = start; i < end; i++) {
-            Collections.swap(relations, i, i + 1);
-        }
+        for (int i = start; i < end; i++) Collections.swap(relations, i, i + 1);
         // Update sorted list to animate gesture event
         adapter.notifyItemMoved(from, destination);
+    }
+
+    @Override
+    public void onItemSwipe(int position, int direction) {
+        final UserSong join = relations.get(position).join;
+        join.setUserId(PrefShared.getInstance(getContext()).getUid());
+        new UserSongUpdate(getContext(), join);
     }
 
     @Override
@@ -100,16 +119,6 @@ public class SongFragment extends ListFragment implements Observer<List<UserSong
     }
 
     @Override
-    public void sort() {
-        if (relations != null && adapter != null && recycler != null) {
-            destination = 0;
-            if (ListSorted.customOrder()) ordered();
-            adapter.items.replaceAll(relations);
-            recycler.smoothScrollToPosition(0);
-        }
-    }
-
-    @Override
     public void search(String query) {
         if (query.isEmpty()) adapter.items.replaceAll(relations);
         else {
@@ -121,11 +130,30 @@ public class SongFragment extends ListFragment implements Observer<List<UserSong
         }
     }
 
+    @Override
+    public void sort() {
+        if (relations != null && adapter != null && recycler != null) {
+            destination = 0;
+            if (ListSorted.customOrder()) ordered();
+            adapter.items.replaceAll(relations);
+            recycler.smoothScrollToPosition(0);
+        }
+    }
+
     private void observe() {
-        if (songLiveData == null)
-            songLiveData = DataReference.getInstance(getContext()).accessUserSong().all();
-        if (songLiveData.hasObservers()) songLiveData.removeObserver(this);
-        songLiveData.observe(this, this);
+        if (getArguments() != null) {
+            UserSongAccess access = DataReference.getInstance(getContext()).accessUserSong();
+            if (songLiveData == null) switch (getArguments().getInt(POSITION, 0)) {
+                case 0:
+                    songLiveData = access.all();
+                    break;
+                case 1:
+                    songLiveData = access.mine(PrefShared.getInstance(getContext()).getUid());
+                    break;
+            }
+            if (songLiveData.hasObservers()) songLiveData.removeObserver(this);
+            songLiveData.observe(this, this);
+        }
     }
 
     // Allow an interaction to be communicated to the activity

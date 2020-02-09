@@ -17,8 +17,6 @@ import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.item.song.Song;
 import com.tregz.miksing.data.join.song.user.UserSongRelation;
 
-import java.util.Date;
-
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 
 public class SongAdapter extends RecyclerView.Adapter<SongHolder> {

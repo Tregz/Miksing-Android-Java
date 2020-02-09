@@ -3,6 +3,8 @@ package com.tregz.miksing.arch.pref;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import static com.tregz.miksing.data.DataNotation.PK;
+
 public class PrefShared {
     //private final String TAG = PrefShared.class.getSimpleName();
     private final String USERNAME = "username";
@@ -28,6 +30,14 @@ public class PrefShared {
 
     public void setEmail(String email) {
         sp.edit().putString(EMAIL, email).apply();
+    }
+
+    public String getUid() {
+        return sp.getString(PK, null);
+    }
+
+    public void setUid(String id) {
+        sp.edit().putString(PK, id).apply();
     }
 
     public String getUsername() {

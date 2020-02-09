@@ -10,6 +10,8 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
+import com.tregz.miksing.data.item.song.Song;
+
 import java.util.List;
 
 import io.reactivex.Single;
@@ -20,22 +22,24 @@ public interface UserSongAccess {
     //String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
 
-    //@Query(SELECT_FROM_TABLE)
     @Transaction
-    @Query(SELECT_FROM_TABLE) //" INNER JOIN " + Song.TABLE + " ON song.id = user_song.song ORDER BY user_song.spot")
+    @Query(SELECT_FROM_TABLE)
     LiveData<List<UserSongRelation>> all();
+
+    @Transaction
+    @Query(SELECT_FROM_TABLE + " WHERE user = :userId") // ORDER BY user_song.spot
+    LiveData<List<UserSongRelation>> mine(String userId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<List<Long>> insert(UserSong...joins);
 
-    @Update
+    @Query(SELECT_FROM_TABLE + " WHERE song = :key")
+    LiveData<UserSongRelation> query(String key);
+
+    @Update //(onConflict = REPLACE)
     Single<Integer> update(UserSong...joins);
 
     @RawQuery(observedEntities = UserSong.class)
     LiveData<UserSong> item(SupportSQLiteQuery query);
-
-    /* error? varargs mismatch; boolean cannot be converted to String
-    @RawQuery(observedEntities = UserWork.class)
-    Observable<List<UserWork>> get(SupportSQLiteQuery query); */
 
 }
