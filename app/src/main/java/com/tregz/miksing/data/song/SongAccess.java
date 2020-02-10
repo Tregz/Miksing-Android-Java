@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item.song;
+package com.tregz.miksing.data.song;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

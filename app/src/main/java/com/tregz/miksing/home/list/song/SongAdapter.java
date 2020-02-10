@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide;
 import com.tregz.miksing.R;
 import com.tregz.miksing.core.date.DateUtil;
 import com.tregz.miksing.base.list.ListSorted;
-import com.tregz.miksing.data.item.song.Song;
-import com.tregz.miksing.data.join.song.user.UserSongRelation;
+import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.user.list.song.ListSongRelation;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 
@@ -23,8 +23,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
     public final String TAG = SongAdapter.class.getSimpleName();
 
     private SongFragment.OnItem listener;
-    private SortedListAdapterCallback<UserSongRelation> callback = new ListSorted<>(this);
-    SortedList<UserSongRelation> items = new SortedList<>(UserSongRelation.class, callback);
+    private SortedListAdapterCallback<ListSongRelation> callback = new ListSorted<>(this);
+    SortedList<ListSongRelation> items = new SortedList<>(ListSongRelation.class, callback);
 
     SongAdapter(SongFragment.OnItem listener) {
         this.listener = listener;
@@ -40,7 +40,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
     @Override
     public void onBindViewHolder(@NonNull SongHolder holder, final int position) {
         if (items.get(position) != null) {
-            final UserSongRelation relation = items.get(position);
+            final ListSongRelation relation = items.get(position);
             final Song song = relation.song;
             if (song != null) {
                 // Download thumbnail with Glide dependency
@@ -65,13 +65,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onItemClick(song);
+                    //listener.onItemClick(song);
                 }
             });
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    listener.onItemLongClick(song);
+                    //listener.onItemLongClick(song);
                     return false;
                 }
             });

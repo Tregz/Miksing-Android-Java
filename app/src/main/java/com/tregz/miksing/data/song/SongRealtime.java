@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item.song;
+package com.tregz.miksing.data.song;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +34,7 @@ public class SongRealtime extends BaseRealtime {
             song.setTitle(getString(snapshot, DataNotation.NS));
             song.setWhat(getInt(snapshot, DataNotation.WI));
             Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
-            new SongInsert(context, song);
+            new SongInsert(context, "All", song);
         }
     }
 

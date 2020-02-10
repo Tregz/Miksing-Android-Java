@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item.song;
+package com.tregz.miksing.data.song;
 
 import android.content.Context;
 import android.util.Log;

@@ -14,7 +14,7 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseDialog;
 import com.tregz.miksing.core.date.DateUtil;
 import com.tregz.miksing.core.text.TextUtil;
-import com.tregz.miksing.data.item.song.Song;
+import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.home.list.ListArray;
 
 import org.json.JSONArray;

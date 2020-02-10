@@ -29,9 +29,9 @@ import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.play.PlayVideo;
 import com.tregz.miksing.base.play.PlayWeb;
-import com.tregz.miksing.data.item.Item;
-import com.tregz.miksing.data.item.song.Song;
-import com.tregz.miksing.data.join.song.user.UserSongRelation;
+import com.tregz.miksing.data.DataItem;
+import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.user.list.song.ListSongRelation;
 import com.tregz.miksing.home.item.ItemFragment;
 import com.tregz.miksing.home.item.ItemView;
 import com.tregz.miksing.home.list.song.SongFragment;
@@ -89,7 +89,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     @Override
     public void onItemLongClick(Song song) {
         String id = song.getId();
-        controller().navigate(HomeFragmentDirections.actionHomeFragmentToWorkFragment(id));
+        controller().navigate(HomeFragmentDirections.actionHomeFragmentToItemFragment(id));
         bottom.hide();
     }
 
@@ -144,7 +144,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
                 @Override
                 public void onClick(View v) {
                     if (!back()) {
-                        controller().navigate(R.id.action_homeFragment_to_workFragment);
+                        //controller().navigate(R.id.action_homeFragment_to_workFragment);
                         expand((FloatingActionButton)v);
                         bottom.hide();
                     }
@@ -334,7 +334,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
-    public void onFillItemDetails(Item item) {
+    public void onFillItemDetails(DataItem item) {
         Fragment primary = primary();
         if (primary instanceof ItemFragment) ((ItemFragment) primary).fill(item);
     }
@@ -343,6 +343,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     public void onSaveItem() {
         Fragment primary = primary();
         if (primary instanceof ItemFragment) ((ItemFragment) primary).save();
+        else if (primary instanceof HomeFragment) ((HomeFragment) primary).save();
     }
 
     @Override
@@ -394,9 +395,9 @@ public class HomeActivity extends BaseActivity implements HomeView,
         return fm != null ? (UserMap) fm.getPrimaryNavigationFragment() : null;
     }
 
-    public void setPlaylist(List<UserSongRelation> relations) {
+    public void setPlaylist(List<ListSongRelation> relations) {
         StringBuilder builder = new StringBuilder();
-        for (UserSongRelation relation : relations) {
+        for (ListSongRelation relation : relations) {
             if (builder.length() > 0) builder.append(",");
             builder.append("'");
             builder.append(relation.song.getId());
@@ -441,6 +442,6 @@ public class HomeActivity extends BaseActivity implements HomeView,
 
     static {
         TAG = HomeActivity.class.getSimpleName();
-        PRIMARY = R.id.homeFragment;
+        PRIMARY = R.id.home_fragment;
     }
 }

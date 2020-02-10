@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item;
+package com.tregz.miksing.data;
 
 import android.os.Parcel;
 
@@ -10,11 +10,11 @@ import com.tregz.miksing.data.DataNotation;
 
 import java.util.Date;
 
-public abstract class Item extends Data {
+public abstract class DataItem extends Data {
 
-    protected Item() {}
+    protected DataItem() {}
 
-    protected Item(@NonNull String id, @NonNull Date createdAt) {
+    protected DataItem(@NonNull String id, @NonNull Date createdAt) {
         super(id, createdAt);
     }
 

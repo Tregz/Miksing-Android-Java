@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.join;
+package com.tregz.miksing.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,9 +7,9 @@ import androidx.room.ColumnInfo;
 
 import com.tregz.miksing.data.DataNotation;
 
-public abstract class Join implements Parcelable {
+public abstract class DataJoin extends Data {
 
-    protected Join() {}
+    protected DataJoin() {}
 
     public int getPosition() {
         return position;

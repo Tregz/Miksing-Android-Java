@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 
 import android.content.DialogInterface;
@@ -22,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.tregz.miksing.R;
+import com.tregz.miksing.base.icon.IconUtil;
 
 public abstract class BaseDialog implements DialogInterface.OnShowListener {
 
@@ -66,12 +68,7 @@ public abstract class BaseDialog implements DialogInterface.OnShowListener {
 
     private Drawable icon(int resource, int tint) {
         Drawable drawable = ContextCompat.getDrawable(context, resource);
-        if (drawable != null) {
-            int color = ContextCompat.getColor(context, tint);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
-                drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP); // no inspection
-            else drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
-        }
+        if (drawable != null) IconUtil.setTint(context, drawable, tint);
         return drawable;
     }
 

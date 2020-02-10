@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item.song;
+package com.tregz.miksing.data.user.list.song;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,12 +8,12 @@ import com.tregz.miksing.data.DataReference;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
-public abstract class SongSingle<T> implements SingleObserver<T> {
-    protected String TAG = SongSingle.class.getSimpleName();
+public abstract class ListSongSingle<T> implements SingleObserver<T> {
+    protected String TAG = ListSongSingle.class.getSimpleName();
 
     private Context context;
 
-    SongSingle(Context context) {
+    ListSongSingle(Context context) {
         this.context = context;
     }
 
@@ -32,7 +32,7 @@ public abstract class SongSingle<T> implements SingleObserver<T> {
         e.printStackTrace();
     }
 
-    SongAccess access() {
-        return DataReference.getInstance(context).accessSong();
+    ListSongAccess access() {
+        return DataReference.getInstance(context).accessUserSong();
     }
 }

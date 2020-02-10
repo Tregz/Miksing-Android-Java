@@ -49,6 +49,8 @@ public abstract class ListFragment extends BaseFragment {
         sort();
     }
 
+    abstract public void save();
+
     abstract public void sort();
 
     abstract public void search(String query);

@@ -1,19 +1,16 @@
-package com.tregz.miksing.data.item.user;
+package com.tregz.miksing.data.user;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.RawQuery;
-import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.tregz.miksing.data.DataAccess;
 
 import java.util.Date;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 @Dao

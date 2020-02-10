@@ -35,17 +35,26 @@ public class HomeFragment extends BaseFragment {
         pager.setAdapter(new HomePager(getChildFragmentManager()));
     }
 
+    void save() {
+        ListFragment page = page();
+        if (page != null) page.save();
+    }
+
     void search(String query) {
-        if (getActivity() != null && pager.getAdapter() != null) {
-            Object fragment = pager.getAdapter().instantiateItem(pager, pager.getCurrentItem());
-            if (fragment instanceof ListFragment) ((ListFragment) fragment).search(query);
-        }
+        ListFragment page = page();
+        if (page != null) page.search(query);
     }
 
     void sort() {
-        if (getActivity() != null && pager.getAdapter() != null) {
+        ListFragment page = page();
+        if (page != null) page.sort();
+    }
+
+    private ListFragment page() {
+        if (pager.getAdapter() != null) {
             Object fragment = pager.getAdapter().instantiateItem(pager, pager.getCurrentItem());
-            if (fragment instanceof ListFragment) ((ListFragment) fragment).sort();
+            if (fragment instanceof ListFragment) return ((ListFragment) fragment);
         }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.join.song.user;
+package com.tregz.miksing.data.user.list.song;
 
 import android.content.Context;
 
@@ -6,9 +6,9 @@ import java.util.List;
 
 import io.reactivex.schedulers.Schedulers;
 
-public class UserSongInsert extends UserSongSingle<List<Long>> {
+public class ListSongInsert extends ListSongSingle<List<Long>> {
 
-    public UserSongInsert(Context context, final UserSong...joins) {
+    public ListSongInsert(Context context, final ListSong...joins) {
         super(context);
         access().insert(joins).subscribeOn(Schedulers.io()).subscribe(this);
     }

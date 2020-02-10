@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item.user;
+package com.tregz.miksing.data.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,13 +8,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
 import com.tregz.miksing.data.DataNotation;
-import com.tregz.miksing.data.item.Item;
+import com.tregz.miksing.data.DataItem;
 
 import java.util.Date;
 
 
 @Entity(tableName = User.TABLE)
-public class User extends Item {
+public class User extends DataItem {
 
     public final static String TABLE = "user";
 

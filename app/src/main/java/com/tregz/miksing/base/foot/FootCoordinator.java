@@ -48,7 +48,8 @@ public class FootCoordinator <V extends View> extends CoordinatorLayout.Behavior
             int type
     ) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
-        child.setTranslationY(max((-10f), min(child.getHeight(), child.getTranslationY() - dy)));
+        float max = max((0f), min(child.getHeight() + 50f, child.getTranslationY() - dy));
+        child.setTranslationY(max);
     }
 
     @Override
@@ -64,7 +65,6 @@ public class FootCoordinator <V extends View> extends CoordinatorLayout.Behavior
             @NonNull int[] consumed
     ) {
         super.onNestedScroll(layout, child, target, dx0, dy0, dx1, dy1, type, consumed);
-        Log.d(TAG, "Child? " + child.getClass().getSimpleName());
         if (child instanceof FloatingActionButton) {
             if (child.getTranslationY() > 10) child.setVisibility(View.GONE);
             else child.setVisibility(View.VISIBLE);

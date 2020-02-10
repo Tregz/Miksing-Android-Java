@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.item.song;
+package com.tregz.miksing.data.song;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,12 +8,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
 import com.tregz.miksing.data.DataNotation;
-import com.tregz.miksing.data.item.Item;
+import com.tregz.miksing.data.DataItem;
 
 import java.util.Date;
 
 @Entity(tableName = Song.TABLE)
-public class Song extends Item {
+public class Song extends DataItem {
 
     public static final String TABLE = "song";
 

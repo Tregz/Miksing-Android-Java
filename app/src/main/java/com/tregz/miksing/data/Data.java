@@ -11,10 +11,9 @@ import java.util.Date;
 
 public abstract class Data implements Parcelable {
 
-    protected Data() {
-    }
+    Data() {}
 
-    protected Data(@NonNull String id, @NonNull Date createdAt) {
+    Data(@NonNull String id, @NonNull Date createdAt) {
         this.id = id;
         this.createdAt = createdAt;
     }

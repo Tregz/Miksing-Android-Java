@@ -31,7 +31,8 @@ public class ListGesture extends ItemTouchHelper.Callback {
         if (ListSorted.customOrder()) {
             int vertical = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
             int horizontal = ItemTouchHelper.START | ItemTouchHelper.END;
-            return makeMovementFlags(vertical | horizontal, horizontal);
+            //return makeMovementFlags(vertical | horizontal, horizontal);
+            return makeMovementFlags(vertical, horizontal);
         } else return 0;
     }
 

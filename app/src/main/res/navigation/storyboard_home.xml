@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/storyboard"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/home_fragment">
 
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/home_fragment"
         android:name="com.tregz.miksing.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_workFragment"
-            app:destination="@id/workFragment" >
+            android:id="@+id/action_home_fragment_to_item_fragment"
+            app:destination="@id/item_fragment" >
             <argument
                 android:name="id"
                 app:argType="string" />
@@ -20,9 +20,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/workFragment"
+        android:id="@+id/item_fragment"
         android:name="com.tregz.miksing.home.item.ItemFragment"
-        android:label="WorkFragment"
+        android:label="ItemFragment"
         tools:layout="@layout/fragment_song" />
 
 </navigation>
