@@ -12,7 +12,7 @@ import com.google.android.material.behavior.HideBottomViewOnScrollBehavior;
 import com.google.android.material.snackbar.Snackbar;
 
 public class FootBehavior<V extends View> extends HideBottomViewOnScrollBehavior<V> {
-    private final String TAG = FootBehavior.class.getSimpleName();
+    //private final String TAG = FootBehavior.class.getSimpleName();
 
     public FootBehavior() {
     }

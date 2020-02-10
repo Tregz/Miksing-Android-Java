@@ -49,7 +49,8 @@
         android:id="@+id/dial"
         style="@style/HorizontalSpeedDial"
         android:visibility="invisible"
-        app:layout_anchor="@id/fab">
+        app:layout_anchor="@id/fab"
+        app:layout_behavior=".base.foot.FootDialer">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/clear_all"
@@ -95,18 +96,6 @@
         app:layout_anchor="@id/nav_host_guideline"
         app:layout_anchorGravity="bottom|center"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/primaryAccent"
-        app:layout_anchor="@id/nav_host_guideline"
-        app:layout_anchorGravity="bottom|end"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_add"
-        app:tint="@color/primaryTextDark" />
-
     <com.tregz.miksing.base.foot.FootNavigation
         android:id="@+id/bottom"
         android:layout_width="match_parent"
@@ -119,5 +108,18 @@
         app:layout_anchor="@+id/nav_host_fragment"
         app:layout_anchorGravity="bottom"
         app:layout_behavior=".base.foot.FootBehavior"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/primaryAccent"
+        app:layout_anchor="@id/bottom"
+        app:layout_anchorGravity="bottom|end"
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@color/primaryTextDark"
+        app:layout_behavior=".base.foot.FootCoordinator" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
