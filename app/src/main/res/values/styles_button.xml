@@ -8,6 +8,7 @@
         <item name="android:visibility">invisible</item>
         <item name="layout_anchorGravity">center_vertical</item>
         <item name="layout_behavior">@string/fab_transformation_scrim_behavior</item>
+        <!---->
     </style>
 
     <style name="MiniButton">

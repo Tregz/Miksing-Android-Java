@@ -11,13 +11,13 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior;
 import com.google.android.material.snackbar.Snackbar;
 
-public class FootBehavior<V extends View> extends HideBottomViewOnScrollBehavior<V> {
-    //private final String TAG = FootBehavior.class.getSimpleName();
+public class FootScroll<V extends View> extends HideBottomViewOnScrollBehavior<V> {
+    //private final String TAG = FootScroll.class.getSimpleName();
 
-    public FootBehavior() {
+    public FootScroll() {
     }
 
-    public FootBehavior(Context context, AttributeSet attrs) {
+    public FootScroll(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

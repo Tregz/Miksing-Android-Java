@@ -143,10 +143,16 @@ public class HomeActivity extends BaseActivity implements HomeView,
             buttons[Button.FAB.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!back()) {
-                        //controller().navigate(R.id.action_homeFragment_to_workFragment);
-                        expand((FloatingActionButton)v);
-                        bottom.hide();
+                    //if (!back()) {
+                    if (v instanceof FloatingActionButton) {
+                        if (!((FloatingActionButton) v).isExpanded()) {
+                            //controller().navigate(R.id.action_homeFragment_to_workFragment);
+                            expand((FloatingActionButton)v);
+                            bottom.hide();
+                        } else {
+                            expand((FloatingActionButton)v);
+                            bottom.show(false);
+                        }
                     }
                 }
             });
@@ -291,7 +297,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     public void onBackStackChanged() {
         if (portrait() && root()) {
             expand((FloatingActionButton)findViewById(R.id.fab));
-            ((FootNavigation)findViewById(R.id.bottom)).show();
+            ((FootNavigation)findViewById(R.id.bottom)).show(true);
         }
     }
 
@@ -301,7 +307,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
         if (portrait()) {
             if (verticalOffset < -300) { if (!collapsing) collapsing = true; }
             else if (collapsing) collapsing = false;
-            if (collapsing) {
+            /* if (collapsing) {
                 if (buttons[0].getVisibility() == View.VISIBLE) {
                     //imageView.setVisibility(View.INVISIBLE);
                     if (buttons[0].isExpanded())
@@ -313,7 +319,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
                 if (buttons[0].isExpanded())
                     for (FloatingActionButton fab : buttons) fab.show();
                 else buttons[0].show();
-            }
+            } */
         }
     }
 

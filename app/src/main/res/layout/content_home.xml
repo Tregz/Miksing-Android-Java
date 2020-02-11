@@ -49,8 +49,8 @@
         android:id="@+id/dial"
         style="@style/HorizontalSpeedDial"
         android:visibility="invisible"
-        app:layout_anchor="@id/fab"
-        app:layout_behavior=".base.foot.FootDialer">
+        app:layout_anchor="@id/fab">
+        <!-- -->
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/clear_all"
@@ -105,21 +105,30 @@
         app:itemTextColor="@color/primaryAccentLight"
         app:menu="@menu/bottom_home"
         app:labelVisibilityMode="selected"
-        app:layout_anchor="@+id/nav_host_fragment"
+        app:layout_anchor="@+id/nested"
         app:layout_anchorGravity="bottom"
-        app:layout_behavior=".base.foot.FootBehavior"/>
+        app:layout_behavior=".base.foot.FootScroll"/>
+
+    <FrameLayout
+        android:id="@+id/bottom_guideline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/normal_toolbar_height" >
+
+    </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:visibility="invisible"
         app:backgroundTint="@color/primaryAccent"
-        app:layout_anchor="@id/bottom"
+        app:layout_anchor="@id/nested"
         app:layout_anchorGravity="bottom|end"
         app:maxImageSize="40dp"
         app:srcCompat="@drawable/ic_add"
         app:tint="@color/primaryTextDark"
-        app:layout_behavior=".base.foot.FootCoordinator" />
+        app:layout_behavior=".base.foot.FootFloating"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

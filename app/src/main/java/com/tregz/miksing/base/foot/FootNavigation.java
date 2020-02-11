@@ -21,9 +21,9 @@ public class FootNavigation extends BottomNavigationView {
         setVisibility(View.GONE);
     }
 
-    public void show() {
+    public void show(boolean slide) {
         shown = true;
         setVisibility(View.VISIBLE);
-        setTranslationY(0);
+        if (slide) setTranslationY(0);
     }
 }
