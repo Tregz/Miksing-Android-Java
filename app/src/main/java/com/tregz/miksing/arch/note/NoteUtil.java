@@ -10,7 +10,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.data.song.SongRealtime;
+import com.tregz.miksing.data.user.list.UserListRealtime;
 
 public class NoteUtil implements OnCompleteListener<InstanceIdResult>, OnFailureListener {
     private final static String TAG = NoteUtil.class.getSimpleName();
@@ -38,6 +40,7 @@ public class NoteUtil implements OnCompleteListener<InstanceIdResult>, OnFailure
             // Log token
             Log.d(TAG, token);
             new SongRealtime(context);
+            new UserListRealtime(context, PrefShared.getInstance(context).getUid());
         }
     }
 

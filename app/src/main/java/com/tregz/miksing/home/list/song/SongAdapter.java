@@ -65,13 +65,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //listener.onItemClick(song);
+                    listener.onItemClick(song);
                 }
             });
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    //listener.onItemLongClick(song);
+                    listener.onItemLongClick(song);
                     return false;
                 }
             });

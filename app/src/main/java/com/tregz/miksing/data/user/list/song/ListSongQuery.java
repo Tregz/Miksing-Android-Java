@@ -15,7 +15,7 @@ public class ListSongQuery /* extends ListSongObservable<ListSong>*/ {
 
     public LiveData<ListSong> query(Context context, String id) {
         String request = "SELECT * FROM " + ListSong.TABLE + " WHERE id = '" + id + "'";
-        ListSongAccess access = DataReference.getInstance(context).accessUserSong();
+        ListSongAccess access = DataReference.getInstance(context).accessListSong();
         return access.item(new SimpleSQLiteQuery(request));
     }
 

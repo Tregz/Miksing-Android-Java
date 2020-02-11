@@ -11,14 +11,17 @@ import com.tregz.miksing.data.user.UserAccess;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.user.User;
 import com.tregz.miksing.data.song.SongAccess;
+import com.tregz.miksing.data.user.list.UserList;
+import com.tregz.miksing.data.user.list.UserListAccess;
 import com.tregz.miksing.data.user.list.song.ListSong;
 import com.tregz.miksing.data.user.list.song.ListSongAccess;
 
 @Database(entities = {
         User.class,
         Song.class,
-        ListSong.class
-}, version = 15, exportSchema = false)
+        ListSong.class,
+        UserList.class
+}, version = 16, exportSchema = false)
 @TypeConverters({DataConverter.class})
 public abstract class DataReference extends RoomDatabase {
 
@@ -41,6 +44,8 @@ public abstract class DataReference extends RoomDatabase {
 
     public abstract UserAccess accessUser();
 
-    public abstract ListSongAccess accessUserSong();
+    public abstract ListSongAccess accessListSong();
+
+    public abstract UserListAccess accessUserList();
 
 }

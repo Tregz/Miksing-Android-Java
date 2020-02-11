@@ -37,7 +37,7 @@ public class HomeFragment extends BaseFragment {
 
     void save() {
         ListFragment page = page();
-        if (page != null) page.save();
+        if (page != null) page.save("Test");
     }
 
     void search(String query) {

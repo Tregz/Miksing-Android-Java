@@ -15,6 +15,7 @@ import com.tregz.miksing.data.user.User;
 public class UserList extends DataJoin {
 
     public UserList(@NonNull String userId, @NonNull String name) {
+        setId(userId + "-" + name);
         this.userId = userId;
         this.name = name;
     }

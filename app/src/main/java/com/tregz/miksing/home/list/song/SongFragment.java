@@ -10,6 +10,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
@@ -19,6 +21,7 @@ import com.tregz.miksing.data.user.list.song.ListSongAccess;
 import com.tregz.miksing.data.user.list.song.ListSongRelation;
 import com.tregz.miksing.data.user.list.song.ListSongUpdate;
 import com.tregz.miksing.home.HomeActivity;
+import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListView;
@@ -35,7 +38,8 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
     private LiveData<List<ListSongRelation>> songLiveData;
     private List<ListSongRelation> relations;
     private int destination = 0; // last gesture's target position
-    private OnItem listener;
+    private OnItem onItem;
+    private HomeView home;
 
     public static SongFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -49,7 +53,8 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            listener = (OnItem) context;
+            onItem = (OnItem) context;
+            home = (HomeView) context;
         } catch (ClassCastException e) {
             String name = OnItem.class.getSimpleName();
             throw new ClassCastException(context.toString() + " must implement " + name);
@@ -65,7 +70,7 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        adapter = new SongAdapter(listener);
+        adapter = new SongAdapter(onItem);
         recycler.setAdapter(adapter);
         new ItemTouchHelper(new ListGesture(this)).attachToRecyclerView(recycler);
     }
@@ -73,11 +78,11 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
     @Override
     public void onChanged(List<ListSongRelation> relations) {
         if (this.relations == null || this.relations.size() != relations.size()) {
+            this.relations = relations;
             if (getActivity() instanceof HomeActivity)
                 ((HomeActivity) getActivity()).setPlaylist(relations);
             sort();
         }
-        this.relations = relations;
     }
 
     @Override
@@ -119,13 +124,18 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
     }
 
     @Override
-    public void save() {
+    public void save(String key) {
         if (getArguments() != null) switch (getArguments().getInt(POSITION, 0)) {
             case 0:
                 //
                 break;
             case 1:
-                //
+                DatabaseReference users = FirebaseDatabase.getInstance().getReference("user");
+                String user = PrefShared.getInstance(getContext()).getUid();
+                DatabaseReference list = users.child(user).child("song").child("mine").child(key);
+                for (ListSongRelation relation : relations)
+                    list.child(relation.song.getId()).setValue(true);
+                home.onSaved();
                 break;
         }
     }
@@ -154,7 +164,7 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
 
     private void observe() {
         if (getArguments() != null) {
-            ListSongAccess access = DataReference.getInstance(getContext()).accessUserSong();
+            ListSongAccess access = DataReference.getInstance(getContext()).accessListSong();
             if (songLiveData == null) switch (getArguments().getInt(POSITION, 0)) {
                 case 0:
                     songLiveData = access.all();

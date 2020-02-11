@@ -34,7 +34,6 @@
         <item name="android:textColor">@color/primaryPage</item>
     </style>
 
-
     <style name="Widget.MaterialComponents.Button.OutlinedButton.Custom">
         <item name="backgroundTint">@color/secondaryPageLight</item>
         <item name="rippleColor">@color/secondaryLight</item>

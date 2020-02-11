@@ -37,6 +37,6 @@ public abstract class ListSongObservable<T> implements Observer<T> {
     }
 
     ListSongAccess access() {
-        return DataReference.getInstance(context).accessUserSong();
+        return DataReference.getInstance(context).accessListSong();
     }
 }
