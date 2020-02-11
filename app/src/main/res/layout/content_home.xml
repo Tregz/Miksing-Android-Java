@@ -50,7 +50,6 @@
         style="@style/HorizontalSpeedDial"
         android:visibility="invisible"
         app:layout_anchor="@id/fab">
-        <!-- -->
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/clear_all"
