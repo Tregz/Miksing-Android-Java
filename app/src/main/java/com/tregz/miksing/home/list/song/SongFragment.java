@@ -16,10 +16,10 @@ import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.user.list.song.ListSong;
-import com.tregz.miksing.data.user.list.song.ListSongAccess;
-import com.tregz.miksing.data.user.list.song.ListSongRelation;
-import com.tregz.miksing.data.user.list.song.ListSongUpdate;
+import com.tregz.miksing.data.tube.song.TubeSong;
+import com.tregz.miksing.data.tube.song.TubeSongAccess;
+import com.tregz.miksing.data.tube.song.TubeSongRelation;
+import com.tregz.miksing.data.tube.song.TubeSongUpdate;
 import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListFragment;
@@ -30,13 +30,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SongFragment extends ListFragment implements Observer<List<ListSongRelation>>,
+public class SongFragment extends ListFragment implements Observer<List<TubeSongRelation>>,
         ListView {
 
     //private final String TAG = SongFragment.class.getSimpleName();
     private final static String POSITION = "position";
-    private LiveData<List<ListSongRelation>> songLiveData;
-    private List<ListSongRelation> relations;
+    private LiveData<List<TubeSongRelation>> songLiveData;
+    private List<TubeSongRelation> relations;
     private int destination = 0; // last gesture's target position
     private OnItem onItem;
     private HomeView home;
@@ -76,7 +76,7 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
     }
 
     @Override
-    public void onChanged(List<ListSongRelation> relations) {
+    public void onChanged(List<TubeSongRelation> relations) {
         if (this.relations == null || this.relations.size() != relations.size()) {
             this.relations = relations;
             if (getActivity() instanceof HomeActivity)
@@ -103,20 +103,20 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
 
     @Override
     public void onItemSwipe(int position, int direction) {
-        final ListSong join = relations.get(position).join;
-        join.setListId(PrefShared.getInstance(getContext()).getUid() + "-Prepare");
+        final TubeSong join = relations.get(position).join;
+        join.setTubeId(PrefShared.getInstance(getContext()).getUid() + "-Prepare");
 
-        new ListSongUpdate(getContext(), join);
+        new TubeSongUpdate(getContext(), join);
     }
 
     @Override
     public void ordered() {
         adapter.items.beginBatchedUpdates();
         for (int i = 0; i < relations.size(); i++) {
-            ListSongRelation relation = relations.get(i);
+            TubeSongRelation relation = relations.get(i);
             if (relation.join.getPosition() != i) {
                 relation.join.setPosition(i);
-                new ListSongUpdate(getContext(), relation.join);
+                new TubeSongUpdate(getContext(), relation.join);
             }
         }
         adapter.items.endBatchedUpdates();
@@ -131,9 +131,12 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
                 break;
             case 1:
                 DatabaseReference users = FirebaseDatabase.getInstance().getReference("user");
+                DatabaseReference tube = FirebaseDatabase.getInstance().getReference("tube");
                 String user = PrefShared.getInstance(getContext()).getUid();
-                DatabaseReference list = users.child(user).child("song").child("mine").child(key);
-                for (ListSongRelation relation : relations)
+                //DatabaseReference list = tube.child(user).child("song").child("mine").child(key);
+                DatabaseReference list = tube.child(user).child("tube").child(key);
+                users.child(user).child("mine").child(key).setValue(true);
+                for (TubeSongRelation relation : relations)
                     list.child(relation.song.getId()).setValue(true);
                 home.onSaved();
                 break;
@@ -144,8 +147,8 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
     public void search(String query) {
         if (query.isEmpty()) adapter.items.replaceAll(relations);
         else {
-            List<ListSongRelation> searched = new ArrayList<>();
-            for (ListSongRelation relation : relations)
+            List<TubeSongRelation> searched = new ArrayList<>();
+            for (TubeSongRelation relation : relations)
                 if (relation.song.getTitle().toLowerCase().startsWith(query.toLowerCase()))
                     searched.add(relation);
             adapter.items.replaceAll(searched);
@@ -164,7 +167,7 @@ public class SongFragment extends ListFragment implements Observer<List<ListSong
 
     private void observe() {
         if (getArguments() != null) {
-            ListSongAccess access = DataReference.getInstance(getContext()).accessListSong();
+            TubeSongAccess access = DataReference.getInstance(getContext()).accessListSong();
             if (songLiveData == null) switch (getArguments().getInt(POSITION, 0)) {
                 case 0:
                     songLiveData = access.all();

@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.base.spin.SpinUtil;
-import com.tregz.miksing.core.date.DateUtil;
+import com.tregz.miksing.base.date.DateUtil;
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataItem;

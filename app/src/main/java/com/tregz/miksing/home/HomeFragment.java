@@ -35,9 +35,9 @@ public class HomeFragment extends BaseFragment {
         pager.setAdapter(new HomePager(getChildFragmentManager()));
     }
 
-    void save() {
+    void save(String name) {
         ListFragment page = page();
-        if (page != null) page.save("Test");
+        if (page != null) page.save(name);
     }
 
     void search(String query) {

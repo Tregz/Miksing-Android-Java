@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.user.list.song;
+package com.tregz.miksing.data.tube.song;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -15,30 +15,30 @@ import java.util.List;
 import io.reactivex.Single;
 
 @Dao
-public interface ListSongAccess {
-    String FROM_TABLE = " FROM " + ListSong.TABLE;
+public interface TubeSongAccess {
+    String FROM_TABLE = " FROM " + TubeSong.TABLE;
     //String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
 
     @Transaction
     @Query(SELECT_FROM_TABLE)
-    LiveData<List<ListSongRelation>> all();
+    LiveData<List<TubeSongRelation>> all();
 
     @Transaction
-    @Query(SELECT_FROM_TABLE + " WHERE user_list = :listId") // ORDER BY user_song.spot
-    LiveData<List<ListSongRelation>> prepare(String listId);
+    @Query(SELECT_FROM_TABLE + " WHERE user_tube = :tubeId") // ORDER BY user_song.spot
+    LiveData<List<TubeSongRelation>> prepare(String tubeId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    Single<List<Long>> insert(ListSong...joins);
+    Single<List<Long>> insert(TubeSong...joins);
 
     @Transaction
     @Query(SELECT_FROM_TABLE + " WHERE song = :key")
-    LiveData<ListSongRelation> query(String key);
+    LiveData<TubeSongRelation> query(String key);
 
     @Update //(onConflict = REPLACE)
-    Single<Integer> update(ListSong...joins);
+    Single<Integer> update(TubeSong...joins);
 
-    @RawQuery(observedEntities = ListSong.class)
-    LiveData<ListSong> item(SupportSQLiteQuery query);
+    @RawQuery(observedEntities = TubeSong.class)
+    LiveData<TubeSong> item(SupportSQLiteQuery query);
 
 }

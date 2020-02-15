@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.user.list.song;
+package com.tregz.miksing.data.tube.song;
 
 import android.content.Context;
 
@@ -7,12 +7,12 @@ import com.tregz.miksing.data.DataReference;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public abstract class ListSongObservable<T> implements Observer<T> {
-    protected String TAG = ListSongObservable.class.getSimpleName();
+public abstract class TubeSongObservable<T> implements Observer<T> {
+    protected String TAG = TubeSongObservable.class.getSimpleName();
 
     private Context context;
 
-    ListSongObservable(Context context) {
+    TubeSongObservable(Context context) {
         this.context = context;
     }
 
@@ -36,7 +36,7 @@ public abstract class ListSongObservable<T> implements Observer<T> {
         e.printStackTrace();
     }
 
-    ListSongAccess access() {
+    TubeSongAccess access() {
         return DataReference.getInstance(context).accessListSong();
     }
 }

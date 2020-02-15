@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.user.list.song;
+package com.tregz.miksing.data.tube.song;
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
@@ -6,9 +6,9 @@ import androidx.room.Relation;
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.song.Song;
 
-public class ListSongRelation {
+public class TubeSongRelation {
 
-    @Embedded public ListSong join;
+    @Embedded public TubeSong join;
 
     @Relation(parentColumn = Song.TABLE, entityColumn = DataNotation.PK) public Song song;
 

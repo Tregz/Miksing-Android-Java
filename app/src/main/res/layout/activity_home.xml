@@ -35,4 +35,6 @@
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
+    <include layout="@layout/content_wait"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

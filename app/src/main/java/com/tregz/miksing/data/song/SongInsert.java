@@ -2,8 +2,8 @@ package com.tregz.miksing.data.song;
 
 import android.content.Context;
 
-import com.tregz.miksing.data.user.list.song.ListSong;
-import com.tregz.miksing.data.user.list.song.ListSongInsert;
+import com.tregz.miksing.data.tube.song.TubeSong;
+import com.tregz.miksing.data.tube.song.TubeSongInsert;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ class SongInsert extends SongSingle<List<Long>> {
         super(context);
         access().insert(songs).subscribeOn(Schedulers.io()).subscribe(this);
         for (Song song : songs) {
-            ListSong join = new ListSong(listId, song.getId());
-            new ListSongInsert(context, join);
+            TubeSong join = new TubeSong(listId, song.getId());
+            new TubeSongInsert(context, join);
         }
     }
 }

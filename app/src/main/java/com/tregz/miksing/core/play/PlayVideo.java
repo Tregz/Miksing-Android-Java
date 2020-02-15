@@ -1,4 +1,4 @@
-package com.tregz.miksing.base.play;
+package com.tregz.miksing.core.play;
 
 import android.content.Context;
 import android.util.AttributeSet;

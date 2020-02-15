@@ -35,6 +35,7 @@ public class HomeNavigation implements
     final static int SIGN_IN = 101;
 
     private final int RIGHT = HomeActivity.Drawer.RIGHT.ordinal();
+    private final int START = HomeActivity.Drawer.START.ordinal();
     private String login, logout;
     private boolean initialized = false;
     private HomeView view;
@@ -83,7 +84,8 @@ public class HomeNavigation implements
     public void onDrawerStateChanged(int newState) {
         if (!initialized) {
             initialized = true;
-            headerHeight(HomeActivity.Drawer.RIGHT.ordinal());
+            headerHeight(RIGHT);
+            headerHeight(START);
         }
     }
 

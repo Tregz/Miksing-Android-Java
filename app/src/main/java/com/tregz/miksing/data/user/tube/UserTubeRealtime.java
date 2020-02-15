@@ -1,4 +1,4 @@
-package com.tregz.miksing.data.user.list;
+package com.tregz.miksing.data.user.tube;
 
 import android.content.Context;
 
@@ -9,15 +9,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.base.BaseRealtime;
-import com.tregz.miksing.data.user.list.song.ListSong;
-import com.tregz.miksing.data.user.list.song.ListSongQuery;
+import com.tregz.miksing.data.tube.song.TubeSong;
 
-public class UserListRealtime extends BaseRealtime {
+public class UserTubeRealtime extends BaseRealtime {
 
     private Context context;
     private String userId;
 
-    public UserListRealtime(Context context, String userId) {
+    public UserTubeRealtime(Context context, String userId) {
         this.context = context;
         DatabaseReference users = FirebaseDatabase.getInstance().getReference("user");
         users.child(userId).child("song").child("mine").addChildEventListener(this);
@@ -26,11 +25,11 @@ public class UserListRealtime extends BaseRealtime {
     @Override
     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
         if (snapshot.getKey() != null) {
-            UserList userList = new UserList(userId, snapshot.getKey());
-            new UserListInsert(context, userList);
+            UserTube userTube = new UserTube(userId, snapshot.getKey());
+            new UserTubeInsert(context, userTube);
             for (DataSnapshot children : snapshot.getChildren()) if (children.getKey() != null) {
-                ListSong listSong = new ListSong(snapshot.getKey(), children.getKey());
-                // TODO if ListSongQuery.
+                TubeSong tubeSong = new TubeSong(snapshot.getKey(), children.getKey());
+                // TODO if TubeSongQuery.
             }
         }
     }

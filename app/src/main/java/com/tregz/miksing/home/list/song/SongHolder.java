@@ -8,22 +8,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tregz.miksing.R;
 
-public class SongHolder extends RecyclerView.ViewHolder {
+class SongHolder extends RecyclerView.ViewHolder {
 
     ImageView ivIcon;
-    TextView tvWhat;
-    TextView tvName;
-    TextView tvDate;
-    TextView tvFeat;
-    TextView tvMark;
+    TextView tvWhat, tvName, tvDate, tvFeat, tvMark;
 
     SongHolder(View view) {
         super(view);
-        tvDate = view.findViewById(R.id.tvDate);
-        tvFeat = view.findViewById(R.id.tvFeat);
-        ivIcon = view.findViewById(R.id.ivIcon);
-        tvMark = view.findViewById(R.id.tvMark);
-        tvName = view.findViewById(R.id.tvName);
-        tvWhat = view.findViewById(R.id.tvWhat);
+        tvDate = view.findViewById(R.id.tv_date);
+        tvFeat = view.findViewById(R.id.tv_feat);
+        ivIcon = view.findViewById(R.id.iv_icon);
+        tvMark = view.findViewById(R.id.tv_mark);
+        tvName = view.findViewById(R.id.tv_name);
+        tvWhat = view.findViewById(R.id.tv_what);
     }
 }

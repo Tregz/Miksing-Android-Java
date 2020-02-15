@@ -39,21 +39,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        for (BaseDialog dialog : dialogs) if (dialog.alert != null) dialog.alert.dismiss();
-        super.onDestroy();
-    }
-
-    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-    }
-
-    public BaseDialog add(BaseDialog dialog) {
-        dialogs.add(dialog);
-        return dialog;
     }
 
     public ViewGroup getViewGroup() {
@@ -94,8 +83,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         NavDestination destination = controller().getCurrentDestination();
         return destination != null ? destination.getId() : null;
     }
-
-    protected List<BaseDialog> dialogs = new ArrayList<>();
 
     protected NavController controller() {
         return Navigation.findNavController(this, HOST);

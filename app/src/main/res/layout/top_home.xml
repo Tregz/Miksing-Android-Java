@@ -48,12 +48,12 @@
             android:layout_gravity="bottom">
 
             <!-- TODO identify compatibily bug; crashed on API 22 -->
-            <com.tregz.miksing.base.play.PlayWeb
+            <com.tregz.miksing.core.play.PlayWeb
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <com.tregz.miksing.base.play.PlayVideo
+            <com.tregz.miksing.core.play.PlayVideo
                 android:id="@+id/video_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

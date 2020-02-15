@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedListAdapterCallback;
 
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.user.list.song.ListSong;
-import com.tregz.miksing.data.user.list.song.ListSongRelation;
+import com.tregz.miksing.data.tube.song.TubeSong;
+import com.tregz.miksing.data.tube.song.TubeSongRelation;
 
 import java.util.Date;
 
@@ -24,9 +24,9 @@ public class ListSorted<T> extends SortedListAdapterCallback<T> {
 
     @Override
     public boolean areContentsTheSame(T o1, T o2) {
-        if (o1 instanceof ListSongRelation) {
-            Song song1 = ((ListSongRelation) o1).song;
-            Song song2 = ((ListSongRelation) o2).song;
+        if (o1 instanceof TubeSongRelation) {
+            Song song1 = ((TubeSongRelation) o1).song;
+            Song song2 = ((TubeSongRelation) o2).song;
             if (song1 != null && song2 != null)
                 return song1.getUpdatedAt() == song2.getUpdatedAt();
         }
@@ -35,9 +35,9 @@ public class ListSorted<T> extends SortedListAdapterCallback<T> {
 
     @Override
     public boolean areItemsTheSame(T o1, T o2) {
-        if (o1 instanceof ListSongRelation) {
-            Song song1 = ((ListSongRelation) o1).song;
-            Song song2 = ((ListSongRelation) o2).song;
+        if (o1 instanceof TubeSongRelation) {
+            Song song1 = ((TubeSongRelation) o1).song;
+            Song song2 = ((TubeSongRelation) o2).song;
             if (song1 != null && song2 != null)
                 return compare(song1.getId(), song2.getId()) == 0;
         }
@@ -48,23 +48,23 @@ public class ListSorted<T> extends SortedListAdapterCallback<T> {
     public int compare(T o1, T o2) {
         switch (comparator) {
             case ALPHA:
-                if (o1 instanceof ListSongRelation) {
-                    Song song1 = ((ListSongRelation) o1).song;
-                    Song song2 = ((ListSongRelation) o2).song;
+                if (o1 instanceof TubeSongRelation) {
+                    Song song1 = ((TubeSongRelation) o1).song;
+                    Song song2 = ((TubeSongRelation) o2).song;
                     if (song1 != null && song2 != null)
                         return compare(song1.getName(), song2.getName());
                 }
             case DIGIT:
-                if (o1 instanceof ListSongRelation) {
-                    ListSong join1 = ((ListSongRelation) o1).join;
-                    ListSong join2 = ((ListSongRelation) o2).join;
+                if (o1 instanceof TubeSongRelation) {
+                    TubeSong join1 = ((TubeSongRelation) o1).join;
+                    TubeSong join2 = ((TubeSongRelation) o2).join;
                     if (join1 != null && join2 != null)
                         return join1.getPosition() - join2.getPosition();
                 }
             case FRESH:
-                if (o1 instanceof ListSongRelation) {
-                    Song song1 = ((ListSongRelation) o1).song;
-                    Song song2 = ((ListSongRelation) o2).song;
+                if (o1 instanceof TubeSongRelation) {
+                    Song song1 = ((TubeSongRelation) o1).song;
+                    Song song2 = ((TubeSongRelation) o2).song;
                     if (song1 != null && song2 != null)
                         return compare(song1.getReleasedAt(), song2.getReleasedAt());
                 }

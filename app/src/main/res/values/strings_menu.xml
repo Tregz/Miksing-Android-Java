@@ -11,8 +11,13 @@
 
     <string name="clear">Clear</string>
     <string name="save">Save</string>
+    <string name="playlist_name">Playlist name</string>
+    <string name="playlist_name_must_not_null">Playlist name must not be empty</string>
+    <string name="request_link_must_not_null">Request link must not be empty</string>
+    <string name="request_link_not_valid">Request link does not appear to be valid</string>
 
-    <string name="request_youtube">Get YouTube video or playlist from HTTP link</string>
+    <string name="fetch_youtube_title">Get YouTube video or playlist</string>
+    <string name="fetch_youtube_hint">Http link</string>
 
     <string name="main_bottom_alpha">Alpha</string>
     <string name="main_bottom_digit">Number</string>

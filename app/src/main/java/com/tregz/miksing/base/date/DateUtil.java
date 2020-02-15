@@ -1,4 +1,4 @@
-package com.tregz.miksing.core.date;
+package com.tregz.miksing.base.date;
 
 import android.text.format.DateFormat;
 

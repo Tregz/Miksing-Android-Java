@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MaterialDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:background">@color/primaryPageLight</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialTitleText</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MaterialBodyText</item>
+        <item name="buttonBarNegativeButtonStyle">@style/MaterialNegativeButton</item>
+        <item name="buttonBarPositiveButtonStyle">@style/MaterialPositiveButton</item>
+    </style>
+
+    <style name="MaterialTitleText" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/primaryTextDarkColor</item>
+    </style>
+
+    <style name="MaterialBodyText" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="MaterialNegativeButton"
+        parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/secondaryDark</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="backgroundTint">@color/secondaryPageLight</item>
+        <item name="icon">@drawable/ic_close</item>
+        <item name="iconTint">@color/secondaryDark</item>
+        <item name="rippleColor">@color/secondaryLight</item>
+        <item name="strokeColor">@color/secondaryLight</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:paddingTop">@dimen/default_gap</item>
+        <item name="android:paddingBottom">@dimen/default_gap</item>
+    </style>
+
+    <style name="MaterialPositiveButton" parent="Widget.MaterialComponents.Button.Icon">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="icon">@drawable/ic_check</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:layout_marginLeft">@dimen/default_gap</item>
+        <item name="android:paddingTop">@dimen/default_gap</item>
+        <item name="android:paddingBottom">@dimen/default_gap</item>
+    </style>
+
+</resources>

@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.tregz.miksing.R;
-import com.tregz.miksing.core.date.DateUtil;
+import com.tregz.miksing.base.date.DateUtil;
 import com.tregz.miksing.data.song.Song;
 
 import java.util.ArrayList;
@@ -40,11 +40,11 @@ public class ListArray extends ArrayAdapter<Song> {
         }
         Song song = list.get(position);
         String thumb = "https://img.youtube.com/vi/" + song.getId() + "/0.jpg";
-        Glide.with(context).load(thumb).into((ImageView) view.findViewById(R.id.ivIcon));
-        ((TextView) view.findViewById(R.id.tvName)).setText(song.getTitle());
-        ((TextView) view.findViewById(R.id.tvMark)).setText(song.getArtist());
+        Glide.with(context).load(thumb).into((ImageView) view.findViewById(R.id.iv_icon));
+        ((TextView) view.findViewById(R.id.tv_name)).setText(song.getTitle());
+        ((TextView) view.findViewById(R.id.tv_mark)).setText(song.getArtist());
         String when = "[" + DateUtil.dayOfYear(null, song.getReleasedAt()) + "]";
-        ((TextView) view.findViewById(R.id.tvFeat)).setText(when);
+        ((TextView) view.findViewById(R.id.tv_feat)).setText(when);
         return view;
     }
 }

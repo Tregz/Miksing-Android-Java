@@ -7,21 +7,21 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import com.tregz.miksing.data.tube.song.TubeSong;
+import com.tregz.miksing.data.tube.song.TubeSongAccess;
 import com.tregz.miksing.data.user.UserAccess;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.user.User;
 import com.tregz.miksing.data.song.SongAccess;
-import com.tregz.miksing.data.user.list.UserList;
-import com.tregz.miksing.data.user.list.UserListAccess;
-import com.tregz.miksing.data.user.list.song.ListSong;
-import com.tregz.miksing.data.user.list.song.ListSongAccess;
+import com.tregz.miksing.data.user.tube.UserTube;
+import com.tregz.miksing.data.user.tube.UserTubeAccess;
 
 @Database(entities = {
         User.class,
         Song.class,
-        ListSong.class,
-        UserList.class
-}, version = 16, exportSchema = false)
+        TubeSong.class,
+        UserTube.class
+}, version = 18, exportSchema = false)
 @TypeConverters({DataConverter.class})
 public abstract class DataReference extends RoomDatabase {
 
@@ -44,8 +44,8 @@ public abstract class DataReference extends RoomDatabase {
 
     public abstract UserAccess accessUser();
 
-    public abstract ListSongAccess accessListSong();
+    public abstract TubeSongAccess accessListSong();
 
-    public abstract UserListAccess accessUserList();
+    public abstract UserTubeAccess accessUserList();
 
 }

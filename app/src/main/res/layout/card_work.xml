@@ -23,7 +23,7 @@
             android:weightSum="1">
 
             <ImageView
-                android:id="@+id/ivIcon"
+                android:id="@+id/iv_icon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
@@ -45,12 +45,12 @@
                     android:orientation="horizontal">
 
                     <TextView style="@style/WrapWrap.DarkBold"
-                        android:id="@+id/tvName"
+                        android:id="@+id/tv_name"
                         android:maxLines="1"
                         android:text="@string/card_name" />
 
                     <TextView style="@style/WrapWrap.Black"
-                        android:id="@+id/tvWhat"
+                        android:id="@+id/tv_what"
                         android:layout_marginStart="5dp"
                         android:maxLines="1" />
 
@@ -62,13 +62,13 @@
                     android:orientation="horizontal">
 
                     <TextView style="@style/WrapWrap.Black"
-                        android:id="@+id/tvFrom"
+                        android:id="@+id/tv_from"
                         android:maxLines="1"
                         android:text="@string/card_mark"
                         android:textStyle="italic" />
 
                     <TextView style="@style/WrapWrap.Black"
-                        android:id="@+id/tvMark"
+                        android:id="@+id/tv_mark"
                         android:layout_marginStart="5dp"
                         android:maxLines="1"
                         android:textStyle="bold" />
@@ -81,12 +81,12 @@
                     android:orientation="horizontal">
 
                     <TextView style="@style/WrapWrap.Black"
-                        android:id="@+id/tvFeat"
+                        android:id="@+id/tv_feat"
                         android:maxLines="1"
                         android:text="@string/card_info" />
 
                     <TextView style="@style/WrapWrap.Black"
-                        android:id="@+id/tvDate"
+                        android:id="@+id/tv_date"
                         android:layout_marginStart="5dp"
                         android:maxLines="1"
                         android:text="@string/card_born" />

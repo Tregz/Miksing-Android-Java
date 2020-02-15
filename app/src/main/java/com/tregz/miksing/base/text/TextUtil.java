@@ -1,4 +1,4 @@
-package com.tregz.miksing.core.text;
+package com.tregz.miksing.base.text;
 
 public final class TextUtil {
 

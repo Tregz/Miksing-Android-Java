@@ -27,14 +27,18 @@ import com.tregz.miksing.arch.note.NoteUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootNavigation;
-import com.tregz.miksing.base.play.PlayVideo;
-import com.tregz.miksing.base.play.PlayWeb;
+import com.tregz.miksing.core.play.PlayVideo;
+import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataItem;
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.user.list.song.ListSongRelation;
+import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.home.item.ItemFragment;
 import com.tregz.miksing.home.item.ItemView;
 import com.tregz.miksing.home.list.song.SongFragment;
+import com.tregz.miksing.home.warn.WarnClear;
+import com.tregz.miksing.home.warn.WarnFetch;
+import com.tregz.miksing.home.warn.WarnPlaylist;
+import com.tregz.miksing.home.warn.WarnSave;
 import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
 
@@ -160,21 +164,22 @@ public class HomeActivity extends BaseActivity implements HomeView,
             buttons[Button.CLEAR.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((HomeDialog)add(new HomeDialog(HomeActivity.this))).clear();
+                    new WarnClear().show(getSupportFragmentManager(), WarnClear.TAG);
                 }
             });
             buttons[Button.SAVE.ordinal()] = findViewById(R.id.save);
             buttons[Button.SAVE.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((HomeDialog)add(new HomeDialog(HomeActivity.this))).save();
+                    new WarnSave().show(getSupportFragmentManager(), WarnSave.TAG);
+                    //((HomeDialog)add(new HomeDialog(HomeActivity.this))).save();
                 }
             });
-            buttons[Button.SEARCH.ordinal()] = findViewById(R.id.web_search);
-            buttons[Button.SEARCH.ordinal()].setOnClickListener(new View.OnClickListener() {
+            buttons[Button.FETCH.ordinal()] = findViewById(R.id.web_search);
+            buttons[Button.FETCH.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    add(new HomeDialog(HomeActivity.this, webView));
+                    new WarnFetch().show(getSupportFragmentManager(), WarnFetch.TAG);
                 }
             });
             // Scroll listener, to show/hide options while collapsing
@@ -340,21 +345,36 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
+    public void onClearPlaylist() {
+        // TODO
+    }
+
+    @Override
     public void onFillItemDetails(DataItem item) {
         Fragment primary = primary();
         if (primary instanceof ItemFragment) ((ItemFragment) primary).fill(item);
     }
 
     @Override
-    public void onSaveItem() {
+    public void onHttpRequestResult(List<Song> list) {
+        WarnPlaylist.newInstance(list).show(getSupportFragmentManager(), WarnPlaylist.TAG);
+    }
+
+    @Override
+    public void onSaveItem(String name) {
         Fragment primary = primary();
         if (primary instanceof ItemFragment) ((ItemFragment) primary).save();
-        else if (primary instanceof HomeFragment) ((HomeFragment) primary).save();
+        else if (primary instanceof HomeFragment) ((HomeFragment) primary).save(name);
     }
 
     @Override
     public void onSaved() {
         back();
+    }
+
+    @Override
+    public PlayWeb getWebView() {
+        return webView;
     }
 
     @Override
@@ -401,9 +421,9 @@ public class HomeActivity extends BaseActivity implements HomeView,
         return fm != null ? (UserMap) fm.getPrimaryNavigationFragment() : null;
     }
 
-    public void setPlaylist(List<ListSongRelation> relations) {
+    public void setPlaylist(List<TubeSongRelation> relations) {
         StringBuilder builder = new StringBuilder();
-        for (ListSongRelation relation : relations) {
+        for (TubeSongRelation relation : relations) {
             if (builder.length() > 0) builder.append(",");
             builder.append("'");
             builder.append(relation.song.getId());
@@ -442,7 +462,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     private enum Button {
         FAB,
         CLEAR,
-        SEARCH,
+        FETCH,
         SAVE
     }
 
