@@ -105,7 +105,6 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
     public void onItemSwipe(int position, int direction) {
         final TubeSong join = relations.get(position).join;
         join.setTubeId(PrefShared.getInstance(getContext()).getUid() + "-Prepare");
-
         new TubeSongUpdate(getContext(), join);
     }
 
@@ -134,8 +133,10 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
                 DatabaseReference tube = FirebaseDatabase.getInstance().getReference("tube");
                 DatabaseReference push = tube.push();
                 push.child("name").setValue(name);
-                for (TubeSongRelation relation : relations)
-                    push.child("song").child(relation.song.getId()).setValue(true);
+                for (TubeSongRelation relation : relations) {
+                    int position = relation.join.getPosition();
+                    push.child("song").child(relation.song.getId()).setValue(position);
+                }
                 // Save user's playlist
                 DatabaseReference user = FirebaseDatabase.getInstance().getReference("user");
                 String currentUser = PrefShared.getInstance(getContext()).getUid();
@@ -169,20 +170,19 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
     }
 
     private void observe() {
-        if (getArguments() != null) {
-            TubeSongAccess access = DataReference.getInstance(getContext()).accessListSong();
-            if (songLiveData == null) switch (getArguments().getInt(POSITION, 0)) {
-                case 0:
-                    songLiveData = access.all();
-                    break;
-                case 1:
-                    String listId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
-                    songLiveData = access.prepare(listId);
-                    break;
-            }
-            if (songLiveData.hasObservers()) songLiveData.removeObserver(this);
-            songLiveData.observe(this, this);
+        int position = getArguments() != null ? getArguments().getInt(POSITION, 0) : 0;
+        TubeSongAccess access = DataReference.getInstance(getContext()).accessListSong();
+        if (songLiveData == null) switch (position) {
+            case 0:
+                songLiveData = access.all();
+                break;
+            case 1:
+                String listId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
+                songLiveData = access.prepare(listId);
+                break;
         }
+        if (songLiveData.hasObservers()) songLiveData.removeObserver(this);
+        songLiveData.observe(this, this);
     }
 
     // Allow an interaction to be communicated to the activity

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/side_nav_bar"
     android:padding="@dimen/text_margin"
     android:orientation="vertical">
@@ -19,10 +20,12 @@
         android:rotation="-4"
         android:text="@string/nav_drawer_mine" />
 
-    <FrameLayout
-        android:id="@+id/container_start"
+    <fragment
+        android:id="@+id/nav_tube_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/storyboard_tube" />
 
 </LinearLayout>
