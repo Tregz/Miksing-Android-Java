@@ -2,12 +2,13 @@ package com.tregz.miksing.base.foot;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class FootNavigation extends BottomNavigationView {
-    //private final String TAG = FootNavigation.class.getSimpleName();
+    private final String TAG = FootNavigation.class.getSimpleName();
 
     public boolean shown = true;
 
@@ -19,6 +20,7 @@ public class FootNavigation extends BottomNavigationView {
         shown = false;
         setTranslationY(getHeight());
         setVisibility(View.GONE);
+        Log.d(TAG, "hide");
     }
 
     public void show(boolean slide) {

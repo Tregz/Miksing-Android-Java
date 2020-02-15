@@ -1,6 +1,7 @@
 package com.tregz.miksing.base.foot;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.tregz.miksing.home.HomeFragment;
 
 import android.content.Context;
 import android.util.AttributeSet;

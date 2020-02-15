@@ -14,6 +14,8 @@ import com.google.android.material.snackbar.Snackbar;
 public class FootScroll<V extends View> extends HideBottomViewOnScrollBehavior<V> {
     //private final String TAG = FootScroll.class.getSimpleName();
 
+    public static State state = State.UP;
+
     public FootScroll() {
     }
 
@@ -52,8 +54,19 @@ public class FootScroll<V extends View> extends HideBottomViewOnScrollBehavior<V
             @NonNull int[] consumed
     ) {
         if (child instanceof FootNavigation && ((FootNavigation) child).shown) {
-            if (dy0 > dy1) slideUp(child);
-            if (dy0 < dy1) slideDown(child);
+            if (dy0 > dy1) {
+                slideUp(child);
+                state = State.UP;
+            }
+            if (dy0 < dy1) {
+                slideDown(child);
+                state = State.DOWN;
+            }
         }
+    }
+
+    public enum State {
+        DOWN,
+        UP
     }
 }

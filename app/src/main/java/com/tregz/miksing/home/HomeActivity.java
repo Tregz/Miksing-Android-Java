@@ -27,6 +27,7 @@ import com.tregz.miksing.arch.note.NoteUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootNavigation;
+import com.tregz.miksing.base.foot.FootScroll;
 import com.tregz.miksing.core.play.PlayVideo;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataItem;
@@ -419,6 +420,23 @@ public class HomeActivity extends BaseActivity implements HomeView,
     public UserMap areaFragment() {
         FragmentManager fm = manager(R.id.nav_area_fragment);
         return fm != null ? (UserMap) fm.getPrimaryNavigationFragment() : null;
+    }
+
+    public void setFabVisibility(boolean show) {
+        FloatingActionButton fab = buttons[Button.FAB.ordinal()];
+        if (show) {
+            if (FootScroll.state == FootScroll.State.UP)
+                fab.setVisibility(View.INVISIBLE);
+            else {
+                fab.setVisibility(View.VISIBLE);
+                fab.show();
+            }
+        }
+        else {
+            if (fab.isExpanded()) expand(fab);
+            fab.setVisibility(View.GONE);
+        }
+
     }
 
     public void setPlaylist(List<TubeSongRelation> relations) {

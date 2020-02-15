@@ -115,7 +115,6 @@ public class HomeNavigation implements
                     String policy = "http://www.tregz.com/miksing/aide/en/privacy.pdf";
                     ui.setTosAndPrivacyPolicyUrls(terms, policy);
                     view.startActivityForResult(ui.build(), SIGN_IN);
-
                 } else
                     AuthUI.getInstance().signOut(layout.getContext()).addOnCompleteListener(this);
                 break;

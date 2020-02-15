@@ -124,20 +124,23 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
     }
 
     @Override
-    public void save(String key) {
+    public void save(String name) {
         if (getArguments() != null) switch (getArguments().getInt(POSITION, 0)) {
             case 0:
                 //
                 break;
             case 1:
-                DatabaseReference users = FirebaseDatabase.getInstance().getReference("user");
+                // Save playlist
                 DatabaseReference tube = FirebaseDatabase.getInstance().getReference("tube");
-                String user = PrefShared.getInstance(getContext()).getUid();
-                //DatabaseReference list = tube.child(user).child("song").child("mine").child(key);
-                DatabaseReference list = tube.child(user).child("tube").child(key);
-                users.child(user).child("mine").child(key).setValue(true);
+                DatabaseReference push = tube.push();
+                push.child("name").setValue(name);
                 for (TubeSongRelation relation : relations)
-                    list.child(relation.song.getId()).setValue(true);
+                    push.child("song").child(relation.song.getId()).setValue(true);
+                // Save user's playlist
+                DatabaseReference user = FirebaseDatabase.getInstance().getReference("user");
+                String currentUser = PrefShared.getInstance(getContext()).getUid();
+                if (push.getKey() != null)
+                    user.child(currentUser).child("tube").child(push.getKey()).setValue(true);
                 home.onSaved();
                 break;
         }

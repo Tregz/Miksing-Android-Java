@@ -121,7 +121,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:backgroundTint="@color/primaryAccent"
         app:layout_anchor="@id/nested"
         app:layout_anchorGravity="bottom|end"

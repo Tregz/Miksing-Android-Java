@@ -13,9 +13,9 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.home.list.ListFragment;
 
-public class HomeFragment extends BaseFragment {
-    //private final String TAG = HomeFragment.class.getSimpleName();
+public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
+    //private final String TAG = HomeFragment.class.getSimpleName();
     private ViewPager pager;
 
     @Nullable
@@ -33,6 +33,22 @@ public class HomeFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         pager = view.findViewById(R.id.view_pager);
         pager.setAdapter(new HomePager(getChildFragmentManager()));
+        pager.addOnPageChangeListener(this);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        // do nothing
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        // do nothing
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (getActivity() != null) ((HomeActivity) getActivity()).setFabVisibility(position > 0);
     }
 
     void save(String name) {

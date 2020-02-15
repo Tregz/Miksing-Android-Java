@@ -49,7 +49,7 @@ public abstract class ListFragment extends BaseFragment {
         sort();
     }
 
-    abstract public void save(String key);
+    abstract public void save(String name);
 
     abstract public void sort();
 

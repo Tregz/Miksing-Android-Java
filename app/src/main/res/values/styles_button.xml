@@ -2,11 +2,12 @@
 
     <style name="HorizontalSpeedDial">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginEnd">@dimen/speed_dial_margin</item>
+        <item name="android:layout_height">@dimen/speed_dial_height</item>
+        <item name="android:layout_marginEnd">@dimen/speed_dial_height</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:visibility">invisible</item>
         <item name="layout_anchorGravity">center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="layout_behavior">@string/fab_transformation_scrim_behavior</item>
     </style>
 
