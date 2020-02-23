@@ -6,20 +6,39 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.tregz.miksing.base.BaseRealtime;
+import com.google.firebase.database.ValueEventListener;
+import com.tregz.miksing.data.DataListener;
 import com.tregz.miksing.data.DataNotation;
 
 import java.util.Date;
 
-public class SongRealtime extends BaseRealtime {
-    private String TAG = SongRealtime.class.getSimpleName();
+public class SongListener extends DataListener implements ValueEventListener {
+    private String TAG = SongListener.class.getSimpleName();
 
     private Context context;
 
-    public SongRealtime(Context context) {
+    public SongListener(Context context, String key) {
         this.context = context;
-        FirebaseDatabase.getInstance().getReference("song").addChildEventListener(this);
+        //FirebaseDatabase.getInstance().getReference(Song.TABLE).addChildEventListener(this);
+        DatabaseReference song = FirebaseDatabase.getInstance().getReference(Song.TABLE);
+        song.child(key).addValueEventListener(this); //addChildEventListener(this);
+    }
+
+    @Override
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        Song song = new Song(snapshot.getKey(), new Date(getLong(snapshot, DataNotation.CD)));
+        song.setReleasedAt(new Date(getLong(snapshot, DataNotation.BD)));
+        song.setUpdatedAt(new Date(getLong(snapshot, DataNotation.ED)));
+        song.setFeaturing(getString(snapshot, DataNotation.FS));
+        song.setMixedBy(getString(snapshot, DataNotation.LS));
+        song.setArtist(getString(snapshot, DataNotation.MS));
+        song.setTitle(getString(snapshot, DataNotation.NS));
+        song.setWhat(getInt(snapshot, DataNotation.WI));
+        //Log.d(TAG, "Song key: " + song.getArtist() + " - " + song.getTitle());
+        Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
+        new SongInsert(context, song);
     }
 
     @Override
@@ -33,8 +52,9 @@ public class SongRealtime extends BaseRealtime {
             song.setArtist(getString(snapshot, DataNotation.MS));
             song.setTitle(getString(snapshot, DataNotation.NS));
             song.setWhat(getInt(snapshot, DataNotation.WI));
+            //Log.d(TAG, "Song key: " + song.getArtist() + " - " + song.getTitle());
             Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
-            new SongInsert(context, "All", song);
+            new SongInsert(context, song);
         }
     }
 

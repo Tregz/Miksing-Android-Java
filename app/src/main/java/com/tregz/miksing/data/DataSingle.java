@@ -1,19 +1,19 @@
-package com.tregz.miksing.data.user.tube;
+package com.tregz.miksing.data;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.tregz.miksing.data.DataReference;
-
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
-public abstract class UserTubeSingle<T> implements SingleObserver<T> {
-    protected String TAG = UserTubeSingle.class.getSimpleName();
+public abstract class DataSingle<T> implements SingleObserver<T> {
+    protected String TAG = DataSingle.class.getSimpleName();
 
-    private Context context;
+    protected Context context;
 
-    UserTubeSingle(Context context) {
+    public DataSingle() {};
+
+    public DataSingle(Context context) {
         this.context = context;
     }
 
@@ -30,9 +30,5 @@ public abstract class UserTubeSingle<T> implements SingleObserver<T> {
     @Override
     public void onError(Throwable e) {
         e.printStackTrace();
-    }
-
-    UserTubeAccess access() {
-        return DataReference.getInstance(context).accessUserTube();
     }
 }

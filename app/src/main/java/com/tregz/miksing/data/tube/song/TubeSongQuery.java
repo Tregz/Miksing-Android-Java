@@ -15,7 +15,7 @@ public class TubeSongQuery /* extends TubeSongObservable<TubeSong>*/ {
 
     public LiveData<TubeSong> query(Context context, String id) {
         String request = "SELECT * FROM " + TubeSong.TABLE + " WHERE id = '" + id + "'";
-        TubeSongAccess access = DataReference.getInstance(context).accessListSong();
+        TubeSongAccess access = DataReference.getInstance(context).accessTubeSong();
         return access.item(new SimpleSQLiteQuery(request));
     }
 

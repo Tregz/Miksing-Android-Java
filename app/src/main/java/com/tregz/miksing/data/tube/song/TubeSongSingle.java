@@ -33,6 +33,6 @@ public abstract class TubeSongSingle<T> implements SingleObserver<T> {
     }
 
     TubeSongAccess access() {
-        return DataReference.getInstance(context).accessListSong();
+        return DataReference.getInstance(context).accessTubeSong();
     }
 }

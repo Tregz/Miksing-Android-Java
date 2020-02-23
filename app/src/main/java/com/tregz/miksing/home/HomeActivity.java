@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
+import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.note.NoteUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseActivity;
@@ -33,6 +34,9 @@ import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataItem;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
+import com.tregz.miksing.data.user.User;
+import com.tregz.miksing.data.user.UserInsert;
+import com.tregz.miksing.data.user.UserMaybe;
 import com.tregz.miksing.home.item.ItemFragment;
 import com.tregz.miksing.home.item.ItemView;
 import com.tregz.miksing.home.list.song.SongFragment;
@@ -241,6 +245,12 @@ public class HomeActivity extends BaseActivity implements HomeView,
             String[] permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION };
             ActivityCompat.requestPermissions(this, permissions, LOCATION_CODE);
         }
+
+        // TODO remove after test
+        User user = new User(AuthUtil.user().getUid(), new Date());
+        user.setName(AuthUtil.user().getDisplayName());
+        user.setEmail(AuthUtil.user().getEmail());
+        new UserMaybe(this, user);
     }
 
     @Override
@@ -270,12 +280,17 @@ public class HomeActivity extends BaseActivity implements HomeView,
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SIGN_IN) {
              if (resultCode == Activity.RESULT_OK) {
-                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                 if (user != null) {
-                     Log.d(TAG, "set UID " + user.getUid());
-                     PrefShared.getInstance(this).setUid(user.getUid());
-                     PrefShared.getInstance(this).setUsername(user.getDisplayName());
-                     PrefShared.getInstance(this).setEmail(user.getEmail());
+                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                 if (firebaseUser != null) {
+                     Log.d(TAG, "set UID " + firebaseUser.getUid());
+                     PrefShared.getInstance(this).setUid(firebaseUser.getUid());
+                     PrefShared.getInstance(this).setUsername(firebaseUser.getDisplayName());
+                     PrefShared.getInstance(this).setEmail(firebaseUser.getEmail());
+
+                     User user = new User(firebaseUser.getUid(), new Date());
+                     user.setName(firebaseUser.getDisplayName());
+                     new UserMaybe(this, user);
+
                      // Retrieve fcm token for testing (result printed to Logcat)
                      new NoteUtil(this);
                  }

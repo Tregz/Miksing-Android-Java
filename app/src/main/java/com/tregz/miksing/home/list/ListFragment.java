@@ -15,14 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
-import com.tregz.miksing.home.list.song.SongAdapter;
 
 import static android.telephony.TelephonyManager.PHONE_TYPE_NONE;
 
 public abstract class ListFragment extends BaseFragment {
     //private final String TAG = ListFragment.class.getSimpleName();
 
-    protected SongAdapter adapter;
+    protected RecyclerView.Adapter<?> adapter;
     protected RecyclerView recycler;
 
     @Nullable

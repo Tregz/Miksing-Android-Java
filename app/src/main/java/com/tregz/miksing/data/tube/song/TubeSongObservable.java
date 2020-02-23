@@ -37,6 +37,6 @@ public abstract class TubeSongObservable<T> implements Observer<T> {
     }
 
     TubeSongAccess access() {
-        return DataReference.getInstance(context).accessListSong();
+        return DataReference.getInstance(context).accessTubeSong();
     }
 }

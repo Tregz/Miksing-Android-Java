@@ -4,6 +4,7 @@ public class DataNotation {
 
     // unused yet. private static String A = "auth";  // authenticator / publisher
     public static final String PK = "id"; // string primary key
+    public static final String AS = "auth"; // email
     public static final String BD = "born"; // date of origin / birth day
     public static final String CD = "copy"; // created at
     public static final String DD = "dead"; // soft deleted

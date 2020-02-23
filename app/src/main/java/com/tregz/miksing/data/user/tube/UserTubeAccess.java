@@ -20,19 +20,19 @@ public interface UserTubeAccess extends DataAccess<UserTube> {
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
 
     @Query(SELECT_FROM_TABLE)
-    LiveData<List<UserTube>> all();
+    LiveData<List<UserTubeRelation>> all();
 
     @Query(DELETE_FROM_TABLE)
     Single<Integer> wipe();
 
     @Update
-    Single<Integer> update(UserTube... songs);
+    Single<Integer> update(UserTube...data);
 
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
     LiveData<UserTube> query(String key);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    Single<List<Long>> insert(UserTube... songs);
+    Single<List<Long>> insert(UserTube...data);
 
 }
 

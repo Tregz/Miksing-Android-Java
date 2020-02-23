@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tregz.miksing.R;
+import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.list.ListSorted;
@@ -94,7 +95,7 @@ public class HomeNavigation implements
         Log.d(TAG, "onNavigationItemSelected");
         switch (item.getItemId()) {
             case R.id.nav_login:
-                if (!logged()) {
+                if (!AuthUtil.logged()) {
                     AuthUI.SignInIntentBuilder ui = AuthUI.getInstance().createSignInIntentBuilder();
                     List<AuthUI.IdpConfig> providers = new ArrayList<>();
                     providers.add(new AuthUI.IdpConfig.EmailBuilder().build());
@@ -142,7 +143,7 @@ public class HomeNavigation implements
     void update() {
         view.userFragment().update();
         MenuItem item = drawers[RIGHT].getMenu().getItem(0);
-        if (logged()) {
+        if (AuthUtil.logged()) {
             if (item.getTitle() != logout) {
                 item.setIcon(R.drawable.ic_exit);
                 item.setTitle(logout);
@@ -153,10 +154,6 @@ public class HomeNavigation implements
                 item.setTitle(login);
             }
         }
-    }
-
-    private boolean logged() {
-        return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
     /* Proportional height of drawer's header */

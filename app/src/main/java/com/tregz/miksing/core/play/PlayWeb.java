@@ -53,9 +53,11 @@ public class PlayWeb extends WebView {
         final String TIMER = "timer";
         final int SECONDS_BEFORE_END = 10;
         String visible = PLAYERS + "[" + positionPlayerVisible() + "]";
-        String currentTime = PRESENT + "=" + visible + ".getCurrentTime();";
-        String duration = DURATION + "=" + visible + ".getDuration();";
-        String time = "else {" + currentTime + duration + "}}";
+        String currentTime = visible + ".getCurrentTime";
+        String getTime = PRESENT + "=!" + currentTime + " ? 0.0 :" + currentTime + "();";
+        String duration = visible + ".getDuration";
+        String getDuration = DURATION + "=!" + duration + " ? 0.0 :" + duration + "();";
+        String time = "else {" + getTime + getDuration + "}}";
         String isEnding = "(" + DURATION + "-" + PRESENT + ")<" + SECONDS_BEFORE_END;
         String isPlaying = PLAYING + "===" + VIDEO_ID;
         String isStarted = PRESENT + ">0 && " + DURATION + ">0";

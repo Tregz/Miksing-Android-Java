@@ -27,6 +27,7 @@ import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataItem;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.song.SongInsert;
 import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListCollection;
 
@@ -198,7 +199,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
     }
 
     public void save() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("song").push();
+        /* TODO * DatabaseReference ref = FirebaseDatabase.getInstance().getReference("song").push();
         if (ref.getKey() != null) {
             Song item = new Song(ref.getKey(), new Date());
             if (etMixedBy != null) item.setMixedBy(etMixedBy.getText().toString());
@@ -208,20 +209,9 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
             item.setArtist(etArtist.getText().toString());
             item.setReleasedAt(releasedAt);
             item.setTitle(etTitle.getText().toString());
-            ListCollection.getInstance().add(item);
-            ref.setValue(map(item)); // song will be inserted on local database onChildAdded
+            //ListCollection.getInstance().add(item);
+            new SongInsert(getContext(), item);
             listener.onSaved();
-        }
-    }
-
-    private HashMap<String, Object> map(Song song) {
-        HashMap<String, Object> map = new HashMap<>();
-        if (song.getReleasedAt() != null) map.put(DataNotation.BD, song.getReleasedAt().getTime());
-        if (song.getFeaturing() != null) map.put(DataNotation.FS, song.getFeaturing());
-        if (song.getArtist() != null) map.put(DataNotation.MS, song.getArtist());
-        if (song.getMixedBy() != null) map.put(DataNotation.LS, song.getMixedBy());
-        if (song.getTitle() != null) map.put(DataNotation.NS, song.getTitle());
-        map.put(DataNotation.WI, song.getWhat());
-        return map;
+        } */
     }
 }

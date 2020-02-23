@@ -21,6 +21,9 @@ public class User extends DataItem {
     @ColumnInfo(name = DataNotation.BD)
     private Date birthDay;
 
+    @ColumnInfo(name = DataNotation.AS)
+    private String email;
+
     public Date getBirthDay() {
         return birthDay;
     }
@@ -29,12 +32,12 @@ public class User extends DataItem {
         this.birthDay = birthDay;
     }
 
-    public String getFirstName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
-    public void setFirstName(String name) {
-        this.name = name;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public User(@NonNull String id, @NonNull Date createdAt) {

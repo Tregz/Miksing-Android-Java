@@ -1,4 +1,4 @@
-package com.tregz.miksing.base;
+package com.tregz.miksing.data;
 
 import androidx.annotation.NonNull;
 
@@ -6,7 +6,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
-public abstract class BaseRealtime implements ChildEventListener {
+public abstract class DataListener implements ChildEventListener {
 
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
