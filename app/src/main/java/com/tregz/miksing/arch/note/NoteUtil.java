@@ -38,7 +38,10 @@ public class NoteUtil implements OnCompleteListener<InstanceIdResult>, OnFailure
 
             // Log token
             Log.d(TAG, token);
-            new UserTubeListener(context, PrefShared.getInstance(context).getUid());
+            String uid = PrefShared.getInstance(context).getUid();
+            if (uid != null) {
+                new UserTubeListener(context, uid);
+            }
         }
     }
 

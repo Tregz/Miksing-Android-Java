@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/item_fragment"
-        android:name="com.tregz.miksing.home.item.ItemFragment"
+        android:name="com.tregz.miksing.home.edit.song.SongEditFragment"
         android:label="ItemFragment"
         tools:layout="@layout/fragment_song" />
 

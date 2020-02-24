@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.tregz.miksing.home.list.ListFragment;
-import com.tregz.miksing.home.list.song.SongFragment;
+import com.tregz.miksing.home.list.song.SongListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ public class HomePager extends FragmentStatePagerAdapter {
 
     HomePager(FragmentManager manager) {
         super(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        pages.add(SongFragment.newInstance(0));
-        pages.add(SongFragment.newInstance(1));
+        pages.add(SongListFragment.newInstance(0));
+        pages.add(SongListFragment.newInstance(1));
     }
 
     @NonNull

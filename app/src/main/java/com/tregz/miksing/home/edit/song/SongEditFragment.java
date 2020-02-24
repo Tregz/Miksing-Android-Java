@@ -1,4 +1,4 @@
-package com.tregz.miksing.home.item;
+package com.tregz.miksing.home.edit.song;
 
 import android.content.Context;
 import android.os.Build;
@@ -7,10 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,11 +22,12 @@ import com.tregz.miksing.base.date.DateUtil;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.databinding.FragmentSongBinding;
 import com.tregz.miksing.home.HomeView;
 
 import java.util.Date;
 
-public class ItemFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,
+public class SongEditFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,
         Observer<Song> {
     //private final String TAG = ItemFragment.class.getSimpleName();
     private HomeView listener;
@@ -40,12 +39,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
     private String mixedBy;
 
     // UI references
-    private CheckBox cbDirty;
-    private EditText etArtist;
-    private EditText etMixedBy;
-    private EditText etReleaseDate;
-    private EditText etTitle;
-    private Spinner spMixVersion;
+    private FragmentSongBinding binding;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -71,24 +65,23 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState
     ) {
-        return inflater.inflate(R.layout.fragment_song, container, false);
+        binding = FragmentSongBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        cbDirty = view.findViewById(R.id.cb_dirty);
         // TODO cbDirty.setChecked();
-        cbDirty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.cbDirty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 dirty = isChecked;
             }
         });
 
-        etArtist = view.findViewById(R.id.et_artist);
-        etArtist.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        binding.etArtist.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
                 String sequence = ((EditText)view).getText().toString();
@@ -98,9 +91,8 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
             }
         });
 
-        etMixedBy = view.findViewById(R.id.et_mixed_by);
-        if (mixedBy != null) etMixedBy.setText(mixedBy);
-        etMixedBy.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        if (mixedBy != null) binding.etMixedBy.setText(mixedBy);
+        binding.etMixedBy.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
                 String sequence = ((EditText)view).getText().toString();
@@ -110,16 +102,14 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
             }
         });
 
-        etReleaseDate = view.findViewById(R.id.et_release_date);
-        etReleaseDate.setOnClickListener(new View.OnClickListener() {
+        binding.etReleaseDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog();
             }
         });
 
-        etTitle = view.findViewById(R.id.et_title);
-        etTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        binding.etTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
                 String sequence = ((EditText)view).getText().toString();
@@ -130,16 +120,15 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
         });
 
         if (getContext() != null) {
-            spMixVersion = view.findViewById(R.id.sp_mix_version);
-            SpinUtil.setAdapter(getContext(), spMixVersion, R.array.array_song_mix_version);
-            spMixVersion.setSelection(mix);
-            spMixVersion.setOnItemSelectedListener(this);
+            SpinUtil.setAdapter(getContext(), binding.spMixVersion, R.array.array_song_mix_version);
+            binding.spMixVersion.setSelection(mix);
+            binding.spMixVersion.setOnItemSelectedListener(this);
         }
 
         // Update UI
         if (id != null) {
             LiveData<Song> song = DataReference.getInstance(getContext()).accessSong().query(id);
-            song.observe(this, this);
+            song.observe(getViewLifecycleOwner(), this);
         }
     }
 
@@ -152,8 +141,8 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
             Date released = releasedAt != null ? releasedAt : new Date();
             //ViewGroup group = ((HomeActivity)getActivity()).getViewGroup();
-            ItemDialog dialog = ItemDialog.newInstance(released);
-            dialog.show(getActivity().getSupportFragmentManager(), ItemDialog.TAG);
+            SongEditDialog dialog = SongEditDialog.newInstance(released);
+            dialog.show(getActivity().getSupportFragmentManager(), SongEditDialog.TAG);
         } else toast("Android version must Lollipop or higher");
     }
 
@@ -168,27 +157,27 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
     }
 
     public void release(Date at) {
-        etReleaseDate.setText(DateUtil.dayOfYear(null, at));
+        binding.etReleaseDate.setText(DateUtil.dayOfYear(null, at));
         releasedAt = at;
     }
 
     public void clear() {
-        if (cbDirty != null) cbDirty.setChecked(false);
-        if (etArtist != null) etArtist.setText("");
-        if (etMixedBy != null) etMixedBy.setText("");
-        if (etReleaseDate != null) etReleaseDate.setText("");
-        if (etTitle != null) etTitle.setText("");
-        if (spMixVersion != null) spMixVersion.setSelection(0);
+        binding.cbDirty.setChecked(false);
+        binding.etArtist.setText("");
+        binding.etMixedBy.setText("");
+        binding.etReleaseDate.setText("");
+        binding.etTitle.setText("");
+        binding.spMixVersion.setSelection(0);
     }
 
     public void fill(DataObject item) {
         if (item instanceof Song) {
-            etArtist.setText(((Song)item).getArtist());
-            etReleaseDate.setText(DateUtil.dayOfYear(null, ((Song)item).getReleasedAt()));
-            etTitle.setText(((Song)item).getTitle());
+            binding.etArtist.setText(((Song)item).getArtist());
+            binding.etReleaseDate.setText(DateUtil.dayOfYear(null, ((Song)item).getReleasedAt()));
+            binding.etTitle.setText(((Song)item).getTitle());
             mix = ((Song) item).getMix();
             mixedBy = ((Song) item).getMixedBy();
-            if (cbDirty != null) cbDirty.setSelected(((Song) item).isClean());
+            binding.cbDirty.setSelected(((Song) item).isClean());
         }
     }
 

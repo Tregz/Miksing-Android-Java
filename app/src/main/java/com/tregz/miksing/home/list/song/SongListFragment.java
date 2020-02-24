@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SongFragment extends ListFragment implements Observer<List<TubeSongRelation>>,
+public class SongListFragment extends ListFragment implements Observer<List<TubeSongRelation>>,
         ListView {
 
     //private final String TAG = SongFragment.class.getSimpleName();
@@ -42,10 +42,10 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
     private OnItem onItem;
     private HomeView home;
 
-    public static SongFragment newInstance(int position) {
+    public static SongListFragment newInstance(int position) {
         Bundle args = new Bundle();
         args.putInt(POSITION, position);
-        SongFragment fragment = new SongFragment();
+        SongListFragment fragment = new SongListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,7 +88,7 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        adapter = new SongAdapter(onItem);
+        adapter = new SongListAdapter(onItem);
         recycler.setAdapter(adapter);
         new ItemTouchHelper(new ListGesture(this)).attachToRecyclerView(recycler);
     }
@@ -128,7 +128,7 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
 
     @Override
     public void ordered() {
-        ((SongAdapter)adapter).items.beginBatchedUpdates();
+        ((SongListAdapter)adapter).items.beginBatchedUpdates();
         for (int i = 0; i < relations.size(); i++) {
             TubeSongRelation relation = relations.get(i);
             if (relation.join.getPosition() != i) {
@@ -136,7 +136,7 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
                 new TubeSongUpdate(getContext(), relation.join);
             }
         }
-        ((SongAdapter)adapter).items.endBatchedUpdates();
+        ((SongListAdapter)adapter).items.endBatchedUpdates();
         recycler.smoothScrollToPosition(destination);
     }
 
@@ -167,13 +167,13 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
 
     @Override
     public void search(String query) {
-        if (query.isEmpty()) ((SongAdapter)adapter).items.replaceAll(relations);
+        if (query.isEmpty()) ((SongListAdapter)adapter).items.replaceAll(relations);
         else {
             List<TubeSongRelation> searched = new ArrayList<>();
             for (TubeSongRelation relation : relations)
                 if (relation.song.getTitle().toLowerCase().startsWith(query.toLowerCase()))
                     searched.add(relation);
-            ((SongAdapter)adapter).items.replaceAll(searched);
+            ((SongListAdapter)adapter).items.replaceAll(searched);
         }
     }
 
@@ -182,7 +182,7 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
         if (relations != null && adapter != null && recycler != null) {
             destination = 0;
             if (ListSorted.customOrder()) ordered();
-            ((SongAdapter)adapter).items.replaceAll(relations);
+            ((SongListAdapter)adapter).items.replaceAll(relations);
             recycler.smoothScrollToPosition(0);
         }
     }

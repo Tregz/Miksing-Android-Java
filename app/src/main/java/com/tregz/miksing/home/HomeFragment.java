@@ -9,15 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
-import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
+import com.tregz.miksing.databinding.FragmentHomeBinding;
 import com.tregz.miksing.home.list.ListFragment;
-import com.tregz.miksing.home.list.song.SongFragment;
+import com.tregz.miksing.home.list.song.SongListFragment;
 
 public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
     //private final String TAG = HomeFragment.class.getSimpleName();
-    private ViewPager pager;
+    private FragmentHomeBinding binding;
 
     @Nullable
     @Override
@@ -26,15 +26,15 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState
     ) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        pager = view.findViewById(R.id.view_pager);
-        pager.setAdapter(new HomePager(getChildFragmentManager()));
-        pager.addOnPageChangeListener(this);
+        binding.pager.setAdapter(new HomePager(getChildFragmentManager()));
+        binding.pager.addOnPageChangeListener(this);
     }
 
     @Override
@@ -53,9 +53,9 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     }
 
     void prepare(String id) {
-        pager.setCurrentItem(1);
+        binding.pager.setCurrentItem(1);
         ListFragment page = page();
-        if (page instanceof SongFragment) ((SongFragment)page).live(id);
+        if (page instanceof SongListFragment) ((SongListFragment)page).live(id);
     }
 
     void save(String name) {
@@ -74,8 +74,9 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     }
 
     private ListFragment page() {
-        if (pager.getAdapter() != null) {
-            Object fragment = pager.getAdapter().instantiateItem(pager, pager.getCurrentItem());
+        if (binding.pager.getAdapter() != null) {
+            int position = binding.pager.getCurrentItem();
+            Object fragment = binding.pager.getAdapter().instantiateItem(binding.pager, position);
             if (fragment instanceof ListFragment) return ((ListFragment) fragment);
         }
         return null;

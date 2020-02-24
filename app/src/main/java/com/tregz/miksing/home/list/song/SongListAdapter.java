@@ -20,14 +20,14 @@ import com.tregz.miksing.home.list.ListHolder;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 
-public class SongAdapter extends RecyclerView.Adapter<ListHolder> {
-    public final String TAG = SongAdapter.class.getSimpleName();
+public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
+    public final String TAG = SongListAdapter.class.getSimpleName();
 
-    private SongFragment.OnItem listener;
+    private SongListFragment.OnItem listener;
     private SortedListAdapterCallback<TubeSongRelation> callback = new ListSorted<>(this);
     SortedList<TubeSongRelation> items = new SortedList<>(TubeSongRelation.class, callback);
 
-    SongAdapter(SongFragment.OnItem listener) {
+    SongListAdapter(SongListFragment.OnItem listener) {
         this.listener = listener;
     }
 

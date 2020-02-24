@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/content_home"/>
+        <include android:id="@+id/content_home" layout="@layout/content_home"/>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_start"
@@ -35,6 +35,6 @@
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
-    <include layout="@layout/content_wait"/>
+    <include android:id="@+id/content_wait" layout="@layout/content_wait"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

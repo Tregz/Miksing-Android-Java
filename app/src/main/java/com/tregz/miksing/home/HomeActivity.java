@@ -37,10 +37,11 @@ import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.User;
 import com.tregz.miksing.data.user.UserListener;
-import com.tregz.miksing.home.item.ItemFragment;
-import com.tregz.miksing.home.item.ItemView;
-import com.tregz.miksing.home.list.song.SongFragment;
-import com.tregz.miksing.home.list.tube.TubeFragment;
+import com.tregz.miksing.databinding.ActivityHomeBinding;
+import com.tregz.miksing.home.edit.song.SongEditFragment;
+import com.tregz.miksing.home.edit.song.SongEditView;
+import com.tregz.miksing.home.list.song.SongListFragment;
+import com.tregz.miksing.home.list.tube.TubeListFragment;
 import com.tregz.miksing.home.warn.WarnClear;
 import com.tregz.miksing.home.warn.WarnFetch;
 import com.tregz.miksing.home.warn.WarnPlaylist;
@@ -78,14 +79,15 @@ import static com.tregz.miksing.home.HomeNavigation.SIGN_IN;
 
 public class HomeActivity extends BaseActivity implements
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout>,
-        FragmentManager.OnBackStackChangedListener, HomeView, ItemView, SongFragment.OnItem,
-        TubeFragment.OnItem {
+        FragmentManager.OnBackStackChangedListener, HomeView, SongEditView, SongListFragment.OnItem,
+        TubeListFragment.OnItem {
 
     private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
-    private CollapsingToolbarLayout ctl;
+
+    private ActivityHomeBinding binding;
+    private CollapsingToolbarLayout toolbarLayout;
     private FloatingActionButton[] buttons = new FloatingActionButton[Button.values().length];
-    private FootNavigation bottom;
     //private ImageView imageView;
     private HomeNavigation navigation;
     private PlayWeb webView;
@@ -102,7 +104,7 @@ public class HomeActivity extends BaseActivity implements
     public void onItemLongClick(Song song) {
         String id = song.getId();
         controller().navigate(HomeFragmentDirections.actionHomeFragmentToItemFragment(id));
-        bottom.hide();
+        if (binding.contentHome != null) binding.contentHome.bottom.hide();
     }
 
     @Override
@@ -121,30 +123,31 @@ public class HomeActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         // to delete all song data from sql table: new SongWipe(getContext());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         new NoteUtil(this);
-        if (portrait()) {
+        if (binding.contentHome != null) {
             // Top menu
-            Toolbar toolbar = findViewById(R.id.toolbar);
+            Toolbar toolbar = binding.contentHome.appBar.toolbar;
             setSupportActionBar(toolbar);
             // Hamburger menu item for start (gravity) drawer
             NavGraph graph = controller().getGraph();
             AppBarConfiguration.Builder builder = new AppBarConfiguration.Builder(graph);
-            DrawerLayout layout = findViewById(R.id.drawerLayout);
+            DrawerLayout layout = binding.drawerLayout;
             AppBarConfiguration abc = builder.setDrawerLayout(layout).build();
-            ctl = findViewById(R.id.toolbar_layout);
+            toolbarLayout = binding.contentHome.appBar.toolbarLayout;
             // Toolbar setup including auto update of the collapsing toolbar's title
-            NavigationUI.setupWithNavController(ctl, toolbar, controller(), abc);
+            NavigationUI.setupWithNavController(toolbarLayout, toolbar, controller(), abc);
             // DrawerListener & OnNavigationItemSelectedListener
             NavigationView[] drawers = new NavigationView[Drawer.values().length];
-            drawers[Drawer.RIGHT.ordinal()] = findViewById(R.id.nav_right);
-            drawers[Drawer.START.ordinal()] = findViewById(R.id.nav_start);
-            bottom = findViewById(R.id.bottom);
+            drawers[Drawer.RIGHT.ordinal()] = binding.navRight;
+            drawers[Drawer.START.ordinal()] = binding.navStart;
+            final FootNavigation bottom = binding.contentHome.bottom;
             if (layout != null) navigation = new HomeNavigation(this, bottom, layout, drawers);
             host().getChildFragmentManager().addOnBackStackChangedListener(this);
 
             // Panoramic height for the container of the media players
-            FrameLayout players = findViewById(R.id.players);
+            FrameLayout players = binding.contentHome.appBar.players;
             ViewGroup.LayoutParams params = players.getLayoutParams();
             params.height = (int) (getResources().getDisplayMetrics().widthPixels * 0.5625);
             players.setLayoutParams(params);
@@ -163,7 +166,7 @@ public class HomeActivity extends BaseActivity implements
                     if (e.getMessage() != null) toast(e.getMessage());
                 }
             }); */
-            buttons[Button.FAB.ordinal()] = findViewById(R.id.fab);
+            buttons[Button.FAB.ordinal()] = binding.contentHome.fab;
             buttons[Button.FAB.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -171,23 +174,23 @@ public class HomeActivity extends BaseActivity implements
                     if (v instanceof FloatingActionButton) {
                         if (!((FloatingActionButton) v).isExpanded()) {
                             //controller().navigate(R.id.action_homeFragment_to_workFragment);
-                            expand((FloatingActionButton)v);
+                            expand((FloatingActionButton) v);
                             bottom.hide();
                         } else {
-                            expand((FloatingActionButton)v);
+                            expand((FloatingActionButton) v);
                             bottom.show(false);
                         }
                     }
                 }
             });
-            buttons[Button.CLEAR.ordinal()] = findViewById(R.id.clear_all);
+            buttons[Button.CLEAR.ordinal()] = binding.contentHome.clearAll;
             buttons[Button.CLEAR.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new WarnClear().show(getSupportFragmentManager(), WarnClear.TAG);
                 }
             });
-            buttons[Button.SAVE.ordinal()] = findViewById(R.id.save);
+            buttons[Button.SAVE.ordinal()] = binding.contentHome.save;
             buttons[Button.SAVE.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -195,7 +198,7 @@ public class HomeActivity extends BaseActivity implements
                     //((HomeDialog)add(new HomeDialog(HomeActivity.this))).save();
                 }
             });
-            buttons[Button.FETCH.ordinal()] = findViewById(R.id.web_search);
+            buttons[Button.FETCH.ordinal()] = binding.contentHome.webSearch;
             buttons[Button.FETCH.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -203,30 +206,37 @@ public class HomeActivity extends BaseActivity implements
                 }
             });
             // Scroll listener, to show/hide options while collapsing
-            ((AppBarLayout)findViewById(R.id.app_bar)).addOnOffsetChangedListener(this);
+            ((AppBarLayout)binding.contentHome.appBar.getRoot()).addOnOffsetChangedListener(this);
+
+            videoView = binding.contentHome.appBar.video1;
+            webView = binding.contentHome.appBar.webview;
+        } else {
+            videoView = binding.video1;
+            webView = binding.webview;
         }
 
         // Stream video player
-        webView = findViewById(R.id.webview);
         // Stock video player
-        videoView = findViewById(R.id.video_1);
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.start(); // auto play
-            }
-        });
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mp.start(); // loop
-            }
-        });
+
+        if (videoView != null) {
+            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start(); // auto play
+                }
+            });
+            videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.start(); // loop
+                }
+            });
+        }
         String anim = "anim/Miksing_Logo-Animated.mp4";
         task(anim).addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                videoView.setVideoURI(uri);
+                // TODO, when user is logged ? videoView.setVideoURI(uri);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -257,15 +267,18 @@ public class HomeActivity extends BaseActivity implements
 
         // Check Google Map permission
         if (!check(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            String[] permissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION };
+            String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this, permissions, LOCATION_CODE);
         }
 
         // TODO remove after test
-        User user = new User(AuthUtil.user().getUid(), new Date());
-        user.setName(AuthUtil.user().getDisplayName());
-        user.setEmail(AuthUtil.user().getEmail());
-        new UserListener(this, user);
+        FirebaseUser firebaseUser = AuthUtil.user();
+        if (firebaseUser != null) {
+            User user = new User(firebaseUser.getUid(), new Date());
+            user.setName(AuthUtil.user().getDisplayName());
+            user.setEmail(AuthUtil.user().getEmail());
+            new UserListener(this, user);
+        }
     }
 
     @Override
@@ -280,7 +293,8 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home: if (!back()) navigation.toggle(GravityCompat.START);
+            case android.R.id.home:
+                if (!back()) navigation.toggle(GravityCompat.START);
                 return true;
             case R.id.login:
                 if (navigation != null) navigation.toggle(GravityCompat.END);
@@ -294,33 +308,33 @@ public class HomeActivity extends BaseActivity implements
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SIGN_IN) {
-             if (resultCode == Activity.RESULT_OK) {
-                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                 if (firebaseUser != null) {
-                     Log.d(TAG, "set UID " + firebaseUser.getUid());
-                     PrefShared.getInstance(this).setUid(firebaseUser.getUid());
-                     PrefShared.getInstance(this).setUsername(firebaseUser.getDisplayName());
-                     PrefShared.getInstance(this).setEmail(firebaseUser.getEmail());
+            if (resultCode == Activity.RESULT_OK) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser != null) {
+                    Log.d(TAG, "set UID " + firebaseUser.getUid());
+                    PrefShared.getInstance(this).setUid(firebaseUser.getUid());
+                    PrefShared.getInstance(this).setUsername(firebaseUser.getDisplayName());
+                    PrefShared.getInstance(this).setEmail(firebaseUser.getEmail());
 
-                     User user = new User(firebaseUser.getUid(), new Date());
-                     user.setName(firebaseUser.getDisplayName());
-                     new UserListener(this, user);
+                    User user = new User(firebaseUser.getUid(), new Date());
+                    user.setName(firebaseUser.getDisplayName());
+                    new UserListener(this, user);
 
-                     // Retrieve fcm token for testing (result printed to Logcat)
-                     new NoteUtil(this);
-                 }
-                 navigation.update();
-             } else {
-                 IdpResponse response = IdpResponse.fromResultIntent(data);
-                 if (response != null) {
-                     FirebaseUiException exception = response.getError();
-                     if (exception != null) {
-                         if (exception.getErrorCode() == ErrorCodes.NO_NETWORK)
-                             snack(getString(R.string.no_internet_connection));
-                         if (exception.getMessage() != null) Log.e(TAG, exception.getMessage());
-                     }
-                 }
-             }
+                    // Retrieve fcm token for testing (result printed to Logcat)
+                    new NoteUtil(this);
+                }
+                navigation.update();
+            } else {
+                IdpResponse response = IdpResponse.fromResultIntent(data);
+                if (response != null) {
+                    FirebaseUiException exception = response.getError();
+                    if (exception != null) {
+                        if (exception.getErrorCode() == ErrorCodes.NO_NETWORK)
+                            snack(getString(R.string.no_internet_connection));
+                        if (exception.getMessage() != null) Log.e(TAG, exception.getMessage());
+                    }
+                }
+            }
         }
     }
 
@@ -331,9 +345,9 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public void onBackStackChanged() {
-        if (portrait() && root()) {
-            expand((FloatingActionButton)findViewById(R.id.fab));
-            ((FootNavigation)findViewById(R.id.bottom)).show(true);
+        if (binding.contentHome != null && root()) {
+            expand(binding.contentHome.fab);
+            binding.contentHome.bottom.show(true);
         }
     }
 
@@ -341,8 +355,9 @@ public class HomeActivity extends BaseActivity implements
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         Log.d(TAG, "OffsetChanged " + verticalOffset); // TODO: adjust for device sizes
         if (portrait()) {
-            if (verticalOffset < -300) { if (!collapsing) collapsing = true; }
-            else if (collapsing) collapsing = false;
+            if (verticalOffset < -300) {
+                if (!collapsing) collapsing = true;
+            } else if (collapsing) collapsing = false;
             /* if (collapsing) {
                 if (buttons[0].getVisibility() == View.VISIBLE) {
                     //imageView.setVisibility(View.INVISIBLE);
@@ -372,7 +387,7 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public void onClearItemDetails() {
         Fragment primary = primary();
-        if (primary instanceof ItemFragment) ((ItemFragment) primary).clear();
+        if (primary instanceof SongEditFragment) ((SongEditFragment) primary).clear();
     }
 
     @Override
@@ -383,7 +398,7 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public void onFillItemDetails(DataObject item) {
         Fragment primary = primary();
-        if (primary instanceof ItemFragment) ((ItemFragment) primary).fill(item);
+        if (primary instanceof SongEditFragment) ((SongEditFragment) primary).fill(item);
     }
 
     @Override
@@ -394,7 +409,7 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public void onSaveItem(String name) {
         Fragment primary = primary();
-        if (primary instanceof ItemFragment) ((ItemFragment) primary).save();
+        if (primary instanceof SongEditFragment) ((SongEditFragment) primary).save();
         else if (primary instanceof HomeFragment) ((HomeFragment) primary).save(name);
     }
 
@@ -411,7 +426,7 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public void release(Date at) {
         Fragment primary = primary();
-        if (primary instanceof ItemFragment) ((ItemFragment) primary).release(at);
+        if (primary instanceof SongEditFragment) ((SongEditFragment) primary).release(at);
     }
 
     @Override
@@ -422,16 +437,18 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public void search(boolean focused) {
-        ViewGroup.LayoutParams toolbarParams = ctl.getLayoutParams();
-        int largeToolbar = (int) getResources().getDimension(R.dimen.large_toolbar_height);
-        int normalToolbar = (int) getResources().getDimension(R.dimen.normal_toolbar_height);
-        toolbarParams.height = focused ? normalToolbar : largeToolbar;
-        ctl.setLayoutParams(toolbarParams);
-        FrameLayout header = findViewById(R.id.header);
-        ViewGroup.LayoutParams headerParams = header.getLayoutParams();
-        int normalHeader = (int) getResources().getDimension(R.dimen.normal_header_height);
-        headerParams.height = focused ? 0 : normalHeader;
-        header.setLayoutParams(headerParams);
+        if (binding.contentHome != null) {
+            ViewGroup.LayoutParams toolbarParams = toolbarLayout.getLayoutParams();
+            int largeToolbar = (int) getResources().getDimension(R.dimen.large_toolbar_height);
+            int normalToolbar = (int) getResources().getDimension(R.dimen.normal_toolbar_height);
+            toolbarParams.height = focused ? normalToolbar : largeToolbar;
+            toolbarLayout.setLayoutParams(toolbarParams);
+            FrameLayout header = binding.contentHome.header;
+            ViewGroup.LayoutParams headerParams = header.getLayoutParams();
+            int normalHeader = (int) getResources().getDimension(R.dimen.normal_header_height);
+            headerParams.height = focused ? 0 : normalHeader;
+            header.setLayoutParams(headerParams);
+        }
     }
 
     @Override
@@ -461,8 +478,7 @@ public class HomeActivity extends BaseActivity implements
                 fab.setVisibility(View.VISIBLE);
                 fab.show();
             }
-        }
-        else {
+        } else {
             if (fab.isExpanded()) expand(fab);
             fab.setVisibility(View.GONE);
         }

@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.tregz.miksing.R;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseFragment;
+import com.tregz.miksing.databinding.FragmentUserBinding;
 import com.tregz.miksing.home.HomeActivity;
 
 import static android.view.View.GONE;
@@ -22,8 +23,7 @@ import static android.view.View.VISIBLE;
 public class UserFragment extends BaseFragment {
     public final static String TAG = UserFragment.class.getSimpleName();
 
-    private TextView tvEmail;
-    private TextView tvUsername;
+    private FragmentUserBinding binding;
 
     @Nullable
     @Override
@@ -32,23 +32,21 @@ public class UserFragment extends BaseFragment {
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState
     ) {
-        return inflater.inflate(R.layout.fragment_user, container, false);
+        binding = FragmentUserBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final LinearLayout editor = view.findViewById(R.id.editor);
-        view.findViewById(R.id.profile).setOnClickListener(new View.OnClickListener() {
+        binding.profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     v.setSelected(!v.isSelected());
-                    editor.setVisibility(v.isSelected() ? VISIBLE : GONE);
+                    binding.editor.setVisibility(v.isSelected() ? VISIBLE : GONE);
             }
         });
-        tvUsername = view.findViewById(R.id.user_name);
-        tvEmail = view.findViewById(R.id.subtitle);
-        view.findViewById(R.id.my_location).setOnClickListener(new View.OnClickListener() {
+        binding.myLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserMap map = map();
@@ -56,25 +54,27 @@ public class UserFragment extends BaseFragment {
             }
         });
         update();
-        final EditText home = view.findViewById(R.id.user_home);
-        view.findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
+        //final EditText home = view.findViewById(R.id.user_home);
+        binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String location = home.getText().toString();
-                UserMap map = map();
-                if (map != null) map.fromLocationName(location);
-                // TODO save
+                if (binding.userHome.getText() != null) {
+                    String location = binding.userHome.getText().toString();
+                    UserMap map = map();
+                    if (map != null) map.fromLocationName(location);
+                    // TODO save
+                }
             }
         });
     }
 
     public void update() {
         if (getContext() != null) {
-            tvUsername.setText(PrefShared.getInstance(getContext()).getUsername());
+            binding.userName.setText(PrefShared.getInstance(getContext()).getUsername());
             String email = PrefShared.getInstance(getContext()).getEmail();
             if ((email == null || email.isEmpty()) && getContext() != null)
                 email = getContext().getString(R.string.nav_drawer_sub);
-            tvEmail.setText(email);
+            binding.subtitle.setText(email);
         }
     }
 

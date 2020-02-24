@@ -15,6 +15,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
+    viewBinding.enabled = true
     buildTypes {
         release {
             minifyEnabled false
@@ -38,8 +39,8 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment:$navigation_version"
     implementation "androidx.navigation:navigation-ui:$navigation_version"
 
-    def room_version = "2.2.2"
-    implementation "androidx.room:room-runtime:2.2.3"
+    def room_version = '2.2.4'
+    implementation "androidx.room:room-runtime:2.2.4"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "android.arch.persistence.room:rxjava2:$room_version"
 
@@ -54,7 +55,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:$play_version"
     implementation "com.google.android.gms:play-services-location:$play_version"
 
-    implementation 'com.google.android.material:material:1.2.0-alpha04'
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
 
     implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation 'com.google.firebase:firebase-messaging:20.1.0'

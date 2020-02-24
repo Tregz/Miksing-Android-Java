@@ -4,6 +4,6 @@
     app:startDestination="@id/userTube">
     <fragment
         android:id="@+id/userTube"
-        android:name="com.tregz.miksing.home.list.tube.TubeFragment"
+        android:name="com.tregz.miksing.home.list.tube.TubeListFragment"
         android:label="TubeFragment" />
 </navigation>

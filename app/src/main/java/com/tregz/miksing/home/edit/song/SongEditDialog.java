@@ -1,4 +1,4 @@
-package com.tregz.miksing.home.item;
+package com.tregz.miksing.home.edit.song;
 
 import android.content.Context;
 import android.app.DatePickerDialog;
@@ -16,15 +16,15 @@ import com.tregz.miksing.base.date.DateDialog;
 import java.util.Calendar;
 import java.util.Date;
 
-public class ItemDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-    public final static String TAG = ItemDialog.class.getSimpleName();
+public class SongEditDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+    public final static String TAG = SongEditDialog.class.getSimpleName();
     private final static String DATE = "date";
 
     private Date date;
-    private ItemView listener;
+    private SongEditView listener;
 
-    static ItemDialog newInstance(@NonNull Date  date) {
-        ItemDialog dialog = new ItemDialog();
+    static SongEditDialog newInstance(@NonNull Date  date) {
+        SongEditDialog dialog = new SongEditDialog();
         Bundle bundle = new Bundle();
         bundle.putSerializable(DATE, date);
         dialog.setArguments(bundle);
@@ -35,9 +35,9 @@ public class ItemDialog extends DialogFragment implements DatePickerDialog.OnDat
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            listener = (ItemView) context;
+            listener = (SongEditView) context;
         } catch (ClassCastException e) {
-            String name = ItemView.class.getSimpleName();
+            String name = SongEditView.class.getSimpleName();
             throw new ClassCastException(context.toString() + " must implement " + name);
         }
     }

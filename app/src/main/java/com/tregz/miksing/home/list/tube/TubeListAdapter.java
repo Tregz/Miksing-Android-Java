@@ -17,14 +17,14 @@ import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.home.list.ListHolder;
 
 
-public class TubeAdapter extends RecyclerView.Adapter<ListHolder> {
+public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
     //private String TAG = TubeAdapter.class.getSimpleName();
 
-    private TubeFragment.OnItem listener;
+    private TubeListFragment.OnItem listener;
     private SortedListAdapterCallback<UserTubeRelation> callback = new ListSorted<>(this);
     SortedList<UserTubeRelation> items = new SortedList<>(UserTubeRelation.class, callback);
 
-    TubeAdapter(TubeFragment.OnItem listener) {
+    TubeListAdapter(TubeListFragment.OnItem listener) {
         this.listener = listener;
     }
 

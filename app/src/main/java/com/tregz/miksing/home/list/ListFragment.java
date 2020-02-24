@@ -15,12 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
+import com.tregz.miksing.databinding.FragmentListBinding;
 
 import static android.telephony.TelephonyManager.PHONE_TYPE_NONE;
 
 public abstract class ListFragment extends BaseFragment {
     //private final String TAG = ListFragment.class.getSimpleName();
 
+    protected FragmentListBinding binding;
     protected RecyclerView.Adapter<?> adapter;
     protected RecyclerView recycler;
 
@@ -31,13 +33,14 @@ public abstract class ListFragment extends BaseFragment {
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState
     ) {
-        return inflater.inflate(R.layout.fragment_list, container, false);
+        binding = FragmentListBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recycler = view.findViewById(R.id.recycler);
+        recycler = binding.recycler;
         if (columns() <= 1) recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         else recycler.setLayoutManager(new GridLayoutManager(getContext(), columns()));
     }

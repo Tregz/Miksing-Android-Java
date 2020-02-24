@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/top_home"/>
+    <include android:id="@+id/app_bar" layout="@layout/top_home"/>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested"
