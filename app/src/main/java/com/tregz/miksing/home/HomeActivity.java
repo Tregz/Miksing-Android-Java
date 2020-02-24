@@ -217,7 +217,6 @@ public class HomeActivity extends BaseActivity implements
 
         // Stream video player
         // Stock video player
-
         if (videoView != null) {
             videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -236,7 +235,7 @@ public class HomeActivity extends BaseActivity implements
         task(anim).addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                // TODO, when user is logged ? videoView.setVideoURI(uri);
+                videoView.setVideoURI(uri);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -244,6 +243,7 @@ public class HomeActivity extends BaseActivity implements
                 if (e.getMessage() != null) toast(e.getMessage());
             }
         });
+
         videoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
