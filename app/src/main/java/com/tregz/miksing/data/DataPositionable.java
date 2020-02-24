@@ -7,9 +7,9 @@ import androidx.room.ColumnInfo;
 
 import com.tregz.miksing.data.DataNotation;
 
-public abstract class DataJoin extends Data {
+public abstract class DataPositionable extends Data {
 
-    protected DataJoin() {}
+    protected DataPositionable() {}
 
     public int getPosition() {
         return position;

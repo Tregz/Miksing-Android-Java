@@ -10,11 +10,11 @@ import com.tregz.miksing.data.DataNotation;
 
 import java.util.Date;
 
-public abstract class DataItem extends Data {
+public abstract class DataObject extends Data {
 
-    protected DataItem() {}
+    protected DataObject() {}
 
-    protected DataItem(@NonNull String id, @NonNull Date createdAt) {
+    protected DataObject(@NonNull String id, @NonNull Date createdAt) {
         super(id, createdAt);
     }
 

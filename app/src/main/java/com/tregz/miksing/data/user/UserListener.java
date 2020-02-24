@@ -10,8 +10,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tregz.miksing.data.DataInsert;
 import com.tregz.miksing.data.DataReference;
-import com.tregz.miksing.data.DataSingle;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.user.tube.UserTubeListener;
 
@@ -19,8 +19,8 @@ import io.reactivex.MaybeObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class UserMaybe implements MaybeObserver<User>, ValueEventListener {
-    private final String TAG = UserMaybe.class.getSimpleName();
+public class UserListener implements MaybeObserver<User>, ValueEventListener {
+    private final String TAG = UserListener.class.getSimpleName();
 
     private boolean exist = false;
     private Context context;
@@ -28,7 +28,7 @@ public class UserMaybe implements MaybeObserver<User>, ValueEventListener {
     private User user;
     private UserAccess access;
 
-    public UserMaybe(Context context, User user) {
+    public UserListener(Context context, User user) {
         this.context = context;
         this.user = user;
         table().child(user.getId()).child("data").addListenerForSingleValueEvent(this);
@@ -48,8 +48,9 @@ public class UserMaybe implements MaybeObserver<User>, ValueEventListener {
     public void onComplete() {
         Log.d(TAG, "exist? " + exist);
         /* if (exist) new UserUpdate(context, user);
-        else */ //new UserInsert(context, user);
-        access().insert(user).subscribeOn(Schedulers.io()).subscribe(new UserInsert());
+        else */ //new DataInsert(context, user);
+        access().insert(user).subscribeOn(Schedulers.io()).subscribe(new DataInsert());
+        new UserTubeListener(context, user.getId());
     }
 
     @Override

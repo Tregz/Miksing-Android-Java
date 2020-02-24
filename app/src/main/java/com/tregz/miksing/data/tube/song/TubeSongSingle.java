@@ -18,6 +18,11 @@ public abstract class TubeSongSingle<T> implements SingleObserver<T> {
     }
 
     @Override
+    public void onError(Throwable e) {
+        e.printStackTrace();
+    }
+
+    @Override
     public void onSubscribe(Disposable d) {
         // do nothing
     }
@@ -25,11 +30,6 @@ public abstract class TubeSongSingle<T> implements SingleObserver<T> {
     @Override
     public void onSuccess(T t) {
         Log.d(TAG, t.toString());
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        e.printStackTrace();
     }
 
     TubeSongAccess access() {

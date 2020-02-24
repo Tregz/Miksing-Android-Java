@@ -17,22 +17,16 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.base.spin.SpinUtil;
 import com.tregz.miksing.base.date.DateUtil;
-import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
-import com.tregz.miksing.data.DataItem;
+import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.song.SongInsert;
 import com.tregz.miksing.home.HomeView;
-import com.tregz.miksing.home.list.ListCollection;
 
 import java.util.Date;
-import java.util.HashMap;
 
 public class ItemFragment extends BaseFragment implements AdapterView.OnItemSelectedListener,
         Observer<Song> {
@@ -187,7 +181,7 @@ public class ItemFragment extends BaseFragment implements AdapterView.OnItemSele
         if (spMixVersion != null) spMixVersion.setSelection(0);
     }
 
-    public void fill(DataItem item) {
+    public void fill(DataObject item) {
         if (item instanceof Song) {
             etArtist.setText(((Song)item).getArtist());
             etReleaseDate.setText(DateUtil.dayOfYear(null, ((Song)item).getReleasedAt()));

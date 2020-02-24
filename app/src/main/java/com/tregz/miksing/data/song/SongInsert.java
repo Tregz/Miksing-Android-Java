@@ -1,6 +1,7 @@
 package com.tregz.miksing.data.song;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,6 +21,7 @@ public class SongInsert extends SongSingle<List<Long>> {
 
 
         access().insert(songs).subscribeOn(Schedulers.io()).subscribe(this);
+        Log.d(TAG, "Song inserted");
         for (Song song : songs) {
             //if (ref.getKey() != null) {
 

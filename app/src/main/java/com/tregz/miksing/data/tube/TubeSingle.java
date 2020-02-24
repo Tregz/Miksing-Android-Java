@@ -1,39 +1,24 @@
 package com.tregz.miksing.data.tube;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.tregz.miksing.data.DataReference;
-import com.tregz.miksing.data.song.SongAccess;
+import com.tregz.miksing.data.DataSingle;
 
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
+public class TubeSingle<T> extends DataSingle<T> {
 
-public abstract class TubeSingle<T> implements SingleObserver<T> {
-    protected String TAG = TubeSingle.class.getSimpleName();
+    private TubeSingle.OnSave listener;
 
-    private Context context;
-
-    TubeSingle(Context context) {
-        this.context = context;
-    }
-
-    @Override
-    public void onSubscribe(Disposable d) {
-        // do nothing
+    TubeSingle(TubeSingle.OnSave listener) {
+        this.listener = listener;
     }
 
     @Override
     public void onSuccess(T t) {
         Log.d(TAG, t.toString());
+        listener.saved();
     }
 
-    @Override
-    public void onError(Throwable e) {
-        e.printStackTrace();
-    }
-
-    TubeAccess access() {
-        return DataReference.getInstance(context).accessTube();
+    interface OnSave {
+        void saved();
     }
 }

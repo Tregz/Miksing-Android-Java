@@ -3,19 +3,14 @@ package com.tregz.miksing.data.tube;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-import com.tregz.miksing.data.Data;
-import com.tregz.miksing.data.DataItem;
-import com.tregz.miksing.data.DataJoin;
-import com.tregz.miksing.data.DataNotation;
-import com.tregz.miksing.data.user.User;
+import com.tregz.miksing.data.DataObject;
 
 import java.util.Date;
 
 @Entity(tableName = Tube.TABLE)
-public class Tube extends DataItem {
+public class Tube extends DataObject {
 
     public Tube(@NonNull String id, @NonNull Date createdAt, @NonNull String name) {
         super(id, createdAt);

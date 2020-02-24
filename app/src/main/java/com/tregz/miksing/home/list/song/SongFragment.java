@@ -38,6 +38,7 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
     private LiveData<List<TubeSongRelation>> songLiveData;
     private List<TubeSongRelation> relations;
     private int destination = 0; // last gesture's target position
+    private int position;
     private OnItem onItem;
     private HomeView home;
 
@@ -64,17 +65,23 @@ public class SongFragment extends ListFragment implements Observer<List<TubeSong
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int position = getArguments() != null ? getArguments().getInt(POSITION, 0) : 0;
+        position = getArguments() != null ? getArguments().getInt(POSITION, 0) : 0;
+        live(null);
+
+    }
+
+    public void live(String id) {
         TubeSongAccess access = DataReference.getInstance(getContext()).accessTubeSong();
-        if (songLiveData == null) switch (position) {
+        if (songLiveData != null && songLiveData.hasObservers()) songLiveData.removeObserver(this);
+        switch (position) {
             case 0:
                 songLiveData = access.all();
                 break;
             case 1:
                 String listId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
-                songLiveData = access.prepare(listId);
+                songLiveData = access.prepare(id == null ? listId : id);
                 break;
-        } else if (songLiveData.hasObservers()) songLiveData.removeObserver(this);
+        }
         if (songLiveData != null) songLiveData.observe(this, this);
     }
 

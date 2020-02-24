@@ -11,7 +11,7 @@ public abstract class DataSingle<T> implements SingleObserver<T> {
 
     protected Context context;
 
-    public DataSingle() {};
+    public DataSingle() {}
 
     public DataSingle(Context context) {
         this.context = context;

@@ -8,13 +8,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
 import com.tregz.miksing.data.DataNotation;
-import com.tregz.miksing.data.DataItem;
+import com.tregz.miksing.data.DataObject;
 
 import java.util.Date;
 
 
 @Entity(tableName = User.TABLE)
-public class User extends DataItem {
+public class User extends DataObject {
 
     public final static String TABLE = "user";
 

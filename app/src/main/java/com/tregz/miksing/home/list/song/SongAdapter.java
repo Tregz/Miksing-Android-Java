@@ -16,10 +16,11 @@ import com.tregz.miksing.base.date.DateUtil;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
+import com.tregz.miksing.home.list.ListHolder;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 
-public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
+public class SongAdapter extends RecyclerView.Adapter<ListHolder> {
     public final String TAG = SongAdapter.class.getSimpleName();
 
     private SongFragment.OnItem listener;
@@ -30,15 +31,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
         this.listener = listener;
     }
 
-    @NonNull
     @Override
-    public SongHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new SongHolder(inflater.inflate(R.layout.card_work, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull SongHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ListHolder holder, final int position) {
         if (items.get(position) != null) {
             final TubeSongRelation relation = items.get(position);
             final Song song = relation.song;
@@ -76,6 +70,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongHolder> {
                 }
             }); */
         }
+    }
+
+    @NonNull
+    @Override
+    public ListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        return new ListHolder(inflater.inflate(R.layout.card_work, parent, false));
     }
 
     @Override

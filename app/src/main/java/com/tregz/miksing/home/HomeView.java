@@ -1,10 +1,9 @@
 package com.tregz.miksing.home;
 
 import android.content.Intent;
-import android.webkit.WebView;
 
 import com.tregz.miksing.core.play.PlayWeb;
-import com.tregz.miksing.data.DataItem;
+import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
@@ -19,7 +18,7 @@ public interface HomeView {
 
     void onClearPlaylist();
 
-    void onFillItemDetails(DataItem item);
+    void onFillItemDetails(DataObject item);
 
     void onHttpRequestResult(List<Song> list);
 

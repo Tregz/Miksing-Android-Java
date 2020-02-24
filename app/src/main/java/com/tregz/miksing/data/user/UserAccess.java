@@ -30,7 +30,6 @@ public interface UserAccess extends DataAccess<User> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Single<List<Long>> insert(User...data);
 
-
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
     Maybe<User> query(String key);
 

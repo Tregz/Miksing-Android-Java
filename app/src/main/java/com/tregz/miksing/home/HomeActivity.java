@@ -31,15 +31,16 @@ import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.foot.FootScroll;
 import com.tregz.miksing.core.play.PlayVideo;
 import com.tregz.miksing.core.play.PlayWeb;
-import com.tregz.miksing.data.DataItem;
+import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.User;
-import com.tregz.miksing.data.user.UserInsert;
-import com.tregz.miksing.data.user.UserMaybe;
+import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.home.item.ItemFragment;
 import com.tregz.miksing.home.item.ItemView;
 import com.tregz.miksing.home.list.song.SongFragment;
+import com.tregz.miksing.home.list.tube.TubeFragment;
 import com.tregz.miksing.home.warn.WarnClear;
 import com.tregz.miksing.home.warn.WarnFetch;
 import com.tregz.miksing.home.warn.WarnPlaylist;
@@ -48,6 +49,7 @@ import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -74,9 +76,10 @@ import java.util.List;
 import static android.view.View.GONE;
 import static com.tregz.miksing.home.HomeNavigation.SIGN_IN;
 
-public class HomeActivity extends BaseActivity implements HomeView,
+public class HomeActivity extends BaseActivity implements
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout>,
-        FragmentManager.OnBackStackChangedListener, SongFragment.OnItem, ItemView {
+        FragmentManager.OnBackStackChangedListener, HomeView, ItemView, SongFragment.OnItem,
+        TubeFragment.OnItem {
 
     private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
@@ -100,6 +103,18 @@ public class HomeActivity extends BaseActivity implements HomeView,
         String id = song.getId();
         controller().navigate(HomeFragmentDirections.actionHomeFragmentToItemFragment(id));
         bottom.hide();
+    }
+
+    @Override
+    public void onItemClick(Tube tube) {
+        Fragment primary = primary();
+        navigation.toggle(Gravity.START);
+        if (primary instanceof HomeFragment) ((HomeFragment) primary).prepare(tube.getId());
+
+    }
+
+    @Override
+    public void onItemLongClick(Tube tube) {
     }
 
     @Override
@@ -250,7 +265,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
         User user = new User(AuthUtil.user().getUid(), new Date());
         user.setName(AuthUtil.user().getDisplayName());
         user.setEmail(AuthUtil.user().getEmail());
-        new UserMaybe(this, user);
+        new UserListener(this, user);
     }
 
     @Override
@@ -289,7 +304,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
 
                      User user = new User(firebaseUser.getUid(), new Date());
                      user.setName(firebaseUser.getDisplayName());
-                     new UserMaybe(this, user);
+                     new UserListener(this, user);
 
                      // Retrieve fcm token for testing (result printed to Logcat)
                      new NoteUtil(this);
@@ -366,7 +381,7 @@ public class HomeActivity extends BaseActivity implements HomeView,
     }
 
     @Override
-    public void onFillItemDetails(DataItem item) {
+    public void onFillItemDetails(DataObject item) {
         Fragment primary = primary();
         if (primary instanceof ItemFragment) ((ItemFragment) primary).fill(item);
     }

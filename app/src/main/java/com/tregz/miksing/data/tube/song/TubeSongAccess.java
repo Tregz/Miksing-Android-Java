@@ -25,8 +25,8 @@ public interface TubeSongAccess {
     LiveData<List<TubeSongRelation>> all();
 
     @Transaction
-    @Query(SELECT_FROM_TABLE + " WHERE user_tube = :tubeId") // ORDER BY user_song.spot
-    LiveData<List<TubeSongRelation>> prepare(String tubeId);
+    @Query(SELECT_FROM_TABLE + " WHERE tube = :key") // ORDER BY user_song.spot
+    LiveData<List<TubeSongRelation>> prepare(String key);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<List<Long>> insert(TubeSong...joins);

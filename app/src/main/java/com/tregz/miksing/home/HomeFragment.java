@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.home.list.ListFragment;
+import com.tregz.miksing.home.list.song.SongFragment;
 
 public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
@@ -49,6 +50,12 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     @Override
     public void onPageSelected(int position) {
         if (getActivity() != null) ((HomeActivity) getActivity()).setFabVisibility(position > 0);
+    }
+
+    void prepare(String id) {
+        pager.setCurrentItem(1);
+        ListFragment page = page();
+        if (page instanceof SongFragment) ((SongFragment)page).live(id);
     }
 
     void save(String name) {

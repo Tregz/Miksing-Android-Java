@@ -43,7 +43,7 @@ public class SongListener extends DataListener implements ValueEventListener {
 
     @Override
     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
-        if (snapshot.getKey() != null) {
+        /* if (snapshot.getKey() != null) {
             Song song = new Song(snapshot.getKey(), new Date(getLong(snapshot, DataNotation.CD)));
             song.setReleasedAt(new Date(getLong(snapshot, DataNotation.BD)));
             song.setUpdatedAt(new Date(getLong(snapshot, DataNotation.ED)));
@@ -53,9 +53,9 @@ public class SongListener extends DataListener implements ValueEventListener {
             song.setTitle(getString(snapshot, DataNotation.NS));
             song.setWhat(getInt(snapshot, DataNotation.WI));
             //Log.d(TAG, "Song key: " + song.getArtist() + " - " + song.getTitle());
-            Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
+            //Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
             new SongInsert(context, song);
-        }
+        } */
     }
 
     @Override

@@ -7,12 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-import com.tregz.miksing.data.DataJoin;
+import com.tregz.miksing.data.DataPositionable;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.user.User;
 
 @Entity(tableName = UserTube.TABLE)
-public class UserTube extends DataJoin {
+public class UserTube extends DataPositionable {
 
     public UserTube(@NonNull String userId, @NonNull String tubeId) {
         setId(userId + "-" + tubeId);

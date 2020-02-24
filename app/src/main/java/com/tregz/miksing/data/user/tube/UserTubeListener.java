@@ -11,11 +11,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.data.DataListener;
 import com.tregz.miksing.data.tube.Tube;
-import com.tregz.miksing.data.tube.TubeInsert;
 import com.tregz.miksing.data.tube.TubeListener;
 import com.tregz.miksing.data.user.User;
-
-import java.util.Date;
 
 public class UserTubeListener extends DataListener {
     private String TAG = UserTubeListener.class.getSimpleName();

@@ -1,6 +1,8 @@
 package com.tregz.miksing.home.list.tube;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -10,20 +12,38 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
+import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.user.tube.UserTubeAccess;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.data.user.tube.UserTubeUpdate;
+import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListView;
+import com.tregz.miksing.home.list.song.SongFragment;
 
 import java.util.List;
 
 public class TubeFragment extends ListFragment implements Observer<List<UserTubeRelation>>,
         ListView {
+    private final String TAG = TubeFragment.class.getSimpleName();
 
     private List<UserTubeRelation> relations;
     private int destination = 0; // last gesture's target position
+    private TubeFragment.OnItem onItem;
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            onItem = (TubeFragment.OnItem) context;
+        } catch (ClassCastException e) {
+            String name = SongFragment.OnItem.class.getSimpleName();
+            throw new ClassCastException(context.toString() + " must implement " + name);
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +55,7 @@ public class TubeFragment extends ListFragment implements Observer<List<UserTube
     @Override
     public void onChanged(List<UserTubeRelation> relations) {
         if (this.relations == null || this.relations.size() != relations.size()) {
+            Log.d(TAG, "onChanged " + relations.size());
             this.relations = relations;
             sort();
         }
@@ -43,7 +64,7 @@ public class TubeFragment extends ListFragment implements Observer<List<UserTube
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        adapter = new TubeAdapter();
+        adapter = new TubeAdapter(onItem);
         recycler.setAdapter(adapter);
         new ItemTouchHelper(new ListGesture(this)).attachToRecyclerView(recycler);
     }
@@ -92,8 +113,16 @@ public class TubeFragment extends ListFragment implements Observer<List<UserTube
         if (relations != null && adapter != null && recycler != null) {
             destination = 0;
             if (ListSorted.customOrder()) ordered();
+            Log.d(TAG, "replace " + relations.size());
             ((TubeAdapter)adapter).items.replaceAll(relations);
             recycler.smoothScrollToPosition(0);
         }
+    }
+
+    // Allow an interaction to be communicated to the activity
+    public interface OnItem {
+        void onItemClick(Tube tube);
+
+        void onItemLongClick(Tube tube);
     }
 }

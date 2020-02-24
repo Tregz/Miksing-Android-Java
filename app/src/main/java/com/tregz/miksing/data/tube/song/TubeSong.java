@@ -11,8 +11,8 @@ import androidx.room.Index;
 
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.DataJoin;
-import com.tregz.miksing.data.user.tube.UserTube;
+import com.tregz.miksing.data.DataPositionable;
+import com.tregz.miksing.data.tube.Tube;
 
 import static androidx.room.ForeignKey.CASCADE;
 
@@ -20,7 +20,7 @@ import static androidx.room.ForeignKey.CASCADE;
         onDelete = CASCADE, onUpdate = CASCADE,
         childColumns = Song.TABLE, parentColumns = DataNotation.PK)},
         indices = {@Index(Song.TABLE)})
-public class TubeSong extends DataJoin {
+public class TubeSong extends DataPositionable {
 
     public TubeSong(@NonNull String tubeId, @NonNull String songId) {
         setId(tubeId + "-" + songId);
@@ -51,7 +51,7 @@ public class TubeSong extends DataJoin {
     }
 
     @NonNull
-    @ColumnInfo(name = UserTube.TABLE)
+    @ColumnInfo(name = Tube.TABLE)
     private String tubeId = "Undefined";
 
     public final static String TABLE = "tube_song";
