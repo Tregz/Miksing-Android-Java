@@ -2,6 +2,7 @@ package com.tregz.miksing.home.list.song;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,8 @@ import java.util.List;
 public class SongListFragment extends ListFragment implements Observer<List<TubeSongRelation>>,
         ListView {
 
-    //private final String TAG = SongFragment.class.getSimpleName();
+    private final String TAG = SongListFragment.class.getSimpleName();
+
     private final static String POSITION = "position";
     private LiveData<List<TubeSongRelation>> songLiveData;
     private List<TubeSongRelation> relations;
@@ -96,6 +98,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     @Override
     public void onChanged(List<TubeSongRelation> relations) {
         if (this.relations == null || this.relations.size() != relations.size()) {
+            Log.d(TAG, "onChanged " + relations.size());
             this.relations = relations;
             if (getActivity() instanceof HomeActivity)
                 ((HomeActivity) getActivity()).setPlaylist(relations);
@@ -149,6 +152,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
             case 1:
                 // Save playlist
                 DatabaseReference tube = FirebaseDatabase.getInstance().getReference("tube");
+                // TODO: if exist
                 DatabaseReference push = tube.push();
                 push.child("name").setValue(name);
                 for (TubeSongRelation relation : relations) {

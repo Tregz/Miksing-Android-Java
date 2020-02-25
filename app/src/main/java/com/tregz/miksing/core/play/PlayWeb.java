@@ -2,6 +2,7 @@ package com.tregz.miksing.core.play;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -33,7 +34,13 @@ public class PlayWeb extends WebView {
     }
 
     private void init() {
-        setWebChromeClient(new WebChromeClient()); // enable alert dialog
+        setWebChromeClient(new WebChromeClient() {
+            @Override
+            public Bitmap getDefaultVideoPoster() {
+                // Create empty bitmap, to prevent weird crash, when loading YouTube Player
+                return Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888);
+            }
+        });
         //setWebViewClient(new WebViewClient());
         getSettings().setMediaPlaybackRequiresUserGesture(false);
         getSettings().setJavaScriptEnabled(true);
@@ -71,12 +78,12 @@ public class PlayWeb extends WebView {
 
         String onReady = function("onPlayerReady(event)", "event.target.mute();");
         final String DELAYED = "delayed", RISE_UP = "riseUp";
-        String hide = visibility(getElements("progress") + "[0]", "hidden");
-        String ifProgress = ifVisible(getElements("progress") + "[0]") + "{" + hide + "}";
+        //String hide = visibility(getElements("progress") + "[0]", "hidden");
+        //String ifProgress = ifVisible(getElements("progress") + "[0]") + "{" + hide + "}";
         String timeOut = "setTimeout(" + DELAYED + ", 100);";
         String started = LOADING + "=true;" + timeOut + PLAYING + "=" + VIDEO_ID + ";";
-        String playing = started + setInterval(200, RISE_UP, LOOP, FADE_IN) + ifProgress;
-        String ifPlaying = ifState(playing, State.PLAYING.name());
+        String playing = started + setInterval(200, RISE_UP, LOOP, FADE_IN);// + ifProgress;
+        String ifPlaying = ifState(playing, State.BUFFERING.name());
         String onPlayerStateChange = function("onPlayerStateChange(yt)", ifPlaying);
 
         // unused
@@ -139,7 +146,7 @@ public class PlayWeb extends WebView {
 
         String api = api0 + api1 + api2 + api3;
         String script = "<script type='text/javascript'>" + vars + api + "</script>";
-        String frames = divTest() + div(1) + div(2) + progress();
+        String frames = divTest() + div(1) + div(2);// + progress();
         String body = "<body style='margin:0;padding:0;'>" + frames + script + "</body>";
         String html = "<html>" + body + "</html>";
         loadData(html, "text/html", null);
@@ -182,6 +189,7 @@ public class PlayWeb extends WebView {
 
     // when player is known
     private String ifState(String command, String state) {
+        //return "alert('wtf' + yt.data);if(yt.data===YT.PlayerState." + state + "){" + command + "}";
         return "if(yt.data===YT.PlayerState." + state + "){" + command + "}";
     }
 
@@ -246,9 +254,9 @@ public class PlayWeb extends WebView {
     private enum State {
         //UNSTARTED(-1),
         //ENDED(0),
-        PLAYING //(1)
+        PLAYING, //(1)
         //PAUSED(2),
-        //BUFFERING(3),
+        BUFFERING,
         //CUED(5);
 
         /* private int value;

@@ -17,6 +17,8 @@ import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.song.SongListener;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongInsert;
+import com.tregz.miksing.data.user.tube.UserTube;
+import com.tregz.miksing.data.user.tube.UserTubeInsert;
 
 import java.util.Date;
 import java.util.List;
@@ -107,6 +109,7 @@ public class TubeListener extends DataListener implements MaybeObserver<Tube>, T
 
     @Override
     public void saved() {
+        if (userId != null) new UserTubeInsert(context, new UserTube(userId, tubeId));
         DatabaseReference table = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
         table.child(tubeId).child(Song.TABLE).addChildEventListener(this);
     }

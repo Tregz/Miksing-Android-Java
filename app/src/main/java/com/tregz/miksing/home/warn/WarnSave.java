@@ -18,8 +18,8 @@ import com.tregz.miksing.base.BaseWarning;
 import com.tregz.miksing.home.HomeView;
 
 public class WarnSave extends BaseWarning {
-
     public static final String TAG = WarnSave.class.getSimpleName();
+    private static final String NAME = "name";
     private HomeView listener;
 
     @Override
@@ -27,6 +27,14 @@ public class WarnSave extends BaseWarning {
         super.onAttach(context);
         if (context instanceof HomeView) listener = (HomeView) context;
         else onListenerError(context);
+    }
+
+    public static WarnSave newInstance(String name) {
+        Bundle args = new Bundle();
+        args.putString(NAME, name);
+        WarnSave fragment = new WarnSave();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @NonNull
@@ -40,6 +48,8 @@ public class WarnSave extends BaseWarning {
             final TextInputEditText edit = view.findViewById(R.id.et_input);
             TextInputLayout inputLayout = view.findViewById(R.id.input_layout);
             inputLayout.setHint(str(R.string.playlist_name));
+            if (getArguments() != null && getArguments().getString(NAME) != null)
+                edit.setText(getArguments().getString(NAME));
             alert.setView(view);
             alert.setNegativeButton(R.string.cancel, null);
             alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

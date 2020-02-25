@@ -34,6 +34,7 @@ import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
+import com.tregz.miksing.data.tube.TubeListener;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.User;
 import com.tregz.miksing.data.user.UserListener;
@@ -84,6 +85,7 @@ public class HomeActivity extends BaseActivity implements
 
     private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
+    private String prepareListTitle = null;
 
     private ActivityHomeBinding binding;
     private CollapsingToolbarLayout toolbarLayout;
@@ -112,7 +114,7 @@ public class HomeActivity extends BaseActivity implements
         Fragment primary = primary();
         navigation.toggle(Gravity.START);
         if (primary instanceof HomeFragment) ((HomeFragment) primary).prepare(tube.getId());
-
+        prepareListTitle = tube.getName();
     }
 
     @Override
@@ -194,8 +196,8 @@ public class HomeActivity extends BaseActivity implements
             buttons[Button.SAVE.ordinal()].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new WarnSave().show(getSupportFragmentManager(), WarnSave.TAG);
-                    //((HomeDialog)add(new HomeDialog(HomeActivity.this))).save();
+                    WarnSave warning = WarnSave.newInstance(prepareListTitle);
+                    warning.show(getSupportFragmentManager(), WarnSave.TAG);
                 }
             });
             buttons[Button.FETCH.ordinal()] = binding.contentHome.webSearch;
@@ -235,7 +237,7 @@ public class HomeActivity extends BaseActivity implements
         task(anim).addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                videoView.setVideoURI(uri);
+                // TODO videoView.setVideoURI(uri);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -278,7 +280,7 @@ public class HomeActivity extends BaseActivity implements
             user.setName(AuthUtil.user().getDisplayName());
             user.setEmail(AuthUtil.user().getEmail());
             new UserListener(this, user);
-        }
+        } else new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
     }
 
     @Override
