@@ -22,6 +22,8 @@ public interface HomeView {
 
     void onHttpRequestResult(List<Song> list);
 
+    void onPastePlaylist(String name);
+
     void onSaved();
 
     void onSaveItem(String name);

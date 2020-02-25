@@ -52,17 +52,22 @@
         app:layout_anchor="@id/fab">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/clear_all"
+            android:id="@+id/clear"
             style="@style/MiniButton"
             app:srcCompat="@drawable/ic_clear_all" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/web_search"
+            android:id="@+id/fetch"
             style="@style/MiniButton"
             app:srcCompat="@drawable/ic_web_search" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/save"
+            android:id="@+id/paste"
+            style="@style/MiniButton"
+            app:srcCompat="@drawable/ic_content_copy" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/score"
             style="@style/MiniButton"
             app:srcCompat="@drawable/ic_save" />
 

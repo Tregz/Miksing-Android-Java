@@ -35,7 +35,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         ListView {
 
     private final String TAG = SongListFragment.class.getSimpleName();
-
+    private String tubeId = null;
     private final static String POSITION = "position";
     private LiveData<List<TubeSongRelation>> songLiveData;
     private List<TubeSongRelation> relations;
@@ -72,7 +72,8 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     }
 
-    public void live(String id) {
+    public void live(String  tubeId) {
+        this.tubeId = tubeId;
         TubeSongAccess access = DataReference.getInstance(getContext()).accessTubeSong();
         if (songLiveData != null && songLiveData.hasObservers()) songLiveData.removeObserver(this);
         switch (position) {
@@ -81,7 +82,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
                 break;
             case 1:
                 String listId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
-                songLiveData = access.prepare(id == null ? listId : id);
+                songLiveData = access.prepare(tubeId == null ? listId : tubeId);
                 break;
         }
         if (songLiveData != null) songLiveData.observe(this, this);
@@ -144,7 +145,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     }
 
     @Override
-    public void save(String name) {
+    public void save(String name, boolean paste) {
         if (getArguments() != null) switch (getArguments().getInt(POSITION, 0)) {
             case 0:
                 //
@@ -152,18 +153,18 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
             case 1:
                 // Save playlist
                 DatabaseReference tube = FirebaseDatabase.getInstance().getReference("tube");
-                // TODO: if exist
-                DatabaseReference push = tube.push();
-                push.child("name").setValue(name);
+                boolean create = tubeId == null || paste;
+                DatabaseReference node = create ? tube.push() : tube.child(tubeId);
+                node.child("name").setValue(name);
                 for (TubeSongRelation relation : relations) {
                     int position = relation.join.getPosition();
-                    push.child("song").child(relation.song.getId()).setValue(position);
+                    node.child("song").child(relation.song.getId()).setValue(position);
                 }
                 // Save user's playlist
                 DatabaseReference user = FirebaseDatabase.getInstance().getReference("user");
                 String currentUser = PrefShared.getInstance(getContext()).getUid();
-                if (push.getKey() != null)
-                    user.child(currentUser).child("tube").child(push.getKey()).setValue(true);
+                if (node.getKey() != null)
+                    user.child(currentUser).child("tube").child(node.getKey()).setValue(true);
                 home.onSaved();
                 break;
         }

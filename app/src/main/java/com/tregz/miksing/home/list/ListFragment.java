@@ -51,7 +51,7 @@ public abstract class ListFragment extends BaseFragment {
         sort();
     }
 
-    abstract public void save(String name);
+    abstract public void save(String name, boolean paste);
 
     abstract public void sort();
 

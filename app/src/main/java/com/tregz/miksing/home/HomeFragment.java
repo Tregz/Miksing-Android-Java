@@ -58,9 +58,9 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         if (page instanceof SongListFragment) ((SongListFragment)page).live(id);
     }
 
-    void save(String name) {
+    void save(String name, boolean paste) {
         ListFragment page = page();
-        if (page != null) page.save(name);
+        if (page != null) page.save(name, paste);
     }
 
     void search(String query) {

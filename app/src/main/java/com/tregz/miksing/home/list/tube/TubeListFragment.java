@@ -97,7 +97,7 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     }
 
     @Override
-    public void save(String name) {
+    public void save(String name, boolean paste) {
 
     }
 

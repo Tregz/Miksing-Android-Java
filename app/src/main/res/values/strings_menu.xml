@@ -10,6 +10,9 @@
     <string name="nav_logout_title">Logout</string>
 
     <string name="clear">Clear</string>
+
+    <string name="paste">Create a copy</string>
+
     <string name="save">Save</string>
     <string name="playlist_name">Playlist name</string>
     <string name="playlist_name_must_not_null">Playlist name must not be empty</string>

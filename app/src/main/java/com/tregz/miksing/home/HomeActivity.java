@@ -45,8 +45,9 @@ import com.tregz.miksing.home.list.song.SongListFragment;
 import com.tregz.miksing.home.list.tube.TubeListFragment;
 import com.tregz.miksing.home.warn.WarnClear;
 import com.tregz.miksing.home.warn.WarnFetch;
+import com.tregz.miksing.home.warn.WarnPaste;
 import com.tregz.miksing.home.warn.WarnPlaylist;
-import com.tregz.miksing.home.warn.WarnSave;
+import com.tregz.miksing.home.warn.WarnScore;
 import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
 
@@ -89,7 +90,7 @@ public class HomeActivity extends BaseActivity implements
 
     private ActivityHomeBinding binding;
     private CollapsingToolbarLayout toolbarLayout;
-    private FloatingActionButton[] buttons = new FloatingActionButton[Button.values().length];
+    //private FloatingActionButton[] buttons = new FloatingActionButton[Button.values().length];
     //private ImageView imageView;
     private HomeNavigation navigation;
     private PlayWeb webView;
@@ -168,8 +169,7 @@ public class HomeActivity extends BaseActivity implements
                     if (e.getMessage() != null) toast(e.getMessage());
                 }
             }); */
-            buttons[Button.FAB.ordinal()] = binding.contentHome.fab;
-            buttons[Button.FAB.ordinal()].setOnClickListener(new View.OnClickListener() {
+            binding.contentHome.fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //if (!back()) {
@@ -185,26 +185,30 @@ public class HomeActivity extends BaseActivity implements
                     }
                 }
             });
-            buttons[Button.CLEAR.ordinal()] = binding.contentHome.clearAll;
-            buttons[Button.CLEAR.ordinal()].setOnClickListener(new View.OnClickListener() {
+            binding.contentHome.clear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new WarnClear().show(getSupportFragmentManager(), WarnClear.TAG);
                 }
             });
-            buttons[Button.SAVE.ordinal()] = binding.contentHome.save;
-            buttons[Button.SAVE.ordinal()].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    WarnSave warning = WarnSave.newInstance(prepareListTitle);
-                    warning.show(getSupportFragmentManager(), WarnSave.TAG);
-                }
-            });
-            buttons[Button.FETCH.ordinal()] = binding.contentHome.webSearch;
-            buttons[Button.FETCH.ordinal()].setOnClickListener(new View.OnClickListener() {
+            binding.contentHome.fetch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new WarnFetch().show(getSupportFragmentManager(), WarnFetch.TAG);
+                }
+            });
+            binding.contentHome.paste.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WarnPaste warning = WarnPaste.newInstance(prepareListTitle);
+                    warning.show(getSupportFragmentManager(), WarnScore.TAG);
+                }
+            });
+            binding.contentHome.score.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WarnScore warning = WarnScore.newInstance(prepareListTitle);
+                    warning.show(getSupportFragmentManager(), WarnScore.TAG);
                 }
             });
             // Scroll listener, to show/hide options while collapsing
@@ -409,10 +413,17 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
+    public void onPastePlaylist(String name) {
+        Fragment primary = primary();
+        if (primary instanceof SongEditFragment) ((SongEditFragment) primary).save();
+        else if (primary instanceof HomeFragment) ((HomeFragment) primary).save(name, true);
+    }
+
+    @Override
     public void onSaveItem(String name) {
         Fragment primary = primary();
         if (primary instanceof SongEditFragment) ((SongEditFragment) primary).save();
-        else if (primary instanceof HomeFragment) ((HomeFragment) primary).save(name);
+        else if (primary instanceof HomeFragment) ((HomeFragment) primary).save(name, false);
     }
 
     @Override
@@ -472,19 +483,20 @@ public class HomeActivity extends BaseActivity implements
     }
 
     public void setFabVisibility(boolean show) {
-        FloatingActionButton fab = buttons[Button.FAB.ordinal()];
-        if (show) {
-            if (FootScroll.state == FootScroll.State.UP)
-                fab.setVisibility(View.INVISIBLE);
-            else {
-                fab.setVisibility(View.VISIBLE);
-                fab.show();
+        if (binding.contentHome != null) {
+            FloatingActionButton fab = binding.contentHome.fab;
+            if (show) {
+                if (FootScroll.state == FootScroll.State.UP)
+                    fab.setVisibility(View.INVISIBLE);
+                else {
+                    fab.setVisibility(View.VISIBLE);
+                    fab.show();
+                }
+            } else {
+                if (fab.isExpanded()) expand(fab);
+                fab.setVisibility(View.GONE);
             }
-        } else {
-            if (fab.isExpanded()) expand(fab);
-            fab.setVisibility(View.GONE);
         }
-
     }
 
     public void setPlaylist(List<TubeSongRelation> relations) {
@@ -529,7 +541,8 @@ public class HomeActivity extends BaseActivity implements
         FAB,
         CLEAR,
         FETCH,
-        SAVE
+        PASTE,
+        SCORE
     }
 
     static {
