@@ -3,8 +3,10 @@ package com.tregz.miksing.data;
 import android.content.Context;
 import android.util.Log;
 
+import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public abstract class DataSingle<T> implements SingleObserver<T> {
     protected String TAG = DataSingle.class.getSimpleName();
@@ -30,5 +32,9 @@ public abstract class DataSingle<T> implements SingleObserver<T> {
     @Override
     public void onError(Throwable e) {
         e.printStackTrace();
+    }
+
+    protected void subscribe(Single<T> single) {
+        single.subscribeOn(Schedulers.io()).subscribe(this);
     }
 }
