@@ -15,6 +15,7 @@ import com.tregz.miksing.data.DataPositionable;
 import com.tregz.miksing.data.tube.Tube;
 
 import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.NO_ACTION;
 
 @Entity(tableName = TubeSong.TABLE, foreignKeys = {@ForeignKey(entity = Song.class,
         onDelete = CASCADE, onUpdate = CASCADE,

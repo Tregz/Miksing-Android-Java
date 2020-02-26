@@ -33,9 +33,9 @@ import com.tregz.miksing.core.play.PlayVideo;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.song.SongRelation;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.TubeListener;
-import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 import com.tregz.miksing.home.edit.song.SongEditFragment;
@@ -443,6 +443,12 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
+    public void onTubeSongInserted(String id) {
+        Fragment primary = primary();
+        if (primary instanceof HomeFragment) ((HomeFragment) primary).reload(id);
+    }
+
+    @Override
     public PlayWeb getWebView() {
         return webView;
     }
@@ -510,9 +516,9 @@ public class HomeActivity extends BaseActivity implements
         }
     }
 
-    public void setPlaylist(List<TubeSongRelation> relations) {
+    public void setPlaylist(List<SongRelation> relations) {
         StringBuilder builder = new StringBuilder();
-        for (TubeSongRelation relation : relations) {
+        for (SongRelation relation : relations) {
             if (builder.length() > 0) builder.append(",");
             builder.append("'");
             builder.append(relation.song.getId());

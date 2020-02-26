@@ -28,17 +28,20 @@ public class SongListener extends DataListener implements ValueEventListener {
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-        Song song = new Song(snapshot.getKey(), new Date(getLong(snapshot, DataNotation.CD)));
-        song.setReleasedAt(new Date(getLong(snapshot, DataNotation.BD)));
-        song.setUpdatedAt(new Date(getLong(snapshot, DataNotation.ED)));
-        song.setFeaturing(getString(snapshot, DataNotation.FS));
-        song.setMixedBy(getString(snapshot, DataNotation.LS));
-        song.setArtist(getString(snapshot, DataNotation.MS));
-        song.setTitle(getString(snapshot, DataNotation.NS));
-        song.setWhat(getInt(snapshot, DataNotation.WI));
-        //Log.d(TAG, "Song key: " + song.getArtist() + " - " + song.getTitle());
-        Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
-        new SongInsert(context, song);
+        if (snapshot.getKey() != null) {
+            Song song = new Song(snapshot.getKey(), new Date(getLong(snapshot, DataNotation.CD)));
+            song.setReleasedAt(new Date(getLong(snapshot, DataNotation.BD)));
+            song.setUpdatedAt(new Date(getLong(snapshot, DataNotation.ED)));
+            song.setFeaturing(getString(snapshot, DataNotation.FS));
+            song.setMixedBy(getString(snapshot, DataNotation.LS));
+            song.setArtist(getString(snapshot, DataNotation.MS));
+            song.setTitle(getString(snapshot, DataNotation.NS));
+            song.setWhat(getInt(snapshot, DataNotation.WI));
+            //Log.d(TAG, "Song key: " + song.getArtist() + " - " + song.getTitle());
+            Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
+            // TODO insert or update
+            new SongInsert(context, song);
+        }
     }
 
     @Override

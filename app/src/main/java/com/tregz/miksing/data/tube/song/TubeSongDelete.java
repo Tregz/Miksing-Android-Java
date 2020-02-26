@@ -9,8 +9,8 @@ public class TubeSongDelete extends TubeSongSingle<Integer> {
         subscribe(access().delete(joins));
     }
 
-    public TubeSongDelete(Context context, final String id) {
+    public TubeSongDelete(Context context, final String songId, final String tubeId) {
         super(context);
-        subscribe(access().delete(id));
+        subscribe(access().delete(songId, tubeId));
     }
 }

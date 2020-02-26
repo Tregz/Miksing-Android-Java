@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.tregz.miksing.data.DataAccess;
+import com.tregz.miksing.data.tube.song.TubeSongRelation;
 
 import java.util.List;
 
@@ -34,6 +35,12 @@ public interface SongAccess extends DataAccess<Song> {
 
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
     Maybe<Song> testQuery(String key);
+
+    @Query(SELECT_FROM_TABLE + " WHERE id IN(SELECT song FROM tube_song WHERE tube = :id)")
+    LiveData<List<SongRelation>> tube(String id);
+
+    @Query(SELECT_FROM_TABLE)
+    LiveData<List<SongRelation>> tube();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<List<Long>> insert(Song...songs);

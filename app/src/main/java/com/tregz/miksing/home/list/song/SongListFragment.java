@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
@@ -17,6 +18,8 @@ import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.song.SongAccess;
+import com.tregz.miksing.data.song.SongRelation;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongAccess;
@@ -33,14 +36,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SongListFragment extends ListFragment implements Observer<List<TubeSongRelation>>,
+public class SongListFragment extends ListFragment implements Observer<List<SongRelation>>,
         ListView {
 
     private final String TAG = SongListFragment.class.getSimpleName();
     private String tubeId = null;
     private final static String POSITION = "position";
-    private LiveData<List<TubeSongRelation>> songLiveData;
-    private List<TubeSongRelation> relations;
+    private MediatorLiveData<List<SongRelation>> mediator = new MediatorLiveData<>();
+    private List<SongRelation> relations;
     private int destination = 0; // last gesture's target position
     private Page page;
     private OnItem onItem;
@@ -75,20 +78,27 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     }
 
-    public void live(String  tubeId) {
+    public void live(String tubeId) {
         this.tubeId = tubeId;
-        TubeSongAccess access = DataReference.getInstance(getContext()).accessTubeSong();
-        if (songLiveData != null && songLiveData.hasObservers()) songLiveData.removeObserver(this);
-        switch (page) {
-            case EVERYTHING:
-                songLiveData = access.all();
-                break;
-            case PREPARE:
-                String listId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
-                songLiveData = access.prepare(tubeId == null ? listId : tubeId);
-                break;
+        TubeSongAccess accessTubeSong = DataReference.getInstance(getContext()).accessTubeSong();
+        SongAccess accessSong = DataReference.getInstance(getContext()).accessSong();
+        if (mediator != null) {
+            if (mediator.hasObservers()) mediator.removeObserver(this);
+            mediator.observe(this, this);
+            switch (page) {
+                case EVERYTHING:
+                    String all = "-M0A1B6LQlpJpgdbkYyx";
+                    mediator.addSource(accessSong.tube(), this);
+                    break;
+                case PREPARE:
+                    String listId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
+                    String id = tubeId == null ? listId : tubeId;
+                    //mediator.addSource(accessTubeSong.prepare(id), this);
+                    //mediator.addSource(accessSong.all(), this);
+                    break;
+            }
+            //if (songLiveData != null) songLiveData.observe(this, this);
         }
-        if (songLiveData != null) songLiveData.observe(this, this);
     }
 
     @Override
@@ -100,9 +110,11 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     }
 
     @Override
-    public void onChanged(List<TubeSongRelation> relations) {
+    public void onChanged(List<SongRelation> relations) {
+
+        Log.d(TAG, "onChanged " + relations.size());
         if (this.relations == null || this.relations.size() != relations.size()) {
-            Log.d(TAG, "onChanged " + relations.size());
+            Log.d(TAG, "onChanged.. " + relations.size());
             this.relations = relations;
             if (getActivity() instanceof HomeActivity)
                 ((HomeActivity) getActivity()).setPlaylist(relations);
@@ -135,17 +147,17 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
                 new TubeSongUpdate(getContext(), join);
             } else remove(position);
         } else if (direction == ItemTouchHelper.START || direction == ItemTouchHelper.LEFT) {
-            if (page == Page.EVERYTHING) { }
-            else remove(position);
+            if (page == Page.EVERYTHING) {
+            } else remove(position);
         }
     }
 
     @Override
     public void ordered() {
-        ((SongListAdapter)adapter).items.beginBatchedUpdates();
+        ((SongListAdapter) adapter).items.beginBatchedUpdates();
         for (int i = 0; i < relations.size(); i++) {
             Log.d(TAG, "relation " + relations.get(0).join.getTubeId() + " size? " + relations.size());
-            TubeSongRelation relation = relations.get(i);
+            SongRelation relation = relations.get(i);
             Log.d(TAG, "position changed: " + (relation.join.getPosition() != i));
             if (relation.join.getPosition() != i) {
                 relation.join.setPosition(i);
@@ -155,7 +167,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
                 } else new TubeSongUpdate(getContext(), relation.join);
             }
         }
-        ((SongListAdapter)adapter).items.endBatchedUpdates();
+        ((SongListAdapter) adapter).items.endBatchedUpdates();
         recycler.smoothScrollToPosition(destination);
     }
 
@@ -171,7 +183,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
                 boolean create = tubeId == null || paste;
                 DatabaseReference node = create ? tube.push() : tube.child(tubeId);
                 node.child("name").setValue(name);
-                for (TubeSongRelation relation : relations) {
+                for (SongRelation relation : relations) {
                     int position = relation.join.getPosition();
                     node.child("song").child(relation.song.getId()).setValue(position);
                 }
@@ -187,13 +199,13 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     @Override
     public void search(String query) {
-        if (query.isEmpty()) ((SongListAdapter)adapter).items.replaceAll(relations);
+        if (query.isEmpty()) ((SongListAdapter) adapter).items.replaceAll(relations);
         else {
-            List<TubeSongRelation> searched = new ArrayList<>();
-            for (TubeSongRelation relation : relations)
+            List<SongRelation> searched = new ArrayList<>();
+            for (SongRelation relation : relations)
                 if (relation.song.getTitle().toLowerCase().startsWith(query.toLowerCase()))
                     searched.add(relation);
-            ((SongListAdapter)adapter).items.replaceAll(searched);
+            ((SongListAdapter) adapter).items.replaceAll(searched);
         }
     }
 
@@ -202,13 +214,13 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         if (relations != null && adapter != null && recycler != null) {
             destination = 0;
             if (ListSorted.customOrder()) ordered();
-            ((SongListAdapter)adapter).items.replaceAll(relations);
+            ((SongListAdapter) adapter).items.replaceAll(relations);
             recycler.smoothScrollToPosition(0);
         }
     }
 
     private void remove(int position) {
-        TubeSongRelation relation = relations.get(position);
+        SongRelation relation = relations.get(position);
         if (tubeId != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
             ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).removeValue();

@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.tube.Tube;
+import com.tregz.miksing.data.user.User;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.home.list.ListHolder;
 
@@ -41,7 +42,10 @@ public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
                 Glide.with(holder.itemView.getContext()).load(drawable).into(holder.ivIcon);
 
                 holder.tvName.setText(tube.getName(context));
-                holder.tvMark.setText(relation.user.getName());
+                if (relation.user != null) {
+                    String username = relation.user.getName();
+                    if (username != null) holder.tvMark.setText(username);
+                }
                 if (tube.getUpdatedAt() != null) {
                     /* String dayOfYear = DateUtil.dayOfYear(null, song.getReleasedAt());
                     String when = "[" + dayOfYear + "]";

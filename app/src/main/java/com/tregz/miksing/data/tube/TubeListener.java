@@ -20,6 +20,7 @@ import com.tregz.miksing.data.tube.song.TubeSongDelete;
 import com.tregz.miksing.data.tube.song.TubeSongInsert;
 import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.data.user.tube.UserTubeInsert;
+import com.tregz.miksing.home.HomeView;
 
 import java.util.Date;
 import java.util.List;
@@ -74,7 +75,7 @@ public class TubeListener extends DataListener implements MaybeObserver<Tube>, T
     @Override
     public void onChildRemoved(@NonNull DataSnapshot snapshot) {
         Log.d(TAG, "onChildRemoved: " + snapshot.getKey());
-        new TubeSongDelete(context, snapshot.getKey());
+        new TubeSongDelete(context, snapshot.getKey(), tubeId);
     }
     @Override
     public void onComplete() {

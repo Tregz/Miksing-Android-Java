@@ -42,8 +42,8 @@ public interface TubeSongAccess {
     @Delete
     Single<Integer> delete(TubeSong...joins);
 
-    @Query(DELETE_FROM_TABLE + " WHERE song = :songId")
-    Single<Integer> delete(String songId);
+    @Query(DELETE_FROM_TABLE + " WHERE song = :songId AND tube = :tubeId")
+    Single<Integer> delete(String songId, String tubeId);
 
     @RawQuery(observedEntities = TubeSong.class)
     LiveData<TubeSong> item(SupportSQLiteQuery query);

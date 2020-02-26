@@ -30,6 +30,8 @@ public interface HomeView {
 
     void onSaveItem(String name);
 
+    void onTubeSongInserted(String id);
+
     void sort();
 
     void search(String query);

@@ -15,6 +15,7 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.base.date.DateUtil;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.song.SongRelation;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.home.list.ListHolder;
 
@@ -24,8 +25,8 @@ public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
     public final String TAG = SongListAdapter.class.getSimpleName();
 
     private SongListFragment.OnItem listener;
-    private SortedListAdapterCallback<TubeSongRelation> callback = new ListSorted<>(this);
-    SortedList<TubeSongRelation> items = new SortedList<>(TubeSongRelation.class, callback);
+    private SortedListAdapterCallback<SongRelation> callback = new ListSorted<>(this);
+    SortedList<SongRelation> items = new SortedList<>(SongRelation.class, callback);
 
     SongListAdapter(SongListFragment.OnItem listener) {
         this.listener = listener;
@@ -34,7 +35,7 @@ public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
     @Override
     public void onBindViewHolder(@NonNull ListHolder holder, final int position) {
         if (items.get(position) != null) {
-            final TubeSongRelation relation = items.get(position);
+            final SongRelation relation = items.get(position);
             final Song song = relation.song;
             if (song != null) {
                 // Download thumbnail with Glide dependency
