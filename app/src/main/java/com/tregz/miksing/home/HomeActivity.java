@@ -212,7 +212,7 @@ public class HomeActivity extends BaseActivity implements
                 }
             });
             // Scroll listener, to show/hide options while collapsing
-            ((AppBarLayout)binding.contentHome.appBar.getRoot()).addOnOffsetChangedListener(this);
+            ((AppBarLayout) binding.contentHome.appBar.getRoot()).addOnOffsetChangedListener(this);
 
             videoView = binding.contentHome.appBar.video1;
             webView = binding.contentHome.appBar.webview;
@@ -277,14 +277,17 @@ public class HomeActivity extends BaseActivity implements
             ActivityCompat.requestPermissions(this, permissions, LOCATION_CODE);
         }
 
-        // TODO remove after test
         FirebaseUser firebaseUser = AuthUtil.user();
         if (firebaseUser != null) {
-            User user = new User(firebaseUser.getUid(), new Date());
-            user.setName(AuthUtil.user().getDisplayName());
-            user.setEmail(AuthUtil.user().getEmail());
-            new UserListener(this, user);
-        } else new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
+            // Start observing user's cloud data
+            new UserListener(this, firebaseUser.getUid());
+        } else {
+            // Start observing default playlists
+            new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
+            //new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
+            //new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
+            //new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
+        }
     }
 
     @Override
@@ -321,11 +324,7 @@ public class HomeActivity extends BaseActivity implements
                     PrefShared.getInstance(this).setUid(firebaseUser.getUid());
                     PrefShared.getInstance(this).setUsername(firebaseUser.getDisplayName());
                     PrefShared.getInstance(this).setEmail(firebaseUser.getEmail());
-
-                    User user = new User(firebaseUser.getUid(), new Date());
-                    user.setName(firebaseUser.getDisplayName());
-                    new UserListener(this, user);
-
+                    new UserListener(this, firebaseUser.getUid());
                     // Retrieve fcm token for testing (result printed to Logcat)
                     new NoteUtil(this);
                 }

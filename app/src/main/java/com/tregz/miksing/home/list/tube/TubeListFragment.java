@@ -62,9 +62,11 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        adapter = new TubeListAdapter(onItem);
-        recycler.setAdapter(adapter);
-        new ItemTouchHelper(new ListGesture(this)).attachToRecyclerView(recycler);
+        if (getContext() != null) {
+            adapter = new TubeListAdapter(getContext().getApplicationContext(), onItem);
+            recycler.setAdapter(adapter);
+            new ItemTouchHelper(new ListGesture(this)).attachToRecyclerView(recycler);
+        }
     }
 
     @Override

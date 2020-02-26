@@ -5,9 +5,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 
-import com.tregz.miksing.data.Data;
-import com.tregz.miksing.data.DataNotation;
-
 import java.util.Date;
 
 public abstract class DataObject extends Data {

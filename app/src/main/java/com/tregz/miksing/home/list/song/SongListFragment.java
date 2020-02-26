@@ -116,8 +116,8 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     public void onItemMoved(final int from, final int destination) {
         // Update unsorted array to save to new position after gesture event
         this.destination = destination;
-        int start = from < destination ? from : destination;
-        int end = from < destination ? destination : from;
+        int start = Math.min(from, destination);
+        int end = Math.max(from, destination);
         for (int i = start; i < end; i++) Collections.swap(relations, i, i + 1);
         // Update sorted list to animate gesture event
         adapter.notifyItemMoved(from, destination);

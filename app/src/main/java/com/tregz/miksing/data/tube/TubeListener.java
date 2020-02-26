@@ -104,7 +104,8 @@ public class TubeListener extends DataListener implements MaybeObserver<Tube>, T
     @Override
     public void onSuccess(Tube tube) {
         TubeSingle<Integer> observer = new TubeSingle<>(this);
-        access().update(tube).subscribeOn(Schedulers.io()).subscribe(observer);
+        Log.d(TAG, "update tube name!" + this.tube.getName());
+        access().update(this.tube).subscribeOn(Schedulers.io()).subscribe(observer);
     }
 
     @Override

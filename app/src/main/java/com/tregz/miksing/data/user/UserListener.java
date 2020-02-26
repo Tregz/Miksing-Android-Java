@@ -5,15 +5,20 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.data.DataInsert;
+import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.user.tube.UserTubeListener;
+
+import java.util.Date;
 
 import io.reactivex.MaybeObserver;
 import io.reactivex.disposables.Disposable;
@@ -22,20 +27,20 @@ import io.reactivex.schedulers.Schedulers;
 public class UserListener implements MaybeObserver<User>, ValueEventListener {
     private final String TAG = UserListener.class.getSimpleName();
 
-    private boolean exist = false;
     private Context context;
     private DatabaseReference table;
     private User user;
+    private String userId;
     private UserAccess access;
 
-    public UserListener(Context context, User user) {
+    public UserListener(Context context, String userId) {
         this.context = context;
-        this.user = user;
-        table().child(user.getId()).child("data").addListenerForSingleValueEvent(this);
+        this.userId = userId;
+        table().child(userId).child("data").addListenerForSingleValueEvent(this);
     }
 
     private void save() {
-        access().query(user.getId()).subscribeOn(Schedulers.io()).subscribe(this);
+        access().query(userId).subscribeOn(Schedulers.io()).subscribe(this);
     }
 
     @Override
@@ -46,23 +51,28 @@ public class UserListener implements MaybeObserver<User>, ValueEventListener {
 
     @Override
     public void onComplete() {
-        Log.d(TAG, "exist? " + exist);
-        /* if (exist) new UserUpdate(context, user);
-        else */ //new DataInsert(context, user);
         access().insert(user).subscribeOn(Schedulers.io()).subscribe(new DataInsert());
-        new UserTubeListener(context, user.getId());
+        new UserTubeListener(context, userId);
     }
 
     @Override
-    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        if (!dataSnapshot.exists()) {
-            table().child(user.getId()).child("data").setValue(UserUtil.map(user));
-
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        if (!snapshot.exists()) {
+            // Create initial user data
+            user = new User(userId, new Date());
+            FirebaseUser firebaseUser =  AuthUtil.user();
+            user.setName(firebaseUser.getDisplayName());
+            user.setEmail(firebaseUser.getEmail());
+            table().child(userId).child("data").setValue(UserUtil.map(user));
         } else {
             Log.d(TAG, "User exist");
-            table().child(user.getId()).child("data").setValue(UserUtil.map(user));
+            Date createdAt =  snapshot.child(DataNotation.CD).getValue(Date.class);
+            if (createdAt != null) {
+                user = new User(userId, createdAt);
+                user.setName(snapshot.child(DataNotation.NS).getValue(String.class));
+                user.setEmail(snapshot.child(DataNotation.AS).getValue(String.class));
+            }
         }
-
         save();
     }
 
@@ -78,10 +88,8 @@ public class UserListener implements MaybeObserver<User>, ValueEventListener {
 
     @Override
     public void onSuccess(User t) {
-        Log.d(TAG, "onSuccess " + t.getName());
-        exist = true;
         access().update(user).subscribeOn(Schedulers.io()).subscribe(new DataUpdate());
-        new UserTubeListener(context, user.getId());
+        new UserTubeListener(context, userId);
     }
 
     private DatabaseReference table() {

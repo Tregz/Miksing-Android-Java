@@ -5,6 +5,7 @@ import android.util.Log;
 import com.tregz.miksing.data.DataSingle;
 
 public class TubeSingle<T> extends DataSingle<T> {
+    protected String TAG = TubeSingle.class.getSimpleName();
 
     private TubeSingle.OnSave listener;
 
@@ -15,6 +16,7 @@ public class TubeSingle<T> extends DataSingle<T> {
     @Override
     public void onSuccess(T t) {
         Log.d(TAG, t.toString());
+        Log.d(TAG, "tube saved");
         listener.saved();
     }
 

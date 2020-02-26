@@ -29,7 +29,7 @@
 
     <string name="nav_drawer_back">Up</string>
     <string name="nav_drawer_items">Items</string>
-    <string name="nav_drawer_mine">PLAYLISTS</string>
+    <string name="nav_drawer_playlists">PLAYLISTS</string>
     <string name="nav_drawer_title">Démo d\'application mobile</string>
     <string name="nav_drawer_sub">par Tregz (jerome@tregz.com)</string>
     <string name="nav_user_profile">Profil</string>

@@ -5,6 +5,9 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 
+import android.content.Context;
+
+import com.tregz.miksing.arch.load.LoadResource;
 import com.tregz.miksing.data.DataObject;
 
 import java.util.Date;
@@ -18,6 +21,13 @@ public class Tube extends DataObject {
     }
 
     public final static String TABLE = "tube";
+
+    public String getName(Context context) {
+        if (name.startsWith("tx_")) {
+            String nameFromResource = LoadResource.getString(context, name);
+            return nameFromResource != null ? nameFromResource : name;
+        } else return name;
+    }
 
     @Override
     public int describeContents() {

@@ -1,5 +1,6 @@
 package com.tregz.miksing.home.list.tube;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +17,16 @@ import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.home.list.ListHolder;
 
-
 public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
     //private String TAG = TubeAdapter.class.getSimpleName();
 
+    private Context context;
     private TubeListFragment.OnItem listener;
     private SortedListAdapterCallback<UserTubeRelation> callback = new ListSorted<>(this);
     SortedList<UserTubeRelation> items = new SortedList<>(UserTubeRelation.class, callback);
 
-    TubeListAdapter(TubeListFragment.OnItem listener) {
+    TubeListAdapter(Context context, TubeListFragment.OnItem listener) {
+        this.context = context;
         this.listener = listener;
     }
 
@@ -38,7 +40,7 @@ public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
                 int drawable = R.drawable.ic_playlist_play;
                 Glide.with(holder.itemView.getContext()).load(drawable).into(holder.ivIcon);
 
-                holder.tvName.setText(tube.getName());
+                holder.tvName.setText(tube.getName(context));
                 holder.tvMark.setText(relation.user.getName());
                 if (tube.getUpdatedAt() != null) {
                     /* String dayOfYear = DateUtil.dayOfYear(null, song.getReleasedAt());
