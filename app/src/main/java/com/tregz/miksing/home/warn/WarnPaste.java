@@ -22,10 +22,8 @@ public class WarnPaste extends WarnInput {
     public static final String TAG = WarnPaste.class.getSimpleName();
 
     public static WarnPaste newInstance(String name) {
-        Bundle args = new Bundle();
-        args.putString(NAME, name);
         WarnPaste fragment = new WarnPaste();
-        fragment.setArguments(args);
+        fragment.setArguments(args(name));
         return fragment;
     }
 

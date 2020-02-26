@@ -17,15 +17,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.tregz.miksing.R;
+import com.tregz.miksing.arch.auth.AuthLogin;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.list.ListSorted;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HomeNavigation implements
         BottomNavigationView.OnNavigationItemSelectedListener,
@@ -33,7 +30,6 @@ public class HomeNavigation implements
         NavigationView.OnNavigationItemSelectedListener,
         OnCompleteListener<Void> {
     private final String TAG = HomeNavigation.class.getSimpleName();
-    final static int SIGN_IN = 101;
 
     private final int RIGHT = HomeActivity.Drawer.RIGHT.ordinal();
     private final int START = HomeActivity.Drawer.START.ordinal();
@@ -95,29 +91,8 @@ public class HomeNavigation implements
         Log.d(TAG, "onNavigationItemSelected");
         switch (item.getItemId()) {
             case R.id.nav_login:
-                if (!AuthUtil.logged()) {
-                    AuthUI.SignInIntentBuilder ui = AuthUI.getInstance().createSignInIntentBuilder();
-                    List<AuthUI.IdpConfig> providers = new ArrayList<>();
-                    providers.add(new AuthUI.IdpConfig.EmailBuilder().build());
-                    providers.add(new AuthUI.IdpConfig.GoogleBuilder().build());
-                    // if Facebook dev account id is set in Firebase console
-
-                    // TODO restore Facebook dev account
-                    // providers.add(new AuthUI.IdpConfig.FacebookBuilder().build());
-
-                    // release build only: if app certificate is set in Firebase console
-                    providers.add(new AuthUI.IdpConfig.PhoneBuilder().build());
-                    ui.setIsSmartLockEnabled(false); // smart lock not well supported by FirebaseUI
-                    ui.setAvailableProviders(providers);
-                    ui.setLogo(R.mipmap.ic_launcher_logo);
-                    ui.setTheme(R.style.LoginTheme);
-                    // optional terms of use (tos) and privacy policy
-                    String terms = "http://www.tregz.com/miksing/aide/en/privacy.pdf"; // TODO: terms
-                    String policy = "http://www.tregz.com/miksing/aide/en/privacy.pdf";
-                    ui.setTosAndPrivacyPolicyUrls(terms, policy);
-                    view.startActivityForResult(ui.build(), SIGN_IN);
-                } else
-                    AuthUI.getInstance().signOut(layout.getContext()).addOnCompleteListener(this);
+                if (!AuthUtil.logged()) new AuthLogin(view);
+                else AuthUI.getInstance().signOut(layout.getContext()).addOnCompleteListener(this);
                 break;
             case R.id.sort_alpha:
                 ListSorted.comparator = ListSorted.Order.ALPHA;

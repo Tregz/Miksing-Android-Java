@@ -53,7 +53,7 @@ public class WarnFetch extends BaseWarning {
             alert.setTitle(R.string.fetch_youtube_title);
 
             LayoutInflater inflater = getActivity().getLayoutInflater();
-            View view = inflater.inflate(R.layout.dialog_input, null);
+            View view = inflater.inflate(R.layout.text_input, null);
             final TextInputEditText edit = view.findViewById(R.id.et_input);
             TextInputLayout inputLayout = view.findViewById(R.id.input_layout);
             inputLayout.setHint(str(R.string.fetch_youtube_hint));

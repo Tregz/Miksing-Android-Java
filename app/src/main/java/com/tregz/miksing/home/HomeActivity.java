@@ -36,7 +36,6 @@ import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.TubeListener;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
-import com.tregz.miksing.data.user.User;
 import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 import com.tregz.miksing.home.edit.song.SongEditFragment;
@@ -77,7 +76,7 @@ import java.util.Date;
 import java.util.List;
 
 import static android.view.View.GONE;
-import static com.tregz.miksing.home.HomeNavigation.SIGN_IN;
+import static com.tregz.miksing.arch.auth.AuthLogin.SIGN_IN;
 
 public class HomeActivity extends BaseActivity implements
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout>,
@@ -115,7 +114,7 @@ public class HomeActivity extends BaseActivity implements
         Fragment primary = primary();
         navigation.toggle(Gravity.START);
         if (primary instanceof HomeFragment) ((HomeFragment) primary).prepare(tube.getId());
-        prepareListTitle = tube.getName();
+        prepareListTitle = tube.getName(this);
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.tregz.miksing.home.warn;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
@@ -16,6 +18,7 @@ import com.tregz.miksing.home.HomeView;
 public class WarnInput extends BaseWarning {
 
     static final String NAME = "name";
+    protected String name;
 
     protected HomeView listener;
 
@@ -26,16 +29,21 @@ public class WarnInput extends BaseWarning {
         else onListenerError(context);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) name = getArguments().getString(NAME);
+    }
+
     TextInputEditText setInputLayout(MaterialAlertDialogBuilder alert) {
         TextInputEditText edit = null;
         if (getActivity() != null) {
             LayoutInflater inflater = getActivity().getLayoutInflater();
-            View view = inflater.inflate(R.layout.dialog_input, null);
+            View view = inflater.inflate(R.layout.text_input, null);
             edit = view.findViewById(R.id.et_input);
             TextInputLayout inputLayout = view.findViewById(R.id.input_layout);
             inputLayout.setHint(str(R.string.playlist_name));
-            if (getArguments() != null && getArguments().getString(NAME) != null)
-                edit.setText(getArguments().getString(NAME));
+            edit.setText(name);
             alert.setView(view);
         }
         return edit;
@@ -43,6 +51,12 @@ public class WarnInput extends BaseWarning {
 
     String name(TextInputEditText edit) {
         return edit.getText() != null ? edit.getText().toString() : "null";
+    }
+
+    static Bundle args(String name) {
+        Bundle args = new Bundle();
+        args.putString(NAME, name);
+        return args;
     }
 
     boolean nameNotNull(TextInputEditText edit) {

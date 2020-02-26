@@ -26,6 +26,10 @@
         <item name="android:textColor">@color/primaryTextDark</item>
     </style>
 
+    <style name="MatchFourty.TextLabel">
+        <item name="android:textColor">@color/primaryTextDark</item>
+    </style>
+
     <style name="TextTheme">
         <item name="colorPrimary">@color/primaryText</item>
     </style>
