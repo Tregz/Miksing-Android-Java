@@ -16,6 +16,7 @@ import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.song.SongListener;
 import com.tregz.miksing.data.tube.song.TubeSong;
+import com.tregz.miksing.data.tube.song.TubeSongDelete;
 import com.tregz.miksing.data.tube.song.TubeSongInsert;
 import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.data.user.tube.UserTubeInsert;
@@ -61,20 +62,20 @@ public class TubeListener extends DataListener implements MaybeObserver<Tube>, T
     }
 
     @Override
-    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        // TODO
+    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String s) {
+        Log.d(TAG, "onChildChanged");
     }
 
     @Override
-    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        // TODO
+    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String s) {
+        Log.d(TAG, "onChildMoved");
     }
 
     @Override
-    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-        // TODO
+    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+        Log.d(TAG, "onChildRemoved: " + snapshot.getKey());
+        new TubeSongDelete(context, snapshot.getKey());
     }
-
     @Override
     public void onComplete() {
         TubeSingle<List<Long>> observer = new TubeSingle<>(this);

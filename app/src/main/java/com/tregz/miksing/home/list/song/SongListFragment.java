@@ -17,6 +17,7 @@ import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongAccess;
 import com.tregz.miksing.data.tube.song.TubeSongDelete;
@@ -143,10 +144,15 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     public void ordered() {
         ((SongListAdapter)adapter).items.beginBatchedUpdates();
         for (int i = 0; i < relations.size(); i++) {
+            Log.d(TAG, "relation " + relations.get(0).join.getTubeId() + " size? " + relations.size());
             TubeSongRelation relation = relations.get(i);
+            Log.d(TAG, "position changed: " + (relation.join.getPosition() != i));
             if (relation.join.getPosition() != i) {
                 relation.join.setPosition(i);
-                new TubeSongUpdate(getContext(), relation.join);
+                if (tubeId != null) {
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
+                    ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).setValue(i);
+                } else new TubeSongUpdate(getContext(), relation.join);
             }
         }
         ((SongListAdapter)adapter).items.endBatchedUpdates();
@@ -202,7 +208,11 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     }
 
     private void remove(int position) {
-        new TubeSongDelete(getContext(), relations.get(position).join);
+        TubeSongRelation relation = relations.get(position);
+        if (tubeId != null) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
+            ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).removeValue();
+        } else new TubeSongDelete(getContext(), relation.join);
         adapter.notifyItemRemoved(position);
     }
 

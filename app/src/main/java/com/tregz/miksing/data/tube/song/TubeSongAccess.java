@@ -18,7 +18,7 @@ import io.reactivex.Single;
 @Dao
 public interface TubeSongAccess {
     String FROM_TABLE = " FROM " + TubeSong.TABLE;
-    //String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
+    String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
 
     @Transaction
@@ -41,6 +41,9 @@ public interface TubeSongAccess {
 
     @Delete
     Single<Integer> delete(TubeSong...joins);
+
+    @Query(DELETE_FROM_TABLE + " WHERE song = :songId")
+    Single<Integer> delete(String songId);
 
     @RawQuery(observedEntities = TubeSong.class)
     LiveData<TubeSong> item(SupportSQLiteQuery query);

@@ -25,7 +25,7 @@ public class ListGesture extends ItemTouchHelper.Callback {
         Log.d(TAG, "clearView holder.getOldPosition():" + holder.getOldPosition());
         Log.d(TAG, "clearView holder.getAdapterPosition():" + holder.getAdapterPosition());
         if (holder.getOldPosition() != holder.getAdapterPosition())
-        view.onGestureClear(holder.getOldPosition(), holder.getAdapterPosition());
+            view.onGestureClear(holder.getOldPosition(), holder.getAdapterPosition());
     }
 
     @Override
