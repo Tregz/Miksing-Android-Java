@@ -19,6 +19,7 @@ import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongAccess;
+import com.tregz.miksing.data.tube.song.TubeSongDelete;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.tube.song.TubeSongUpdate;
 import com.tregz.miksing.home.HomeActivity;
@@ -40,7 +41,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     private LiveData<List<TubeSongRelation>> songLiveData;
     private List<TubeSongRelation> relations;
     private int destination = 0; // last gesture's target position
-    private int position;
+    private Page page;
     private OnItem onItem;
     private HomeView home;
 
@@ -67,7 +68,8 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        position = getArguments() != null ? getArguments().getInt(POSITION, 0) : 0;
+        int position = getArguments() != null ? getArguments().getInt(POSITION, 0) : 0;
+        page = Page.values()[position];
         live(null);
 
     }
@@ -76,11 +78,11 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         this.tubeId = tubeId;
         TubeSongAccess access = DataReference.getInstance(getContext()).accessTubeSong();
         if (songLiveData != null && songLiveData.hasObservers()) songLiveData.removeObserver(this);
-        switch (position) {
-            case 0:
+        switch (page) {
+            case EVERYTHING:
                 songLiveData = access.all();
                 break;
-            case 1:
+            case PREPARE:
                 String listId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
                 songLiveData = access.prepare(tubeId == null ? listId : tubeId);
                 break;
@@ -125,9 +127,16 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     @Override
     public void onItemSwipe(int position, int direction) {
-        final TubeSong join = relations.get(position).join;
-        join.setTubeId(PrefShared.getInstance(getContext()).getUid() + "-Prepare");
-        new TubeSongUpdate(getContext(), join);
+        if (direction == ItemTouchHelper.RIGHT || direction == ItemTouchHelper.END) {
+            if (page == Page.EVERYTHING) {
+                final TubeSong join = relations.get(position).join;
+                join.setTubeId(home.getPrepareListTitle());
+                new TubeSongUpdate(getContext(), join);
+            } else remove(position);
+        } else if (direction == ItemTouchHelper.START || direction == ItemTouchHelper.LEFT) {
+            if (page == Page.EVERYTHING) { }
+            else remove(position);
+        }
     }
 
     @Override
@@ -192,10 +201,20 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         }
     }
 
+    private void remove(int position) {
+        new TubeSongDelete(getContext(), relations.get(position).join);
+        adapter.notifyItemRemoved(position);
+    }
+
     // Allow an interaction to be communicated to the activity
     public interface OnItem {
         void onItemClick(Song song);
 
         void onItemLongClick(Song song);
+    }
+
+    public enum Page {
+        EVERYTHING,
+        PREPARE
     }
 }

@@ -2,4 +2,6 @@
 <resources>
     <string name="tx_tube_default">Liste de Miksing</string>
     <string name="tx_tube_apero">Liste apero de Miksing</string>
+    <string name="tx_tube_bistro">Liste bistro de Miksing</string>
+    <string name="tx_tube_club">Liste club de Miksing</string>
 </resources>

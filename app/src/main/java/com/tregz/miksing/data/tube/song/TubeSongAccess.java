@@ -2,6 +2,7 @@ package com.tregz.miksing.data.tube.song;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -37,6 +38,9 @@ public interface TubeSongAccess {
 
     @Update //(onConflict = REPLACE)
     Single<Integer> update(TubeSong...joins);
+
+    @Delete
+    Single<Integer> delete(TubeSong...joins);
 
     @RawQuery(observedEntities = TubeSong.class)
     LiveData<TubeSong> item(SupportSQLiteQuery query);

@@ -1,5 +1,7 @@
 package com.tregz.miksing.home.list;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tregz.miksing.base.list.ListSorted;
 
 public class ListGesture extends ItemTouchHelper.Callback {
-    //private String TAG = ListGesture.class.getSimpleName();
+    private String TAG = ListGesture.class.getSimpleName();
 
     private ListView view;
 
@@ -20,6 +22,9 @@ public class ListGesture extends ItemTouchHelper.Callback {
             @NonNull RecyclerView recycler,
             @NonNull RecyclerView.ViewHolder holder) {
         super.clearView(recycler, holder);
+        Log.d(TAG, "clearView holder.getOldPosition():" + holder.getOldPosition());
+        Log.d(TAG, "clearView holder.getAdapterPosition():" + holder.getAdapterPosition());
+        if (holder.getOldPosition() != holder.getAdapterPosition())
         view.onGestureClear(holder.getOldPosition(), holder.getAdapterPosition());
     }
 
@@ -49,5 +54,10 @@ public class ListGesture extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder holder, int direction) {
         view.onItemSwipe(holder.getAdapterPosition(), direction);
+    }
+
+    public enum Direction {
+        RIGHT,
+        START
     }
 }

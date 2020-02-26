@@ -14,6 +14,8 @@ public interface HomeView {
 
     void startActivityForResult(Intent intent, int requestCode);
 
+    String getPrepareListTitle();
+
     void onClearItemDetails();
 
     void onClearPlaylist();

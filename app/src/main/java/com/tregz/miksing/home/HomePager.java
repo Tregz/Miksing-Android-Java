@@ -18,8 +18,8 @@ public class HomePager extends FragmentStatePagerAdapter {
 
     HomePager(FragmentManager manager) {
         super(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        pages.add(SongListFragment.newInstance(0));
-        pages.add(SongListFragment.newInstance(1));
+        pages.add(SongListFragment.newInstance(SongListFragment.Page.EVERYTHING.ordinal()));
+        pages.add(SongListFragment.newInstance(SongListFragment.Page.PREPARE.ordinal()));
     }
 
     @NonNull

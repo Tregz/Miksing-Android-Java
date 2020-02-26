@@ -72,6 +72,8 @@ import androidx.navigation.NavGraph;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -86,6 +88,18 @@ public class HomeActivity extends BaseActivity implements
     private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
     private String prepareListTitle = null;
+
+    private final String APERO = "-M0uHaGKccSZf3yFQl1P";
+    private final String BISTRO = "-M121RV6XpDcLssTFj_3";
+    private final String CLUB = "-M121Sw09oyK7jePDiAv";
+    private final String DEFAULT = "-M0A1B6LQlpJpgdbkYyx";
+    private final List<String> defaultPlaylists = Arrays.asList(DEFAULT, APERO, BISTRO, CLUB);
+
+    @Override
+    public String getPrepareListTitle() {
+        if (prepareListTitle != null) return prepareListTitle;
+        else return PrefShared.getInstance(this).getUid() + "-Prepare";
+    }
 
     private ActivityHomeBinding binding;
     private CollapsingToolbarLayout toolbarLayout;
@@ -282,10 +296,9 @@ public class HomeActivity extends BaseActivity implements
             new UserListener(this, firebaseUser.getUid());
         } else {
             // Start observing default playlists
-            new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
-            //new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
-            //new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
-            //new TubeListener(this, null, "-M0A1B6LQlpJpgdbkYyx");
+            for (String playlistId : defaultPlaylists) {
+                new TubeListener(this, null, playlistId);
+            }
         }
     }
 
