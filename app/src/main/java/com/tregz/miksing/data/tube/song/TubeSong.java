@@ -24,7 +24,7 @@ import static androidx.room.ForeignKey.NO_ACTION;
 public class TubeSong extends DataPositionable {
 
     public TubeSong(@NonNull String tubeId, @NonNull String songId) {
-        setId(tubeId + "-" + songId);
+        setId(TubeSongUtil.id(tubeId, songId));
         this.songId = songId;
         this.tubeId = tubeId;
     }

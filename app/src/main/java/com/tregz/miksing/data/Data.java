@@ -13,28 +13,13 @@ public abstract class Data implements Parcelable {
 
     Data() {}
 
-    Data(@NonNull String id, @NonNull Date createdAt) {
+    Data(@NonNull String id) {
         this.id = id;
-        this.createdAt = createdAt;
     }
 
     @PrimaryKey
     @NonNull
     private String id = "Undefined";
-    @NonNull
-    @ColumnInfo(name = DataNotation.CD)
-    private Date createdAt = new Date();
-    @ColumnInfo(name = DataNotation.ED)
-    private Date updatedAt;
-
-    @NonNull
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(@NonNull Date createdAt) {
-        this.createdAt = createdAt;
-    }
 
     @NonNull
     public String getId() {
@@ -45,26 +30,13 @@ public abstract class Data implements Parcelable {
         this.id = id;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         String key = parcel.readString();
         id = key != null ? key : "Undefined";
-        Date copy = (Date) parcel.readSerializable();
-        createdAt = copy != null ? copy : new Date();
-        updatedAt = (Date) parcel.readSerializable();
     }
 
     protected void read(Parcel parcel) {
         parcel.writeString(id);
-        parcel.writeSerializable(createdAt);
-        parcel.writeSerializable(updatedAt);
     }
 }

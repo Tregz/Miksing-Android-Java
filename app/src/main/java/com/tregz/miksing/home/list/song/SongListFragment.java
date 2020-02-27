@@ -16,14 +16,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
+import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.song.SongAccess;
-import com.tregz.miksing.data.song.SongRelation;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongAccess;
-import com.tregz.miksing.data.tube.song.TubeSongDelete;
-import com.tregz.miksing.data.tube.song.TubeSongUpdate;
+import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListFragment;
@@ -34,14 +32,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SongListFragment extends ListFragment implements Observer<List<SongRelation>>,
+public class SongListFragment extends ListFragment implements Observer<List<TubeSongRelation>>,
         ListView {
 
     private final String TAG = SongListFragment.class.getSimpleName();
     private String tubeId = null;
     private final static String POSITION = "position";
-    private MediatorLiveData<List<SongRelation>> mediator = new MediatorLiveData<>();
-    private List<SongRelation> relations;
+    private MediatorLiveData<List<TubeSongRelation>> mediator = new MediatorLiveData<>();
+    private List<TubeSongRelation> relations;
     private int destination = 0; // last gesture's target position
     private Page page;
     private OnItem onItem;
@@ -72,31 +70,31 @@ public class SongListFragment extends ListFragment implements Observer<List<Song
         super.onCreate(savedInstanceState);
         int position = getArguments() != null ? getArguments().getInt(POSITION, 0) : 0;
         page = Page.values()[position];
-        live(null);
+        if (page == Page.EVERYTHING) tubeId = PrefShared.getInstance(getContext()).getKeySongs();
+        else tubeId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        live(tubeId);
+    }
+
+    public void reload(String tubeId) {
+        if (this.tubeId.equals(tubeId)) live(tubeId);
     }
 
     public void live(String tubeId) {
-        this.tubeId = tubeId;
-        TubeSongAccess accessTubeSong = DataReference.getInstance(getContext()).accessTubeSong();
-        SongAccess accessSong = DataReference.getInstance(getContext()).accessSong();
-        if (mediator != null) {
+        if (getView() != null && mediator != null) {
+            this.tubeId = tubeId;
             if (mediator.hasObservers()) mediator.removeObserver(this);
-            mediator.observe(this, this);
-            switch (page) {
-                case EVERYTHING:
-                    String all = "-M0A1B6LQlpJpgdbkYyx";
-                    mediator.addSource(accessSong.all(), this);
-                    break;
-                case PREPARE:
-                    String listId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
-                    String id = tubeId == null ? listId : tubeId;
-                    //mediator.addSource(accessTubeSong.prepare(id), this);
-                    //mediator.addSource(accessSong.all(), this);
-                    break;
-            }
-            //if (songLiveData != null) songLiveData.observe(this, this);
+            mediator.observe(getViewLifecycleOwner(), this);
+            mediator.addSource(access().whereTube(tubeId), this);
         }
+    }
+
+    private TubeSongAccess access() {
+        return DataReference.getInstance(getContext()).accessTubeSong();
     }
 
     @Override
@@ -108,11 +106,9 @@ public class SongListFragment extends ListFragment implements Observer<List<Song
     }
 
     @Override
-    public void onChanged(List<SongRelation> relations) {
-
+    public void onChanged(List<TubeSongRelation> relations) {
         Log.d(TAG, "onChanged " + relations.size());
         if (this.relations == null || this.relations.size() != relations.size()) {
-            Log.d(TAG, "onChanged.. " + relations.size());
             this.relations = relations;
             if (getActivity() instanceof HomeActivity)
                 ((HomeActivity) getActivity()).setPlaylist(relations);
@@ -142,7 +138,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Song
             if (page == Page.EVERYTHING) {
                 final TubeSong join = relations.get(position).join;
                 join.setTubeId(home.getPrepareListTitle());
-                new TubeSongUpdate(getContext(), join);
+                new DataUpdate(access().update(join));
             } else remove(position);
         } else if (direction == ItemTouchHelper.START || direction == ItemTouchHelper.LEFT) {
             if (page == Page.EVERYTHING) {
@@ -154,15 +150,14 @@ public class SongListFragment extends ListFragment implements Observer<List<Song
     public void ordered() {
         ((SongListAdapter) adapter).items.beginBatchedUpdates();
         for (int i = 0; i < relations.size(); i++) {
-            Log.d(TAG, "relation " + relations.get(0).join.getTubeId() + " size? " + relations.size());
-            SongRelation relation = relations.get(i);
+            TubeSongRelation relation = relations.get(i);
             Log.d(TAG, "position changed: " + (relation.join.getPosition() != i));
             if (relation.join.getPosition() != i) {
                 relation.join.setPosition(i);
                 if (tubeId != null) {
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
                     ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).setValue(i);
-                } else new TubeSongUpdate(getContext(), relation.join);
+                } else new DataUpdate(access().update(relation.join));
             }
         }
         ((SongListAdapter) adapter).items.endBatchedUpdates();
@@ -181,7 +176,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Song
                 boolean create = tubeId == null || paste;
                 DatabaseReference node = create ? tube.push() : tube.child(tubeId);
                 node.child("name").setValue(name);
-                for (SongRelation relation : relations) {
+                for (TubeSongRelation relation : relations) {
                     int position = relation.join.getPosition();
                     node.child("song").child(relation.song.getId()).setValue(position);
                 }
@@ -199,8 +194,8 @@ public class SongListFragment extends ListFragment implements Observer<List<Song
     public void search(String query) {
         if (query.isEmpty()) ((SongListAdapter) adapter).items.replaceAll(relations);
         else {
-            List<SongRelation> searched = new ArrayList<>();
-            for (SongRelation relation : relations)
+            List<TubeSongRelation> searched = new ArrayList<>();
+            for (TubeSongRelation relation : relations)
                 if (relation.song.getTitle().toLowerCase().startsWith(query.toLowerCase()))
                     searched.add(relation);
             ((SongListAdapter) adapter).items.replaceAll(searched);
@@ -218,11 +213,11 @@ public class SongListFragment extends ListFragment implements Observer<List<Song
     }
 
     private void remove(int position) {
-        SongRelation relation = relations.get(position);
+        TubeSongRelation relation = relations.get(position);
         if (tubeId != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
             ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).removeValue();
-        } else new TubeSongDelete(getContext(), relation.join);
+        } else new DataUpdate(access().delete(relation.join));
         adapter.notifyItemRemoved(position);
     }
 

@@ -9,6 +9,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.data.DataListener;
+import com.tregz.miksing.data.DataReference;
+import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.TubeListener;
 import com.tregz.miksing.data.user.User;
@@ -33,17 +35,20 @@ public class UserTubeListener extends DataListener {
     }
 
     @Override
-    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String s) {
+        if (snapshot.getKey() != null) {
+            UserTube join = new UserTube(userId, snapshot.getKey());
+            new DataUpdate(DataReference.getInstance(context).accessUserTube().update(join));
+        }
+    }
+
+    @Override
+    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String s) {
         // TODO
     }
 
     @Override
-    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        // TODO
-    }
-
-    @Override
-    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
         // TODO
     }
 }

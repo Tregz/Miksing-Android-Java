@@ -45,12 +45,6 @@ public abstract class ListFragment extends BaseFragment {
         else recycler.setLayoutManager(new GridLayoutManager(getContext(), columns()));
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        sort();
-    }
-
     abstract public void save(String name, boolean paste);
 
     abstract public void sort();

@@ -31,7 +31,10 @@ public interface SongAccess extends DataAccess<Song> {
     Single<Integer> update(Song...songs);
 
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    LiveData<Song> whereId(String key);
+    Maybe<Song> whereId(String key);
+
+    @Query(SELECT_FROM_TABLE + " WHERE id = :key")
+    LiveData<Song> liveWhereId(String key);
 
     @Query(SELECT_FROM_TABLE + " WHERE id IN(SELECT song FROM tube_song WHERE tube = :id)")
     LiveData<List<SongRelation>> whereTube(String id);

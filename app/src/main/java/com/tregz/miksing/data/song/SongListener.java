@@ -11,6 +11,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tregz.miksing.data.DataListener;
 import com.tregz.miksing.data.DataNotation;
+import com.tregz.miksing.data.tube.song.TubeSong;
 
 import java.util.Date;
 
@@ -18,9 +19,11 @@ public class SongListener extends DataListener implements ValueEventListener {
     private String TAG = SongListener.class.getSimpleName();
 
     private Context context;
+    private TubeSong join;
 
-    public SongListener(Context context, String key) {
+    public SongListener(Context context, String key, TubeSong join) {
         this.context = context;
+        this.join = join;
         //FirebaseDatabase.getInstance().getReference(Song.TABLE).addChildEventListener(this);
         DatabaseReference song = FirebaseDatabase.getInstance().getReference(Song.TABLE);
         song.child(key).addValueEventListener(this); //addChildEventListener(this);
@@ -40,7 +43,7 @@ public class SongListener extends DataListener implements ValueEventListener {
             //Log.d(TAG, "Song key: " + song.getArtist() + " - " + song.getTitle());
             Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
             // TODO insert or update
-            new SongInsert(context, song);
+            new SongSaver(context, song, join);
         }
     }
 

@@ -4,31 +4,25 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.tregz.miksing.data.DataListener;
 import com.tregz.miksing.data.DataReference;
-import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.song.SongListener;
-import com.tregz.miksing.data.tube.song.TubeSong;
-import com.tregz.miksing.data.tube.song.TubeSongDelete;
-import com.tregz.miksing.data.tube.song.TubeSongInsert;
+import com.tregz.miksing.data.DataUpdate;
+import com.tregz.miksing.data.tube.song.TubeSongListener;
 import com.tregz.miksing.data.user.tube.UserTube;
-import com.tregz.miksing.data.user.tube.UserTubeInsert;
+import com.tregz.miksing.data.user.tube.UserTubeSaver;
 
 import java.util.Date;
-import java.util.List;
 
 import io.reactivex.MaybeObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class TubeListener extends DataListener implements MaybeObserver<Tube>, TubeSingle.OnSave,
+public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
         ValueEventListener {
     private String TAG = TubeListener.class.getSimpleName();
 
@@ -49,37 +43,12 @@ public class TubeListener extends DataListener implements MaybeObserver<Tube>, T
 
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
-        super.onCancelled(databaseError);
+        // do nothing
     }
 
-    @Override
-    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
-        Log.d(TAG, "Tube's song: " + snapshot.getKey());
-        if (snapshot.getKey() != null) {
-            new TubeSongInsert(context, new TubeSong(tubeId, snapshot.getKey()));
-            new SongListener(context, snapshot.getKey());
-        }
-    }
-
-    @Override
-    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String s) {
-        Log.d(TAG, "onChildChanged");
-    }
-
-    @Override
-    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String s) {
-        Log.d(TAG, "onChildMoved");
-    }
-
-    @Override
-    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-        Log.d(TAG, "onChildRemoved: " + snapshot.getKey());
-        new TubeSongDelete(context, snapshot.getKey(), tubeId);
-    }
     @Override
     public void onComplete() {
-        TubeSingle<List<Long>> observer = new TubeSingle<>(this);
-        access().insert(tube).subscribeOn(Schedulers.io()).subscribe(observer);
+        new TubeInsert(tube, this);
     }
 
     @Override
@@ -104,16 +73,15 @@ public class TubeListener extends DataListener implements MaybeObserver<Tube>, T
 
     @Override
     public void onSuccess(Tube tube) {
-        TubeSingle<Integer> observer = new TubeSingle<>(this);
-        Log.d(TAG, "update tube name!" + this.tube.getName());
-        access().update(this.tube).subscribeOn(Schedulers.io()).subscribe(observer);
+        new DataUpdate(access().update(this.tube));
+        saved();
     }
 
     @Override
     public void saved() {
-        if (userId != null) new UserTubeInsert(context, new UserTube(userId, tubeId));
-        DatabaseReference table = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
-        table.child(tubeId).child(Song.TABLE).addChildEventListener(this);
+        Log.d(TAG, "Saving UserTube user " + userId + " tube: " + tubeId);
+        new UserTubeSaver(context, new UserTube(userId, tubeId));
+        new TubeSongListener(context, tubeId);
     }
 
     private DatabaseReference table() {

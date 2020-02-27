@@ -11,8 +11,11 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
+import com.tregz.miksing.data.tube.Tube;
+
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 @Dao
@@ -25,16 +28,19 @@ public interface TubeSongAccess {
     @Query(SELECT_FROM_TABLE)
     LiveData<List<TubeSongRelation>> all();
 
-    @Transaction
-    @Query(SELECT_FROM_TABLE + " WHERE tube = :key") // ORDER BY user_song.spot
-    LiveData<List<TubeSongRelation>> prepare(String key);
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<List<Long>> insert(TubeSong...joins);
 
     @Transaction
-    @Query(SELECT_FROM_TABLE + " WHERE song = :key")
-    LiveData<TubeSongRelation> query(String key);
+    @Query(SELECT_FROM_TABLE + " WHERE song = :id")
+    LiveData<TubeSongRelation> whereSong(String id);
+
+    @Query(SELECT_FROM_TABLE + " WHERE id = :key")
+    Maybe<TubeSong> whereId(String key);
+
+    @Transaction
+    @Query(SELECT_FROM_TABLE + " WHERE tube = :id") // ORDER BY user_song.spot
+    LiveData<List<TubeSongRelation>> whereTube(String id);
 
     @Update //(onConflict = REPLACE)
     Single<Integer> update(TubeSong...joins);

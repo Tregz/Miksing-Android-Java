@@ -9,6 +9,7 @@ public class PrefShared {
     //private final String TAG = PrefShared.class.getSimpleName();
     private final String USERNAME = "username";
     private final String EMAIL = "email";
+    private final String SONGS_KEY = "songs";
     private SharedPreferences sp;
 
     private static PrefShared instance;
@@ -30,6 +31,14 @@ public class PrefShared {
 
     public void setEmail(String email) {
         sp.edit().putString(EMAIL, email).apply();
+    }
+
+    public String getKeySongs() {
+        return sp.getString(SONGS_KEY, "-M0A1B6LQlpJpgdbkYyx");
+    }
+
+    public void setKeySongs(String id) {
+        sp.edit().putString(SONGS_KEY, id).apply();
     }
 
     public String getUid() {

@@ -60,7 +60,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
     void reload(String id) {
         ListFragment page = page();
-        if (page instanceof SongListFragment) ((SongListFragment)page).live(id);
+        if (page instanceof SongListFragment) ((SongListFragment)page).reload(id);
     }
 
     void save(String name, boolean paste) {

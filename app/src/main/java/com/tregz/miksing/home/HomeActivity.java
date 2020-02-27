@@ -35,6 +35,7 @@ import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.song.SongRelation;
 import com.tregz.miksing.data.tube.Tube;
+import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 import com.tregz.miksing.home.edit.song.SongEditFragment;
@@ -49,6 +50,8 @@ import com.tregz.miksing.home.warn.WarnScore;
 import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -428,9 +431,13 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onTubeSongInserted(String id) {
-        Fragment primary = primary();
-        if (primary instanceof HomeFragment) ((HomeFragment) primary).reload(id);
+    public void onTubeSongInserted(final String id) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                Fragment primary = primary();
+                if (primary instanceof HomeFragment) ((HomeFragment) primary).reload(id);
+            }
+        });
     }
 
     @Override
@@ -501,9 +508,9 @@ public class HomeActivity extends BaseActivity implements
         }
     }
 
-    public void setPlaylist(List<SongRelation> relations) {
+    public void setPlaylist(List<TubeSongRelation> relations) {
         StringBuilder builder = new StringBuilder();
-        for (SongRelation relation : relations) {
+        for (TubeSongRelation relation : relations) {
             if (builder.length() > 0) builder.append(",");
             builder.append("'");
             builder.append(relation.song.getId());

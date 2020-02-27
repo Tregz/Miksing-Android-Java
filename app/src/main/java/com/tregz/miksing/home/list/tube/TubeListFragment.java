@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
+import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.user.tube.UserTubeAccess;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
-import com.tregz.miksing.data.user.tube.UserTubeUpdate;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListView;
@@ -91,7 +91,8 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
             UserTubeRelation relation = relations.get(i);
             if (relation.join.getPosition() != i) {
                 relation.join.setPosition(i);
-                new UserTubeUpdate(getContext(), relation.join);
+                UserTubeAccess access = DataReference.getInstance(getContext()).accessUserTube();
+                new DataUpdate(access.update(relation.join));
             }
         }
         ((TubeListAdapter)adapter).items.endBatchedUpdates();

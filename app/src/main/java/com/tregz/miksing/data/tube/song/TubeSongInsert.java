@@ -1,19 +1,19 @@
 package com.tregz.miksing.data.tube.song;
 
-import android.content.Context;
-
+import com.tregz.miksing.data.DataSingle;
 import com.tregz.miksing.home.HomeView;
 
 import java.util.List;
 
-public class TubeSongInsert extends TubeSongSingle<List<Long>> {
+import io.reactivex.Single;
+
+class TubeSongInsert extends DataSingle<List<Long>> {
 
     private TubeSong[] joins;
 
-    public TubeSongInsert(Context context, final TubeSong...joins) {
-        super(context);
+    TubeSongInsert(Single<List<Long>> single, final TubeSong...joins) {
         this.joins = joins;
-        subscribe(access().insert(joins));
+        subscribe(single);
     }
 
     @Override

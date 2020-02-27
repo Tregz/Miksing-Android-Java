@@ -81,7 +81,7 @@ public class UserListener implements MaybeObserver<User>, ValueEventListener {
     @Override
     public void onSuccess(User t) {
         if (user != null) {
-            access().update(user).subscribeOn(Schedulers.io()).subscribe(new DataUpdate());
+            new DataUpdate(access().update(user));
             new UserTubeListener(context, userId);
         }
     }
