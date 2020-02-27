@@ -35,7 +35,6 @@ import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.song.SongRelation;
 import com.tregz.miksing.data.tube.Tube;
-import com.tregz.miksing.data.tube.TubeListener;
 import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 import com.tregz.miksing.home.edit.song.SongEditFragment;
@@ -72,8 +71,6 @@ import androidx.navigation.NavGraph;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -88,12 +85,6 @@ public class HomeActivity extends BaseActivity implements
     private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
     private String prepareListTitle = null;
-
-    private final String APERO = "-M0uHaGKccSZf3yFQl1P";
-    private final String BISTRO = "-M121RV6XpDcLssTFj_3";
-    private final String CLUB = "-M121Sw09oyK7jePDiAv";
-    private final String DEFAULT = "-M0A1B6LQlpJpgdbkYyx";
-    private final List<String> defaultPlaylists = Arrays.asList(DEFAULT, APERO, BISTRO, CLUB);
 
     @Override
     public String getPrepareListTitle() {
@@ -290,16 +281,10 @@ public class HomeActivity extends BaseActivity implements
             ActivityCompat.requestPermissions(this, permissions, LOCATION_CODE);
         }
 
+        // Start observing user's cloud data or default user's playlists
         FirebaseUser firebaseUser = AuthUtil.user();
-        if (firebaseUser != null) {
-            // Start observing user's cloud data
-            new UserListener(this, firebaseUser.getUid());
-        } else {
-            // Start observing default playlists
-            for (String playlistId : defaultPlaylists) {
-                new TubeListener(this, null, playlistId);
-            }
-        }
+        String id = firebaseUser != null ? firebaseUser.getUid() : "Zdh2ZOt9AOMKih2cNv00XSwk3fh1";
+        new UserListener(this, id);
     }
 
     @Override

@@ -7,7 +7,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -24,7 +23,6 @@ import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongAccess;
 import com.tregz.miksing.data.tube.song.TubeSongDelete;
-import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.tube.song.TubeSongUpdate;
 import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.HomeView;
@@ -88,7 +86,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Song
             switch (page) {
                 case EVERYTHING:
                     String all = "-M0A1B6LQlpJpgdbkYyx";
-                    mediator.addSource(accessSong.tube(), this);
+                    mediator.addSource(accessSong.all(), this);
                     break;
                 case PREPARE:
                     String listId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";

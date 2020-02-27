@@ -12,7 +12,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tregz.miksing.arch.auth.AuthUtil;
-import com.tregz.miksing.data.DataInsert;
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
@@ -39,20 +38,14 @@ public class UserListener implements MaybeObserver<User>, ValueEventListener {
         table().child(userId).child("data").addListenerForSingleValueEvent(this);
     }
 
-    private void save() {
-        access().query(userId).subscribeOn(Schedulers.io()).subscribe(this);
-    }
-
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
         Log.e(TAG, databaseError.getMessage());
-        save();
     }
 
     @Override
     public void onComplete() {
-        access().insert(user).subscribeOn(Schedulers.io()).subscribe(new DataInsert());
-        new UserTubeListener(context, userId);
+        if (user != null) new UserInsert(context, user);
     }
 
     @Override
@@ -65,15 +58,14 @@ public class UserListener implements MaybeObserver<User>, ValueEventListener {
             user.setEmail(firebaseUser.getEmail());
             table().child(userId).child("data").setValue(UserUtil.map(user));
         } else {
-            Log.d(TAG, "User exist");
-            Date createdAt =  snapshot.child(DataNotation.CD).getValue(Date.class);
+            Long createdAt = snapshot.child(DataNotation.CD).getValue(Long.class);
             if (createdAt != null) {
-                user = new User(userId, createdAt);
+                user = new User(userId, new Date(createdAt));
                 user.setName(snapshot.child(DataNotation.NS).getValue(String.class));
                 user.setEmail(snapshot.child(DataNotation.AS).getValue(String.class));
             }
         }
-        save();
+        access().whereId(userId).subscribeOn(Schedulers.io()).subscribe(this);
     }
 
     @Override
@@ -88,8 +80,10 @@ public class UserListener implements MaybeObserver<User>, ValueEventListener {
 
     @Override
     public void onSuccess(User t) {
-        access().update(user).subscribeOn(Schedulers.io()).subscribe(new DataUpdate());
-        new UserTubeListener(context, userId);
+        if (user != null) {
+            access().update(user).subscribeOn(Schedulers.io()).subscribe(new DataUpdate());
+            new UserTubeListener(context, userId);
+        }
     }
 
     private DatabaseReference table() {

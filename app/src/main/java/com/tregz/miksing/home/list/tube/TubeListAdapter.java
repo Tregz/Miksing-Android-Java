@@ -1,6 +1,7 @@
 package com.tregz.miksing.home.list.tube;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.home.list.ListHolder;
 
 public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
-    //private String TAG = TubeAdapter.class.getSimpleName();
+    private String TAG = TubeListAdapter.class.getSimpleName();
 
     private Context context;
     private TubeListFragment.OnItem listener;
@@ -33,9 +34,11 @@ public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ListHolder holder, int position) {
+
         if (items.get(position) != null) {
             final UserTubeRelation relation = items.get(position);
             final Tube tube = relation.tube;
+            Log.d(TAG, "tube? " + (tube != null));
             if (tube != null) {
                 // Download thumbnail with Glide dependency
                 int drawable = R.drawable.ic_playlist_play;

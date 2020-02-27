@@ -119,7 +119,7 @@ public class SongInsertAndroidTest {
                 song.setArtist(getString(dataSnapshot, "last"));
                 Log.d(TAG, "childAdded " + getString(dataSnapshot, "last"));
                 access.insert(song).subscribeOn(Schedulers.io()).subscribe(singleObserver);
-                Maybe<Song> test = access.testQuery(dataSnapshot.getKey());
+                Maybe<Song> test = access.test(dataSnapshot.getKey());
                 test.subscribeOn(Schedulers.io()).subscribe(maybeObserver);
             }
         }

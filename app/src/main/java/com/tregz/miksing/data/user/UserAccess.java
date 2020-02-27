@@ -31,7 +31,7 @@ public interface UserAccess extends DataAccess<User> {
     Single<List<Long>> insert(User...data);
 
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    Maybe<User> query(String key);
+    Maybe<User> whereId(String key);
 
     @Update
     Single<Integer> update(User...data);

@@ -22,28 +22,25 @@ public interface SongAccess extends DataAccess<Song> {
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
 
     @Query(SELECT_FROM_TABLE)
-    LiveData<List<Song>> all();
+    LiveData<List<SongRelation>> all();
 
-    @Query(DELETE_FROM_TABLE)
-    Single<Integer> wipe();
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    Single<List<Long>> insert(Song...songs);
 
     @Update
     Single<Integer> update(Song...songs);
 
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    LiveData<Song> query(String key);
-
-    @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    Maybe<Song> testQuery(String key);
+    LiveData<Song> whereId(String key);
 
     @Query(SELECT_FROM_TABLE + " WHERE id IN(SELECT song FROM tube_song WHERE tube = :id)")
-    LiveData<List<SongRelation>> tube(String id);
+    LiveData<List<SongRelation>> whereTube(String id);
 
-    @Query(SELECT_FROM_TABLE)
-    LiveData<List<SongRelation>> tube();
+    @Query(DELETE_FROM_TABLE)
+    Single<Integer> wipe();
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    Single<List<Long>> insert(Song...songs);
+    @Query(SELECT_FROM_TABLE + " WHERE id = :key")
+    Maybe<Song> test(String key);
 
     //@RawQuery(observedEntities = Song.class)
     //Observable<Song> item(SupportSQLiteQuery query);

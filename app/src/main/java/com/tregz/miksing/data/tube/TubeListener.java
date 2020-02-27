@@ -20,7 +20,6 @@ import com.tregz.miksing.data.tube.song.TubeSongDelete;
 import com.tregz.miksing.data.tube.song.TubeSongInsert;
 import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.data.user.tube.UserTubeInsert;
-import com.tregz.miksing.home.HomeView;
 
 import java.util.Date;
 import java.util.List;
@@ -89,7 +88,7 @@ public class TubeListener extends DataListener implements MaybeObserver<Tube>, T
         // TODO set and get createdAt
         if (name != null) {
             tube = new Tube(tubeId, new Date(), name);
-            access().query(tubeId).subscribeOn(Schedulers.io()).subscribe(this);
+            access().whereId(tubeId).subscribeOn(Schedulers.io()).subscribe(this);
         }
     }
 

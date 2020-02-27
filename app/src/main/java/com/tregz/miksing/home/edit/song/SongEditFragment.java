@@ -127,7 +127,7 @@ public class SongEditFragment extends BaseFragment implements AdapterView.OnItem
 
         // Update UI
         if (id != null) {
-            LiveData<Song> song = DataReference.getInstance(getContext()).accessSong().query(id);
+            LiveData<Song> song = DataReference.getInstance(getContext()).accessSong().whereId(id);
             song.observe(getViewLifecycleOwner(), this);
         }
     }
