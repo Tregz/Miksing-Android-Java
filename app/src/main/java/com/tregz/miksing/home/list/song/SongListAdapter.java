@@ -25,8 +25,8 @@ public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
     public final String TAG = SongListAdapter.class.getSimpleName();
 
     private SongListFragment.OnItem listener;
-    private SortedListAdapterCallback<TubeSongRelation> callback = new ListSorted<>(this);
-    SortedList<TubeSongRelation> items = new SortedList<>(TubeSongRelation.class, callback);
+    private SortedListAdapterCallback<TubeSongRelation> echo = new SongListSorted<>(this);
+    SortedList<TubeSongRelation> items = new SortedList<>(TubeSongRelation.class, echo);
 
     SongListAdapter(SongListFragment.OnItem listener) {
         this.listener = listener;

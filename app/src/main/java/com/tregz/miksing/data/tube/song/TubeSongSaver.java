@@ -27,7 +27,7 @@ public class TubeSongSaver implements MaybeObserver<TubeSong> {
 
     @Override
     public void onError(Throwable e) {
-
+        //
     }
 
     @Override

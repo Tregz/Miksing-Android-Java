@@ -70,6 +70,7 @@ public class HomeNavigation implements
     @Override
     public void onDrawerOpened(@NonNull View drawerView) {
         if (drawerView.getId() == drawers[RIGHT].getId()) update();
+        else view.onDrawerStartOpened();
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListView;
 import com.tregz.miksing.home.list.song.SongListFragment;
 
+import java.util.Collections;
 import java.util.List;
 
 public class TubeListFragment extends ListFragment implements Observer<List<UserTubeRelation>>,
@@ -30,7 +31,6 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     private List<UserTubeRelation> relations;
     private int destination = 0; // last gesture's target position
     private TubeListFragment.OnItem onItem;
-
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -71,12 +71,18 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
 
     @Override
     public void onGestureClear(int from, int destination) {
-
+        ordered();
     }
 
     @Override
     public void onItemMoved(int from, int destination) {
-
+        // Update unsorted array to save to new position after gesture event
+        this.destination = destination;
+        int start = Math.min(from, destination);
+        int end = Math.max(from, destination);
+        for (int i = start; i < end; i++) Collections.swap(relations, i, i + 1);
+        // Update sorted list to animate gesture event
+        adapter.notifyItemMoved(from, destination);
     }
 
     @Override

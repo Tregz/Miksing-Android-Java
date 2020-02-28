@@ -23,6 +23,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.tregz.miksing.R;
+import com.tregz.miksing.home.list.tube.TubeListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected static String TAG = BaseActivity.class.getSimpleName();
     protected static int PRIMARY;
     protected final int HOST = R.id.nav_host_fragment;
+    protected final int TUBE = R.id.nav_tube_fragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,7 +78,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected Fragment primary() {
-        return host().getChildFragmentManager().getPrimaryNavigationFragment();
+        return host(HOST).getChildFragmentManager().getPrimaryNavigationFragment();
+    }
+
+    protected TubeListFragment playlist() {
+        Fragment fragment = host(TUBE).getChildFragmentManager().getPrimaryNavigationFragment();
+        return fragment instanceof TubeListFragment ? (TubeListFragment) fragment : null;
     }
 
     protected Integer currentFragmentId() {
@@ -88,7 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return Navigation.findNavController(this, HOST);
     }
 
-    protected NavHostFragment host() {
-        return (NavHostFragment) getSupportFragmentManager().findFragmentById(HOST);
+    protected NavHostFragment host(int id) {
+        return (NavHostFragment) getSupportFragmentManager().findFragmentById(id);
     }
 }

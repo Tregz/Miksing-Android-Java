@@ -1,7 +1,7 @@
 package com.tregz.miksing.base.foot;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.tregz.miksing.home.HomeFragment;
+import com.tregz.miksing.arch.pref.PrefShared;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat;
 
 public class FootFloating extends FloatingActionButton.Behavior {
 
-    private final String TAG = FootFloating.class.getSimpleName();
+    //private final String TAG = FootFloating.class.getSimpleName();
 
     public FootFloating(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -54,7 +54,7 @@ public class FootFloating extends FloatingActionButton.Behavior {
                     }
                 });
         } else if (dy1 > 0 && child.getVisibility() != View.VISIBLE) {
-            child.show();
+            if (PrefShared.getInstance(child.getContext()).getUid() != null) child.show();
         }
     }
 }

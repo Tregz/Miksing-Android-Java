@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/userTube">
     <fragment
         android:id="@+id/userTube"
         android:name="com.tregz.miksing.home.list.tube.TubeListFragment"
-        android:label="TubeFragment" />
+        android:label="TubeFragment"
+        tools:layout="@layout/fragment_list"  />
 </navigation>

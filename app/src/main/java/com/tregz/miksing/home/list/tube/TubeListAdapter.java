@@ -24,12 +24,13 @@ public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
 
     private Context context;
     private TubeListFragment.OnItem listener;
-    private SortedListAdapterCallback<UserTubeRelation> callback = new ListSorted<>(this);
-    SortedList<UserTubeRelation> items = new SortedList<>(UserTubeRelation.class, callback);
+    private SortedListAdapterCallback<UserTubeRelation> echo = new TubeListSorted<>(this);
+    SortedList<UserTubeRelation> items = new SortedList<>(UserTubeRelation.class, echo);
 
     TubeListAdapter(Context context, TubeListFragment.OnItem listener) {
         this.context = context;
         this.listener = listener;
+        ListSorted.comparator = ListSorted.Order.DIGIT;
     }
 
     @Override
@@ -49,6 +50,7 @@ public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
                     String username = relation.user.getName();
                     if (username != null) holder.tvMark.setText(username);
                 }
+
                 if (tube.getUpdatedAt() != null) {
                     /* String dayOfYear = DateUtil.dayOfYear(null, song.getReleasedAt());
                     String when = "[" + dayOfYear + "]";
@@ -75,7 +77,6 @@ public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
                     return false;
                 }
             });
-            /*  */
         }
     }
 

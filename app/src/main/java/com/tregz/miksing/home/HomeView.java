@@ -32,6 +32,8 @@ public interface HomeView {
 
     void onTubeSongInserted(String id);
 
+    void onDrawerStartOpened();
+
     void sort();
 
     void search(String query);

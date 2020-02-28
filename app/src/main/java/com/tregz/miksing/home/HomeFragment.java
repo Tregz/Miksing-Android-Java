@@ -50,6 +50,8 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     @Override
     public void onPageSelected(int position) {
         if (getActivity() != null) ((HomeActivity) getActivity()).setFabVisibility(position > 0);
+        ListFragment page = page();
+        if (page instanceof SongListFragment) ((SongListFragment)page).sort();
     }
 
     void prepare(String id) {

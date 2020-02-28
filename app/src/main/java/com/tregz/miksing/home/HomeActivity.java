@@ -154,7 +154,7 @@ public class HomeActivity extends BaseActivity implements
             drawers[Drawer.START.ordinal()] = binding.navStart;
             final FootNavigation bottom = binding.contentHome.bottom;
             if (layout != null) navigation = new HomeNavigation(this, bottom, layout, drawers);
-            host().getChildFragmentManager().addOnBackStackChangedListener(this);
+            host(HOST).getChildFragmentManager().addOnBackStackChangedListener(this);
 
             // Panoramic height for the container of the media players
             FrameLayout players = binding.contentHome.appBar.players;
@@ -297,6 +297,12 @@ public class HomeActivity extends BaseActivity implements
             new HomeSearch(this, (SearchView) menu.findItem(R.id.search).getActionView());
         }
         return true;
+    }
+
+    @Override
+    public void onDrawerStartOpened() {
+        TubeListFragment tube = playlist();
+        if (tube != null) tube.sort();
     }
 
     @Override
