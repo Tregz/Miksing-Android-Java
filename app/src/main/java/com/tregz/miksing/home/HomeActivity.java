@@ -36,6 +36,7 @@ import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.UserListener;
+import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 import com.tregz.miksing.home.edit.song.SongEditFragment;
 import com.tregz.miksing.home.edit.song.SongEditView;
@@ -117,15 +118,15 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onItemClick(Tube tube) {
+    public void onItemClick(UserTube join, String title) {
         Fragment primary = primary();
         navigation.toggle(Gravity.START);
-        if (primary instanceof HomeFragment) ((HomeFragment) primary).prepare(tube.getId());
-        prepareListTitle = tube.getName(this);
+        if (primary instanceof HomeFragment) ((HomeFragment) primary).prepare(join);
+        prepareListTitle = title;
     }
 
     @Override
-    public void onItemLongClick(Tube tube) {
+    public void onItemLongClick(UserTube join) {
     }
 
     @Override

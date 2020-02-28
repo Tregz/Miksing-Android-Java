@@ -2,6 +2,7 @@ package com.tregz.miksing.home.list.tube;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -13,10 +14,15 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.tregz.miksing.arch.auth.AuthUtil;
+import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
+import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.user.User;
+import com.tregz.miksing.data.user.tube.UserTube;
+import com.tregz.miksing.data.user.tube.UserTubeAccess;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
@@ -31,7 +37,6 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     private final String TAG = TubeListFragment.class.getSimpleName();
 
     private List<UserTubeRelation> relations;
-    private LiveData<List<UserTubeRelation>> live;
     private int destination = 0; // last gesture's target position
     private TubeListFragment.OnItem onItem;
     //private boolean reordered = false;
@@ -50,9 +55,9 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        live();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        access().all().observe(getViewLifecycleOwner(), this);
     }
 
     @Override
@@ -85,9 +90,11 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
             if (relation.join.getPosition() != i) {
                 if (!changed) changed = true;
                 relation.join.setPosition(i);
-                DatabaseReference user = FirebaseDatabase.getInstance().getReference(User.TABLE);
-                DatabaseReference tube = user.child(relation.user.getId()).child(Tube.TABLE);
-                tube.child(relation.tube.getId()).setValue(relation.join.getPosition());
+                if (AuthUtil.logged() && relation.user.getId().equals(AuthUtil.user().getUid())) {
+                    DatabaseReference user = FirebaseDatabase.getInstance().getReference(User.TABLE);
+                    DatabaseReference tube = user.child(relation.user.getId()).child(Tube.TABLE);
+                    tube.child(relation.tube.getId()).setValue(relation.join.getPosition());
+                } else new DataUpdate(access().update(relation.join));
             }
         }
         //((TubeListAdapter)adapter).items.endBatchedUpdates();
@@ -142,18 +149,14 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
         }
     }
 
-    private void live() {
-        //if (adapter != null) ((TubeListAdapter)adapter).items.clear();
-        //relations = null;
-        if (live == null) live = DataReference.getInstance(getContext()).accessUserTube().all();
-        if (live.hasObservers()) live.removeObserver(this);
-        live.observe(this, this);
+    private UserTubeAccess access() {
+        return DataReference.getInstance(getContext()).accessUserTube();
     }
 
     // Allow an interaction to be communicated to the activity
     public interface OnItem {
-        void onItemClick(Tube tube);
+        void onItemClick(UserTube tube, String title);
 
-        void onItemLongClick(Tube tube);
+        void onItemLongClick(UserTube tube);
     }
 }

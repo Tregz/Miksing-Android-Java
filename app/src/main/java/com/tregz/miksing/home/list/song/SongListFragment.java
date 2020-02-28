@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
@@ -21,6 +22,7 @@ import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongAccess;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
+import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListFragment;
@@ -43,6 +45,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     private Page page;
     private OnItem onItem;
     private HomeView home;
+    private UserTube join;
 
     public static SongListFragment newInstance(int position) {
         Bundle args = new Bundle();
@@ -79,23 +82,6 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         live(tubeId);
     }
 
-    public void reload(String tubeId) {
-        if (this.tubeId.equals(tubeId)) live(tubeId);
-    }
-
-    public void live(String tubeId) {
-        if (getView() != null && mediator != null) {
-            this.tubeId = tubeId;
-            if (mediator.hasObservers()) mediator.removeObserver(this);
-            mediator.observe(getViewLifecycleOwner(), this);
-            mediator.addSource(access().whereTube(tubeId), this);
-        }
-    }
-
-    private TubeSongAccess access() {
-        return DataReference.getInstance(getContext()).accessTubeSong();
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -127,7 +113,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
             if (relation.join.getPosition() != i) {
                 if (!changed) changed = true;
                 relation.join.setPosition(i);
-                if (tubeId != null) {
+                if (join != null && join.getUserId().equals(AuthUtil.user().getUid())) {
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
                     ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).setValue(i);
                 } else new DataUpdate(access().update(relation.join));
@@ -212,6 +198,28 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
             ((SongListAdapter) adapter).items.replaceAll(relations);
             recycler.smoothScrollToPosition(0);
         }
+    }
+
+    public void reload(String tubeId) {
+        if (this.tubeId.equals(tubeId)) live(tubeId);
+    }
+
+    public void live(UserTube join) {
+        this.join = join;
+        live(join.getTubeId());
+    }
+
+    private void live(String tubeId) {
+        if (getView() != null && mediator != null) {
+            this.tubeId = tubeId;
+            if (mediator.hasObservers()) mediator.removeObserver(this);
+            mediator.observe(getViewLifecycleOwner(), this);
+            mediator.addSource(access().whereTube(tubeId), this);
+        }
+    }
+
+    private TubeSongAccess access() {
+        return DataReference.getInstance(getContext()).accessTubeSong();
     }
 
     private void remove(int position) {

@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 import com.tregz.miksing.base.BaseFragment;
+import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.databinding.FragmentHomeBinding;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.song.SongListFragment;
@@ -54,10 +55,10 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         if (page instanceof SongListFragment) ((SongListFragment)page).sort();
     }
 
-    void prepare(String id) {
+    void prepare(UserTube join) {
         binding.pager.setCurrentItem(1);
         ListFragment page = page();
-        if (page instanceof SongListFragment) ((SongListFragment)page).live(id);
+        if (page instanceof SongListFragment) ((SongListFragment)page).live(join);
     }
 
     void reload(String id) {
