@@ -2,9 +2,7 @@ package com.tregz.miksing.home;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,45 +19,44 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.arch.auth.AuthLogin;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
-import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.list.ListSorted;
+import com.tregz.miksing.databinding.ActivityHomeBinding;
 
 public class HomeNavigation implements
         BottomNavigationView.OnNavigationItemSelectedListener,
         DrawerLayout.DrawerListener,
         NavigationView.OnNavigationItemSelectedListener,
         OnCompleteListener<Void> {
-    private final String TAG = HomeNavigation.class.getSimpleName();
+    //private final String TAG = HomeNavigation.class.getSimpleName();
 
-    private final int RIGHT = HomeActivity.Drawer.RIGHT.ordinal();
-    private final int START = HomeActivity.Drawer.START.ordinal();
+    private ActivityHomeBinding binding;
+    private HomeView view;
     private String login, logout;
     private boolean initialized = false;
-    private HomeView view;
-    private DrawerLayout layout;
-    private NavigationView[] drawers;
 
-    HomeNavigation(
-            @NonNull HomeView view,
-            @NonNull FootNavigation bottom,
-            @NonNull DrawerLayout layout,
-            @NonNull NavigationView[] drawers
-    ) {
+    HomeNavigation(@NonNull HomeView view, @NonNull ActivityHomeBinding binding) {
         this.view = view;
-        this.drawers = drawers;
-        this.layout = layout;
-        layout.addDrawerListener(this);
-        for (NavigationView drawer : drawers) drawer.setNavigationItemSelectedListener(this);
-        bottom.setOnNavigationItemSelectedListener(this);
-        login = layout.getContext().getString(R.string.nav_login_title);
-        logout = layout.getContext().getString(R.string.nav_logout_title);
+        this.binding = binding;
+        if (binding.drawerLayout != null) binding.drawerLayout.addDrawerListener(this);
+        if (binding.navStart != null) binding.navStart.setNavigationItemSelectedListener(this);
+        if (binding.navRight != null) binding.navRight.setNavigationItemSelectedListener(this);
+        if (binding.contentHome != null) {
+            BottomNavigationView bottom = binding.contentHome.bottom;
+            bottom.setOnNavigationItemSelectedListener(this);
+            Context context = bottom.getContext();
+            login = context.getString(R.string.nav_login_title);
+            logout = context.getString(R.string.nav_logout_title);
+        }
     }
 
     @Override
     public void onComplete(@NonNull Task<Void> task) {
-        PrefShared.getInstance(layout.getContext()).setUsername("");
-        PrefShared.getInstance(layout.getContext()).setEmail("");
-        update();
+        if (binding.navStart != null) {
+            Context context = binding.navStart.getContext();
+            PrefShared.getInstance(context).setUsername("");
+            PrefShared.getInstance(context).setEmail("");
+            update();
+        }
     }
 
     @Override
@@ -69,7 +66,7 @@ public class HomeNavigation implements
 
     @Override
     public void onDrawerOpened(@NonNull View drawerView) {
-        if (drawerView.getId() == drawers[RIGHT].getId()) update();
+        if (binding.navRight != null && drawerView.getId() == binding.navRight.getId()) update();
         else view.onDrawerStartOpened();
     }
 
@@ -82,29 +79,43 @@ public class HomeNavigation implements
     public void onDrawerStateChanged(int newState) {
         if (!initialized) {
             initialized = true;
-            headerHeight(RIGHT);
-            headerHeight(START);
+            headerHeight(binding.navRight);
+            headerHeight(binding.navStart);
+            /* Custom height for MenuItem */
+            if (binding.navRight != null && binding.contentHome != null) {
+                View itemView = binding.navRight.getMenu().getItem(0).getActionView();
+                View menuView = ((ViewGroup)itemView.getParent().getParent());
+                int margin = menuView.getMeasuredHeight() - itemView.getMeasuredHeight();
+                int height = binding.contentHome.bottom.getMeasuredHeight() - margin;
+                setHeight(menuView, height);
+                setHeight(itemView, height);
+            }
         }
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Log.d(TAG, "onNavigationItemSelected");
         switch (item.getItemId()) {
             case R.id.nav_login:
                 if (!AuthUtil.logged()) new AuthLogin(view);
-                else AuthUI.getInstance().signOut(layout.getContext()).addOnCompleteListener(this);
+                else if (binding.navRight != null) {
+                    Context context = binding.navRight.getContext();
+                    AuthUI.getInstance().signOut(context).addOnCompleteListener(this);
+                }
                 break;
             case R.id.sort_alpha:
                 ListSorted.comparator = ListSorted.Order.ALPHA;
+                item.setChecked(true);
                 view.sort();
                 break;
             case R.id.sort_digit:
                 ListSorted.comparator = ListSorted.Order.DIGIT;
+                item.setChecked(true);
                 view.sort();
                 break;
             case R.id.sort_fresh:
                 ListSorted.comparator = ListSorted.Order.FRESH;
+                item.setChecked(true);
                 view.sort();
                 break;
         }
@@ -112,38 +123,44 @@ public class HomeNavigation implements
     }
 
     void toggle(int gravity) {
-        if (layout.isDrawerOpen(gravity)) layout.closeDrawer(gravity);
-        else layout.openDrawer(gravity);
+        if (binding.drawerLayout != null) {
+            if (binding.drawerLayout.isDrawerOpen(gravity))
+                binding.drawerLayout.closeDrawer(gravity);
+            else binding.drawerLayout.openDrawer(gravity);
+        }
     }
 
     void update() {
         view.userFragment().update();
-        MenuItem item = drawers[RIGHT].getMenu().getItem(0);
-        if (AuthUtil.logged()) {
-            if (item.getTitle() != logout) {
-                item.setIcon(R.drawable.ic_exit);
-                item.setTitle(logout);
-            }
-        } else {
-            if (item.getTitle() != login) {
-                item.setIcon(R.drawable.ic_key);
-                item.setTitle(login);
+        if (binding.navRight != null) {
+            MenuItem item = binding.navRight.getMenu().getItem(0);
+            if (AuthUtil.logged()) {
+                if (item.getTitle() != logout) {
+                    item.setIcon(R.drawable.ic_exit);
+                    item.setTitle(logout);
+                }
+            } else {
+                if (item.getTitle() != login) {
+                    item.setIcon(R.drawable.ic_key);
+                    item.setTitle(login);
+                }
             }
         }
     }
 
     /* Proportional height of drawer's header */
-    private void headerHeight(int position) {
-        TypedValue tv = new TypedValue();
-        Context context = drawers[position].getContext();
-        int size = android.R.attr.actionBarSize;
-        if (context.getTheme().resolveAttribute(size, tv, true)) {
-            DisplayMetrics dm = context.getResources().getDisplayMetrics();
-            View header = drawers[position].getHeaderView(0);
-            ViewGroup.LayoutParams params = header.getLayoutParams();
+    private void headerHeight(NavigationView navigation) {
+        if (binding.contentHome != null) {
+            Context context = navigation.getContext();
+            View header = navigation.getHeaderView(0);
             int height = ((Activity) context).getWindow().getDecorView().getHeight();
-            params.height = height - TypedValue.complexToDimensionPixelSize(tv.data, dm);
-            header.setLayoutParams(params);
+            setHeight(header, height - binding.contentHome.bottom.getMeasuredHeight());
         }
+    }
+
+    private void setHeight(View view, int height) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        params.height = height;
+        view.setLayoutParams(params);
     }
 }

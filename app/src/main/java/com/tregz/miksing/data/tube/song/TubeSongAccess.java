@@ -11,6 +11,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
+import com.tregz.miksing.data.DataAccess;
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.tube.Tube;
 
@@ -20,7 +21,7 @@ import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 @Dao
-public interface TubeSongAccess {
+public interface TubeSongAccess extends DataAccess<TubeSong> {
     String FROM_TABLE = " FROM " + TubeSong.TABLE;
     String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="to_save_login">La sauvegarde requiert une authentification</string>
+    <string name="to_save_paste">Faites-vous une copie pour sauvegarder les changements</string>
+</resources>

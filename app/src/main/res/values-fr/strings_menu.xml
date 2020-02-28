@@ -23,9 +23,9 @@
     <string name="fetch_youtube_hint">Lien http</string>
 
 
-    <string name="main_bottom_alpha">Alpha</string>
-    <string name="main_bottom_digit">Nombre</string>
-    <string name="main_bottom_fresh">Date</string>
+    <string name="main_bottom_alpha">Alphabétique</string>
+    <string name="main_bottom_digit">Personnalisé</string>
+    <string name="main_bottom_fresh">Parution</string>
 
     <string name="nav_drawer_back">Up</string>
     <string name="nav_drawer_items">Items</string>

@@ -2,7 +2,6 @@ package com.tregz.miksing.home.list.song;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -27,6 +26,7 @@ import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
+import com.tregz.miksing.home.list.ListPosition;
 import com.tregz.miksing.home.list.ListView;
 
 import java.util.ArrayList;
@@ -41,7 +41,6 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     private final static String POSITION = "position";
     private MediatorLiveData<List<TubeSongRelation>> mediator = new MediatorLiveData<>();
     private List<TubeSongRelation> relations;
-    private int destination = 0; // last gesture's target position
     private Page page;
     private OnItem onItem;
     private HomeView home;
@@ -105,21 +104,21 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     @Override
     public void onGestureClear(final int from, final int destination) {
+        boolean editable = join != null && AuthUtil.isUser(join.getUserId());
+        String nodeId = editable ? tubeId : null;
+        ListPosition listPosition = new ListPosition(Tube.TABLE, nodeId, Song.TABLE);
+
         //((SongListAdapter) adapter).items.beginBatchedUpdates();
         boolean changed = false;
         for (int i = 0; i < relations.size(); i++) {
             TubeSongRelation relation = relations.get(i);
-            Log.d(TAG, "position changed: " + (relation.join.getPosition() != i));
-            if (relation.join.getPosition() != i) {
+            if (listPosition.hasChanged(relation.join, relation.join.getSongId(), i)) {
                 if (!changed) changed = true;
-                relation.join.setPosition(i);
-                if (join != null && join.getUserId().equals(AuthUtil.user().getUid())) {
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
-                    ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).setValue(i);
-                } else new DataUpdate(access().update(relation.join));
+                if (!editable) new DataUpdate(access().update(relation.join));
             }
         }
         //((SongListAdapter) adapter).items.endBatchedUpdates();
+        if (!editable) toast(listPosition.error());
         if (changed) {
             adapter.notifyDataSetChanged();
             ((SongListAdapter)adapter).items.replaceAll(relations);
@@ -130,7 +129,6 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     @Override
     public void onItemMoved(final int from, final int destination) {
         // Update unsorted array to save to new position after gesture event
-        this.destination = destination;
         int start = Math.min(from, destination);
         int end = Math.max(from, destination);
         for (int i = start; i < end; i++) Collections.swap(relations, i, i + 1);
@@ -193,10 +191,9 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     @Override
     public void sort() {
         if (relations != null && adapter != null && recycler != null) {
-            destination = 0;
             //if (ListSorted.customOrder()) ordered();
             ((SongListAdapter) adapter).items.replaceAll(relations);
-            recycler.smoothScrollToPosition(0);
+            //recycler.smoothScrollToPosition(0);
         }
     }
 

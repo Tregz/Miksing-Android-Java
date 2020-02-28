@@ -12,4 +12,9 @@ public final class AuthUtil {
     public static boolean logged() {
         return user() != null;
     }
+
+    public static boolean isUser(String uid) {
+        FirebaseUser user = user();
+        return user != null && uid != null && user.getUid().equals(uid);
+    }
 }

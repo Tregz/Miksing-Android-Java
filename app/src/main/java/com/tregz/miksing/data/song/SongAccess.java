@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.tregz.miksing.data.DataAccess;
@@ -21,6 +22,7 @@ public interface SongAccess extends DataAccess<Song> {
     String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
 
+    @Transaction
     @Query(SELECT_FROM_TABLE)
     LiveData<List<SongRelation>> all();
 
@@ -36,6 +38,7 @@ public interface SongAccess extends DataAccess<Song> {
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
     LiveData<Song> liveWhereId(String key);
 
+    @Transaction
     @Query(SELECT_FROM_TABLE + " WHERE id IN(SELECT song FROM tube_song WHERE tube = :id)")
     LiveData<List<SongRelation>> whereTube(String id);
 

@@ -18,7 +18,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -27,13 +26,11 @@ import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.note.NoteUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseActivity;
-import com.tregz.miksing.base.foot.FootNavigation;
 import com.tregz.miksing.base.foot.FootScroll;
 import com.tregz.miksing.core.play.PlayVideo;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.data.user.tube.UserTube;
@@ -149,11 +146,7 @@ public class HomeActivity extends BaseActivity implements
             // Toolbar setup including auto update of the collapsing toolbar's title
             NavigationUI.setupWithNavController(toolbarLayout, toolbar, controller(), abc);
             // DrawerListener & OnNavigationItemSelectedListener
-            NavigationView[] drawers = new NavigationView[Drawer.values().length];
-            drawers[Drawer.RIGHT.ordinal()] = binding.navRight;
-            drawers[Drawer.START.ordinal()] = binding.navStart;
-            final FootNavigation bottom = binding.contentHome.bottom;
-            if (layout != null) navigation = new HomeNavigation(this, bottom, layout, drawers);
+            if (layout != null) navigation = new HomeNavigation(this, binding);
             host(HOST).getChildFragmentManager().addOnBackStackChangedListener(this);
 
             // Panoramic height for the container of the media players
@@ -184,10 +177,10 @@ public class HomeActivity extends BaseActivity implements
                         if (!((FloatingActionButton) v).isExpanded()) {
                             //controller().navigate(R.id.action_homeFragment_to_workFragment);
                             expand((FloatingActionButton) v);
-                            bottom.hide();
+                            binding.contentHome.bottom.hide();
                         } else {
                             expand((FloatingActionButton) v);
-                            bottom.show(false);
+                            binding.contentHome.bottom.show(false);
                         }
                     }
                 }
@@ -545,19 +538,6 @@ public class HomeActivity extends BaseActivity implements
 
     private boolean portrait() {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-    }
-
-    enum Drawer {
-        START,
-        RIGHT
-    }
-
-    private enum Button {
-        FAB,
-        CLEAR,
-        FETCH,
-        PASTE,
-        SCORE
     }
 
     static {

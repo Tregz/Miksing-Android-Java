@@ -2,20 +2,15 @@ package com.tregz.miksing.home.list.tube;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.arch.auth.AuthUtil;
-import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
@@ -26,6 +21,7 @@ import com.tregz.miksing.data.user.tube.UserTubeAccess;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
+import com.tregz.miksing.home.list.ListPosition;
 import com.tregz.miksing.home.list.ListView;
 import com.tregz.miksing.home.list.song.SongListFragment;
 
@@ -37,10 +33,7 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     private final String TAG = TubeListFragment.class.getSimpleName();
 
     private List<UserTubeRelation> relations;
-    private int destination = 0; // last gesture's target position
     private TubeListFragment.OnItem onItem;
-    //private boolean reordered = false;
-
     private ListSorted.Order comparator = ListSorted.comparator;
 
     @Override
@@ -83,21 +76,22 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
 
     @Override
     public void onGestureClear(int from, int destination) {
+        User user = !relations.isEmpty() ? relations.get(0).user : null;
+        boolean editable = user != null && AuthUtil.isUser(user.getId());
+        String nodeId = editable ? user.getId() : null;
+        ListPosition listPosition = new ListPosition(User.TABLE, nodeId, Tube.TABLE);
+
         //((TubeListAdapter)adapter).items.beginBatchedUpdates();
         boolean changed = false;
         for (int i = 0; i < relations.size(); i++) {
             UserTubeRelation relation = relations.get(i);
-            if (relation.join.getPosition() != i) {
+            if (listPosition.hasChanged(relation.join, relation.join.getTubeId(), i)) {
                 if (!changed) changed = true;
-                relation.join.setPosition(i);
-                if (AuthUtil.logged() && relation.user.getId().equals(AuthUtil.user().getUid())) {
-                    DatabaseReference user = FirebaseDatabase.getInstance().getReference(User.TABLE);
-                    DatabaseReference tube = user.child(relation.user.getId()).child(Tube.TABLE);
-                    tube.child(relation.tube.getId()).setValue(relation.join.getPosition());
-                } else new DataUpdate(access().update(relation.join));
+                if (!editable) new DataUpdate(access().update(relation.join));
             }
         }
-        //((TubeListAdapter)adapter).items.endBatchedUpdates();
+        //((TubeListAdapter)adapter).items.endBatchedUpdates()
+        if (!editable) toast(listPosition.error());
         if (changed) {
             adapter.notifyDataSetChanged();
             ((TubeListAdapter)adapter).items.replaceAll(relations);
@@ -108,7 +102,6 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     @Override
     public void onItemMoved(int from, int destination) {
         // Update unsorted array to save to new position after gesture event
-        this.destination = destination;
         int start = Math.min(from, destination);
         int end = Math.max(from, destination);
         Log.d(TAG, "start" + start);
@@ -140,11 +133,10 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
         if (relations != null && adapter != null && recycler != null) {
             Log.d(TAG, "Comparator: " + comparator.name());
             if (comparator != ListSorted.comparator) {
-                destination = 0;
                 comparator = ListSorted.comparator;
                 //if (ListSorted.customOrder()) ordered();
                 ((TubeListAdapter)adapter).items.replaceAll(relations);
-                //recycler.smoothScrollToPosition(destination);
+                //recycler.smoothScrollToPosition(0);
             }
         }
     }
