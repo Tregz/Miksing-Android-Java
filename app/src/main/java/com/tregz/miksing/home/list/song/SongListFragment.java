@@ -170,7 +170,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
                 DatabaseReference user = FirebaseDatabase.getInstance().getReference("user");
                 String currentUser = PrefShared.getInstance(getContext()).getUid();
                 if (node.getKey() != null)
-                    user.child(currentUser).child("tube").child(node.getKey()).setValue(true);
+                    user.child(currentUser).child("tube").child(node.getKey()).setValue(0);
                 home.onSaved();
                 break;
         }

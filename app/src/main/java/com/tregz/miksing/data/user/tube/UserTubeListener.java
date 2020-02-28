@@ -56,6 +56,6 @@ public class UserTubeListener extends DataListener {
 
     @Override
     public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-        // TODO
+        DataReference.getInstance(context).accessUserTube().delete(userId, snapshot.getKey());
     }
 }

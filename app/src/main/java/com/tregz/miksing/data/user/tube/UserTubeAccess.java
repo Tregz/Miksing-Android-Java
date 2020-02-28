@@ -2,6 +2,7 @@ package com.tregz.miksing.data.user.tube;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -10,7 +11,6 @@ import androidx.room.Update;
 
 import com.tregz.miksing.data.DataAccess;
 import com.tregz.miksing.data.DataNotation;
-import com.tregz.miksing.data.tube.song.TubeSong;
 
 import java.util.List;
 
@@ -27,6 +27,13 @@ public interface UserTubeAccess extends DataAccess<UserTube> {
     @Transaction
     @Query(SELECT_FROM_TABLE + ORDER_BY_POSITION)
     LiveData<List<UserTubeRelation>> all();
+
+    @Delete
+    Single<Integer> delete(UserTube...joins);
+
+    @Query(DELETE_FROM_TABLE + " WHERE user = :userId AND tube = :tubeId")
+    Single<Integer> delete(String userId, String tubeId);
+
 
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
     LiveData<UserTube> query(String key);

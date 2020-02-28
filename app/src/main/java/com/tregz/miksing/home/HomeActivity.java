@@ -32,6 +32,7 @@ import com.tregz.miksing.base.foot.FootScroll;
 import com.tregz.miksing.core.play.PlayVideo;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
+import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
@@ -435,9 +436,13 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public void onWreck(Tube tube) {
-        DatabaseReference user = FirebaseDatabase.getInstance().getReference(User.TABLE);
+        DatabaseReference uRef = FirebaseDatabase.getInstance().getReference(User.TABLE);
         String userId = PrefShared.getInstance(this).getUid();
-        user.child(userId).child(Tube.TABLE).child(tube.getId()).removeValue();
+        uRef.child(userId).child(Tube.TABLE).child(tube.getId()).removeValue();
+
+        // TODO if there is only 1 user, remove playlist
+        // TODO remove with Firebase listener
+        FirebaseDatabase.getInstance().getReference(Tube.TABLE).child(tube.getId()).removeValue();
     }
 
     @Override
