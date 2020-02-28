@@ -11,6 +11,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteQuery;
 
+import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.tube.Tube;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public interface TubeSongAccess {
     String FROM_TABLE = " FROM " + TubeSong.TABLE;
     String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
+    String ORDER_BY_POSITION = " ORDER BY " + TubeSong.TABLE + "." + DataNotation.SI;
 
     @Transaction
     @Query(SELECT_FROM_TABLE)
@@ -39,7 +41,7 @@ public interface TubeSongAccess {
     Maybe<TubeSong> whereId(String key);
 
     @Transaction
-    @Query(SELECT_FROM_TABLE + " WHERE tube = :id") // ORDER BY user_song.spot
+    @Query(SELECT_FROM_TABLE + " WHERE tube = :id" + ORDER_BY_POSITION)
     LiveData<List<TubeSongRelation>> whereTube(String id);
 
     @Update //(onConflict = REPLACE)

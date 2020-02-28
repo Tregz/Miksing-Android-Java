@@ -31,15 +31,22 @@ public class UserTubeListener extends DataListener {
 
     @Override
     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
-        if (snapshot.getKey() != null) new TubeListener(context, userId, snapshot.getKey());
+        UserTube join = join(snapshot);
+        if (join != null) new TubeListener(context, join);
     }
 
     @Override
     public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String s) {
+        new DataUpdate(DataReference.getInstance(context).accessUserTube().update(join(snapshot)));
+    }
+
+    private UserTube join(@NonNull DataSnapshot snapshot) {
         if (snapshot.getKey() != null) {
             UserTube join = new UserTube(userId, snapshot.getKey());
-            new DataUpdate(DataReference.getInstance(context).accessUserTube().update(join));
-        }
+            Integer position = snapshot.getValue(Integer.class);
+            if (position != null) join.setPosition(position);
+            return join;
+        } else return null;
     }
 
     @Override

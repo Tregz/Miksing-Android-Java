@@ -12,7 +12,7 @@ import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import java.util.Date;
 
 public abstract class ListSorted<T> extends SortedListAdapterCallback<T> {
-    //private String TAG = ListSorted.class.getSimpleName();
+    protected String TAG = ListSorted.class.getSimpleName();
 
     public static Order comparator = Order.ALPHA;
 

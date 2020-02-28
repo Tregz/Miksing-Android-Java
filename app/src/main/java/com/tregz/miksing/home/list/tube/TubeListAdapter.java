@@ -30,7 +30,6 @@ public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
     TubeListAdapter(Context context, TubeListFragment.OnItem listener) {
         this.context = context;
         this.listener = listener;
-        ListSorted.comparator = ListSorted.Order.DIGIT;
     }
 
     @Override

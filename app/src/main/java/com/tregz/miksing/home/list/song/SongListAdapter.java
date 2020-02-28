@@ -1,5 +1,6 @@
 package com.tregz.miksing.home.list.song;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,14 +49,16 @@ public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
                     String dayOfYear = DateUtil.dayOfYear(null, song.getReleasedAt());
                     String when = "[" + dayOfYear + "]";
                     holder.tvDate.setText(when);
-                }
+                } else holder.tvDate.setText("");
                 if (song.getFeaturing() != null) {
+                    Log.d(TAG, "");
                     String feat = holder.itemView.getContext().getString(R.string.card_feat);
                     String html = "<i>" + feat + "</i> " + song.getFeaturing();
                     holder.tvFeat.setText(HtmlCompat.fromHtml(html, FROM_HTML_MODE_LEGACY));
-                }
+                } else holder.tvFeat.setText("");
                 if (song.getWhat() > 0)
                     holder.tvWhat.setText(Song.What.values()[song.getMix()].name());
+                else holder.tvWhat.setText("");
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

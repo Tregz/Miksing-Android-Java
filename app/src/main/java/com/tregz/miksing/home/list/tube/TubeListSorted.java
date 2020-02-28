@@ -1,5 +1,7 @@
 package com.tregz.miksing.home.list.tube;
 
+import android.util.Log;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tregz.miksing.base.list.ListSorted;
@@ -54,8 +56,11 @@ class TubeListSorted<T> extends ListSorted<T> {
                 if (o1 instanceof UserTubeRelation) {
                     Tube tube1 = ((UserTubeRelation) o1).tube;
                     Tube tube2 = ((UserTubeRelation) o2).tube;
-                    if (tube1 != null && tube2 != null)
+                    if (tube1 != null && tube2 != null) {
+                        Log.d(TAG, "UserTube: " + tube1.getCreatedAt());
+                        Log.d(TAG, "UserTube: " + tube2.getCreatedAt());
                         return compare(tube1.getCreatedAt(), tube2.getCreatedAt());
+                    }
                 }
         }
         return 0;

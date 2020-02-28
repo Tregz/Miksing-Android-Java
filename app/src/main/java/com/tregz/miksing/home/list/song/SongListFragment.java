@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.arch.pref.PrefShared;
-import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.song.Song;
@@ -107,18 +106,39 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     @Override
     public void onChanged(List<TubeSongRelation> relations) {
-        Log.d(TAG, "onChanged " + relations.size());
         if (this.relations == null || this.relations.size() != relations.size()) {
             this.relations = relations;
             if (getActivity() instanceof HomeActivity)
                 ((HomeActivity) getActivity()).setPlaylist(relations);
             sort();
+        } else {
+            this.relations = relations;
+            ((SongListAdapter)adapter).items.replaceAll(relations);
         }
     }
 
     @Override
     public void onGestureClear(final int from, final int destination) {
-        ordered();
+        //((SongListAdapter) adapter).items.beginBatchedUpdates();
+        boolean changed = false;
+        for (int i = 0; i < relations.size(); i++) {
+            TubeSongRelation relation = relations.get(i);
+            Log.d(TAG, "position changed: " + (relation.join.getPosition() != i));
+            if (relation.join.getPosition() != i) {
+                if (!changed) changed = true;
+                relation.join.setPosition(i);
+                if (tubeId != null) {
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
+                    ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).setValue(i);
+                } else new DataUpdate(access().update(relation.join));
+            }
+        }
+        //((SongListAdapter) adapter).items.endBatchedUpdates();
+        if (changed) {
+            adapter.notifyDataSetChanged();
+            ((SongListAdapter)adapter).items.replaceAll(relations);
+            recycler.smoothScrollToPosition(destination);
+        }
     }
 
     @Override
@@ -144,24 +164,6 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
             if (page == Page.EVERYTHING) {
             } else remove(position);
         }
-    }
-
-    @Override
-    public void ordered() {
-        ((SongListAdapter) adapter).items.beginBatchedUpdates();
-        for (int i = 0; i < relations.size(); i++) {
-            TubeSongRelation relation = relations.get(i);
-            Log.d(TAG, "position changed: " + (relation.join.getPosition() != i));
-            if (relation.join.getPosition() != i) {
-                relation.join.setPosition(i);
-                if (tubeId != null) {
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
-                    ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).setValue(i);
-                } else new DataUpdate(access().update(relation.join));
-            }
-        }
-        ((SongListAdapter) adapter).items.endBatchedUpdates();
-        recycler.smoothScrollToPosition(destination);
     }
 
     @Override
@@ -206,7 +208,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     public void sort() {
         if (relations != null && adapter != null && recycler != null) {
             destination = 0;
-            if (ListSorted.customOrder()) ordered();
+            //if (ListSorted.customOrder()) ordered();
             ((SongListAdapter) adapter).items.replaceAll(relations);
             recycler.smoothScrollToPosition(0);
         }

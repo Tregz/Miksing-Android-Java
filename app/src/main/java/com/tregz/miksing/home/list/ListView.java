@@ -8,6 +8,4 @@ public interface ListView {
 
     void onItemSwipe(int position, int direction);
 
-    void ordered();
-
 }

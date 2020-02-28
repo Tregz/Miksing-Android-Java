@@ -27,18 +27,16 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
     private String TAG = TubeListener.class.getSimpleName();
 
     private Context context;
-    private String tubeId;
-    private String userId;
+    private UserTube join;
     private DatabaseReference table;
 
     private Tube tube;
     private TubeAccess access;
 
-    public TubeListener(Context context, String userId, String tubeId) {
+    public TubeListener(Context context, UserTube join) {
         this.context = context;
-        this.userId = userId;
-        this.tubeId = tubeId;
-        table().child(tubeId).child("name").addListenerForSingleValueEvent(this);
+        this.join = join;
+        table().child(join.getTubeId()).child("name").addListenerForSingleValueEvent(this);
     }
 
     @Override
@@ -56,8 +54,8 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
         String name = snapshot.getValue(String.class);
         // TODO set and get createdAt
         if (name != null) {
-            tube = new Tube(tubeId, new Date(), name);
-            access().whereId(tubeId).subscribeOn(Schedulers.io()).subscribe(this);
+            tube = new Tube(join.getTubeId(), new Date(), name);
+            access().whereId(join.getTubeId()).subscribeOn(Schedulers.io()).subscribe(this);
         }
     }
 
@@ -79,9 +77,8 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
 
     @Override
     public void saved() {
-        Log.d(TAG, "Saving UserTube user " + userId + " tube: " + tubeId);
-        new UserTubeSaver(context, new UserTube(userId, tubeId));
-        new TubeSongListener(context, tubeId);
+        new UserTubeSaver(context, join);
+        new TubeSongListener(context, join.getTubeId());
     }
 
     private DatabaseReference table() {
