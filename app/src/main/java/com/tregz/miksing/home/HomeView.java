@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
 
@@ -29,6 +30,8 @@ public interface HomeView {
     void onSaved();
 
     void onSaveItem(String name);
+
+    void onWreck(Tube tube);
 
     void onTubeSongInserted(String id);
 

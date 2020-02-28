@@ -20,6 +20,8 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
 import com.tregz.miksing.arch.auth.AuthUtil;
@@ -31,7 +33,9 @@ import com.tregz.miksing.core.play.PlayVideo;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
+import com.tregz.miksing.data.user.User;
 import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
@@ -39,13 +43,13 @@ import com.tregz.miksing.home.edit.song.SongEditFragment;
 import com.tregz.miksing.home.edit.song.SongEditView;
 import com.tregz.miksing.home.list.song.SongListFragment;
 import com.tregz.miksing.home.list.tube.TubeListFragment;
-import com.tregz.miksing.home.warn.WarnClear;
 import com.tregz.miksing.home.warn.WarnFetch;
 import com.tregz.miksing.home.warn.WarnPaste;
 import com.tregz.miksing.home.warn.WarnPlaylist;
 import com.tregz.miksing.home.warn.WarnScore;
 import com.tregz.miksing.home.user.UserFragment;
 import com.tregz.miksing.home.user.UserMap;
+import com.tregz.miksing.home.warn.WarnWreck;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -84,11 +88,11 @@ public class HomeActivity extends BaseActivity implements
 
     private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
-    private String prepareListTitle = null;
+    private Tube prepareTube = null;
 
     @Override
     public String getPrepareListTitle() {
-        if (prepareListTitle != null) return prepareListTitle;
+        if (prepareTube != null) return prepareTube.getName(this);
         else return PrefShared.getInstance(this).getUid() + "-Prepare";
     }
 
@@ -115,11 +119,11 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onItemClick(UserTube join, String title) {
+    public void onItemClick(UserTube join, Tube tube) {
         Fragment primary = primary();
         navigation.toggle(Gravity.START);
         if (primary instanceof HomeFragment) ((HomeFragment) primary).prepare(join);
-        prepareListTitle = title;
+        prepareTube = tube;
     }
 
     @Override
@@ -185,12 +189,12 @@ public class HomeActivity extends BaseActivity implements
                     }
                 }
             });
-            binding.contentHome.clear.setOnClickListener(new View.OnClickListener() {
+            /* binding.contentHome.clear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new WarnClear().show(getSupportFragmentManager(), WarnClear.TAG);
                 }
-            });
+            }); */
             binding.contentHome.fetch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -200,15 +204,15 @@ public class HomeActivity extends BaseActivity implements
             binding.contentHome.paste.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WarnPaste warning = WarnPaste.newInstance(prepareListTitle);
+                    WarnPaste warning = WarnPaste.newInstance(getPrepareListTitle());
                     warning.show(getSupportFragmentManager(), WarnScore.TAG);
                 }
             });
-            binding.contentHome.score.setOnClickListener(new View.OnClickListener() {
+            binding.contentHome.wreck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WarnScore warning = WarnScore.newInstance(prepareListTitle);
-                    warning.show(getSupportFragmentManager(), WarnScore.TAG);
+                    WarnWreck warning = WarnWreck.newInstance(prepareTube);
+                    warning.show(getSupportFragmentManager(), WarnWreck.TAG);
                 }
             });
             // Scroll listener, to show/hide options while collapsing
@@ -427,6 +431,13 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public void onSaved() {
         back();
+    }
+
+    @Override
+    public void onWreck(Tube tube) {
+        DatabaseReference user = FirebaseDatabase.getInstance().getReference(User.TABLE);
+        String userId = PrefShared.getInstance(this).getUid();
+        user.child(userId).child(Tube.TABLE).child(tube.getId()).removeValue();
     }
 
     @Override

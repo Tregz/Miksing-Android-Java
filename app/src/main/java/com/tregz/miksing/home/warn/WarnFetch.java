@@ -148,9 +148,9 @@ public class WarnFetch extends BaseWarning {
                 song.setTitle(title);
                 songs.add(song);
             }
-            if (array.length() == 1)
+            /* if (array.length() == 1)
                 if (getContext() != null) ((HomeView) getContext()).onFillItemDetails(songs.get(0));
-            else listener.onHttpRequestResult(songs);
+            else */ listener.onHttpRequestResult(songs);
         } catch (JSONException e) {
             if (e.getMessage() != null) Log.e(TAG, e.getMessage());
         }

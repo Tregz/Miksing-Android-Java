@@ -147,7 +147,7 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
 
     // Allow an interaction to be communicated to the activity
     public interface OnItem {
-        void onItemClick(UserTube tube, String title);
+        void onItemClick(UserTube join, Tube tube);
 
         void onItemLongClick(UserTube tube);
     }

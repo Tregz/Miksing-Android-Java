@@ -66,7 +66,7 @@ public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onItemClick(relation.join, relation.tube.getName(context));
+                    listener.onItemClick(relation.join, relation.tube);
                 }
             });
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
