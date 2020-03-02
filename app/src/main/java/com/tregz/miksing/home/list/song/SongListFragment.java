@@ -93,7 +93,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     public void onChanged(List<TubeSongRelation> relations) {
         if (this.relations == null || this.relations.size() != relations.size()) {
             this.relations = relations;
-            if (getActivity() instanceof HomeActivity)
+            if (getActivity() instanceof HomeActivity && !relations.isEmpty())
                 ((HomeActivity) getActivity()).setPlaylist(relations);
             sort();
         } else {

@@ -9,11 +9,11 @@
 
     <com.tregz.miksing.core.play.PlayWeb
         android:id="@+id/webview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"/>
 
     <com.tregz.miksing.core.play.PlayVideo
         android:id="@+id/video_1"
@@ -21,7 +21,7 @@
         android:layout_height="0dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"/>
 
     <include layout="@layout/content_wait"/>
 

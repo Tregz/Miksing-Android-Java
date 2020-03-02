@@ -3,6 +3,7 @@ package com.tregz.miksing.home;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -77,7 +78,7 @@ public class HomeActivity extends BaseActivity implements
         FragmentManager.OnBackStackChangedListener, HomeView, SongEditView, SongListFragment.OnItem,
         TubeListFragment.OnItem {
 
-    private boolean collapsing = false;
+    //private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
     private Tube prepareTube = new Tube("Undefined", new Date(), "tx_tube_default");
 
@@ -94,7 +95,7 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public void onItemClick(Song song) {
-        webView.mix(song.getId()); // testing
+        load(song.getId());
         Log.d(TAG, "song.getId(): " + song.getId());
     }
 
@@ -121,6 +122,7 @@ public class HomeActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // to delete all song data from sql table: new SongWipe(getContext());
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -228,7 +230,20 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public void load(String id) {
+        if (binding.contentHome != null) binding.contentHome.appBar.video1.hide();
+        else if (binding.video1 != null) binding.video1.hide();
         webView.mix(id);
+        countdown();
+    }
+
+    private void countdown() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                webView.countdown();
+                countdown();
+            }
+        }, 3000);
     }
 
     @Override
@@ -307,10 +322,10 @@ public class HomeActivity extends BaseActivity implements
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         Log.d(TAG, "OffsetChanged " + verticalOffset); // TODO: adjust for device sizes
         if (portrait()) {
-            if (verticalOffset < -300) {
+            /* if (verticalOffset < -300) {
                 if (!collapsing) collapsing = true;
             } else if (collapsing) collapsing = false;
-            /* if (collapsing) {
+            if (collapsing) {
                 if (buttons[0].getVisibility() == View.VISIBLE) {
                     //imageView.setVisibility(View.INVISIBLE);
                     if (buttons[0].isExpanded())

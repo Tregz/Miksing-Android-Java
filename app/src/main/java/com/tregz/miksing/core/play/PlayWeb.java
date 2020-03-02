@@ -9,12 +9,14 @@ import android.webkit.WebView;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class PlayWeb extends WebView {
-
     //private final String TAG = PlayWeb.class.getSimpleName();
     private final String ATTRIBUTES = "width:100%;height:100%;position:absolute;";
+    private final String DURATION = "duration", PLAYING = "playingId", PRESENT = "present";
     private final String FRAMES = "iFrames";
     private final String LOADING = "loading";
     private final String MIKSING = "miksing";
+    private final String NEXT = "next";
+    private final String PLAYERS = "players";
     private final String PREPARE = "prepare";
     private final String VIDEO_ID = "videoId";
 
@@ -33,6 +35,12 @@ public class PlayWeb extends WebView {
         init();
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int width = getDefaultSize(0, widthMeasureSpec);
+        setMeasuredDimension(width, width * 9 / 16);
+    }
+
     private void init() {
         setWebChromeClient(new WebChromeClient() {
             @Override
@@ -45,36 +53,16 @@ public class PlayWeb extends WebView {
         getSettings().setMediaPlaybackRequiresUserGesture(false);
         getSettings().setJavaScriptEnabled(true);
 
-        final String CURRENT = "current", ENSUING = "ensuing", PLAYERS = "players";
+        final String CURRENT = "current", ENSUING = "ensuing";
         String var0 = "var " + CURRENT + "=0," + ENSUING + "=0," + FRAMES + "," + PLAYERS + ";";
         final String FADE_IN = "fadeIn", FADE_OUT = "fadeOut", LOOP = "loop", LOOP_OUT = "loopOut";
         String var1 = "var " + FADE_IN + "=0," + FADE_OUT + "=0," + LOOP + "," + LOOP_OUT + ";";
         String var2 = "var " + LOADING + "=false;";
-        final String DURATION = "duration", PLAYING = "playingId", PRESENT = "present";
         String var3 = "var " + DURATION + "=0," + PRESENT + "=0," + PLAYING + "='';";
         final String STEP_UP = "stepper", POSITION = "position";
         String var4 = "var data," + POSITION + "=0;const " + STEP_UP + "=10;";
         String var5 = "var " + VIDEO_ID + "=''," + PREPARE + "=['5-q3meXJ6W4'];";
-
-        // Continuous mix
-        final String TIMER = "timer";
-        final int SECONDS_BEFORE_END = 10;
-        String visible = PLAYERS + "[" + positionPlayerVisible() + "]";
-        String currentTime = visible + ".getCurrentTime";
-        String getTime = PRESENT + "=!" + currentTime + " ? 0.0 :" + currentTime + "();";
-        String duration = visible + ".getDuration";
-        String getDuration = DURATION + "=!" + duration + " ? 0.0 :" + duration + "();";
-        String time = "else {" + getTime + getDuration + "}}";
-        String isEnding = "(" + DURATION + "-" + PRESENT + ")<" + SECONDS_BEFORE_END;
-        String isPlaying = PLAYING + "===" + VIDEO_ID;
-        String isStarted = PRESENT + ">0 && " + DURATION + ">0";
-        String ifEnding = "if(" + isPlaying + "){if(" + isStarted + " && " + isEnding + "){";
-        String reset = DURATION + "=0;" + PRESENT + "=0," + PLAYING + "='';";
-        final String NEXT = "next";
-        String next = reset + NEXT + "();}";
-        String countdown = function(TIMER + "()", ifEnding + next + time);
-        String var6 = countdown + "const countdown=setInterval(" + TIMER + ", 1000);";
-        String vars = var0 + var1 + var2 + var3 + var4 + var5 + var6;
+        String vars = var0 + var1 + var2 + var3 + var4 + var5;
 
         String onReady = function("onPlayerReady(event)", "event.target.mute();");
         final String DELAYED = "delayed", RISE_UP = "riseUp";
@@ -150,6 +138,29 @@ public class PlayWeb extends WebView {
         String body = "<body style='margin:0;padding:0;'>" + frames + script + "</body>";
         String html = "<html>" + body + "</html>";
         loadData(html, "text/html", null);
+    }
+
+    public void countdown() {
+        // Continuous mix
+        final String TIMER = "timer";
+        final int SECONDS_BEFORE_END = 10;
+        String visible = PLAYERS + "[" + positionPlayerVisible() + "]";
+        String currentTime = visible + ".getCurrentTime";
+        String getTime = PRESENT + "=!" + currentTime + " ? 0.0 :" + currentTime + "();";
+        String duration = visible + ".getDuration";
+        String getDuration = DURATION + "=!" + duration + " ? 0.0 :" + duration + "();";
+        String isEnding = "(" + DURATION + "-" + PRESENT + ")<" + SECONDS_BEFORE_END;
+        String isPlaying = PLAYING + "===" + VIDEO_ID;
+        String isStarted = PRESENT + ">0 && " + DURATION + ">0";
+        String ifPlaying = "if(" + isPlaying + "){" + getTime + getDuration;
+        String ifStarted = "if(" + isStarted + "){";
+        String time = "else {" + getTime + getDuration + "}";
+        String reset = DURATION + "=0;" + PRESENT + "=0;" + PLAYING + "='';";
+        String next = reset + NEXT + "();";
+        String ifEnding = "if(" + isEnding + "){" + next + "}" + time + "} else {" + NEXT + "();}";
+        String command = ifPlaying + ifStarted + ifEnding + "}";
+        String countdown = function(TIMER + "()", command);
+        loadUrl("javascript:(" + countdown + ")()");
     }
 
     public void mix(String id) {

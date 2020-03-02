@@ -24,7 +24,7 @@ public class PlayVideo extends VideoView implements
         OnSuccessListener<Uri>,
         View.OnClickListener,
         View.OnTouchListener {
-    //private String TAG = PlayVideo.class.getSimpleName();
+    private String TAG = PlayVideo.class.getSimpleName();
 
     private HomeView listener;
 
@@ -55,6 +55,7 @@ public class PlayVideo extends VideoView implements
     public void onPrepared(MediaPlayer mp) {
         mp.setLooping(true);
         mp.start(); // auto play
+
     }
 
     @Override
@@ -76,7 +77,7 @@ public class PlayVideo extends VideoView implements
 
     @Override
     public boolean performClick() {
-        setVisibility(GONE);
+        hide();
         super.performClick();
         return true;
     }
@@ -85,6 +86,11 @@ public class PlayVideo extends VideoView implements
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = getDefaultSize(0, widthMeasureSpec);
         setMeasuredDimension(width, width * 9 / 16);
+    }
+
+    public void hide() {
+        if (getVisibility() != GONE)
+            setVisibility(GONE);
     }
 
     public void init(HomeView listener) {
