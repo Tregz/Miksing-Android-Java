@@ -3,7 +3,6 @@ package com.tregz.miksing.home;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -68,6 +67,9 @@ import androidx.navigation.NavGraph;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.List;
 
@@ -92,10 +94,11 @@ public class HomeActivity extends BaseActivity implements
     //private ImageView imageView;
     private HomeNavigation navigation;
     private PlayWeb webView;
+    private Handler countdown;
 
     @Override
     public void onItemClick(Song song) {
-        load(song.getId());
+        next(song.getId());
         Log.d(TAG, "song.getId(): " + song.getId());
     }
 
@@ -207,7 +210,7 @@ public class HomeActivity extends BaseActivity implements
                 }
             });
             // Scroll listener, to show/hide options while collapsing
-            ((AppBarLayout) binding.contentHome.appBar.getRoot()).addOnOffsetChangedListener(this);
+            //((AppBarLayout) binding.contentHome.appBar.getRoot()).addOnOffsetChangedListener(this);
 
             binding.contentHome.appBar.video1.init(this);
             webView = binding.contentHome.appBar.webview;
@@ -215,6 +218,8 @@ public class HomeActivity extends BaseActivity implements
             if (binding.video1 != null) binding.video1.init(this);
             webView = binding.webview;
         }
+
+        if (!PlayWeb.videoId.equals("''")) load(PlayWeb.videoId);
 
         // Check Google Map permission
         if (!check(Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -228,22 +233,42 @@ public class HomeActivity extends BaseActivity implements
         new UserListener(this, id);
     }
 
-    @Override
     public void load(String id) {
         if (binding.contentHome != null) binding.contentHome.appBar.video1.hide();
         else if (binding.video1 != null) binding.video1.hide();
+        webView.load(id);
+    }
+
+    @Override
+    public void next(String id) {
+        if (binding.contentHome != null) binding.contentHome.appBar.video1.hide();
+        else if (binding.video1 != null) binding.video1.hide();
         webView.mix(id);
-        countdown();
     }
 
     private void countdown() {
-        new Handler().postDelayed(new Runnable() {
+        if (countdown != null) countdown.postDelayed(new Runnable() {
             @Override
             public void run() {
                 webView.countdown();
                 countdown();
             }
         }, 3000);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (countdown == null) {
+            countdown = new Handler();
+            countdown();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        countdown = null;
     }
 
     @Override

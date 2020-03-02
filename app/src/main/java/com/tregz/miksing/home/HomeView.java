@@ -21,7 +21,7 @@ public interface HomeView {
 
     UserMap areaFragment();
 
-    void load(String id);
+    void next(String id);
 
     void onClearItemDetails();
 

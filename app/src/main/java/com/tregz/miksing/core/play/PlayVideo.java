@@ -42,7 +42,7 @@ public class PlayVideo extends VideoView implements
 
     @Override
     public void onClick(View v) {
-        listener.load("5-q3meXJ6W4");
+        listener.next("5-q3meXJ6W4");
     }
 
     @Override
