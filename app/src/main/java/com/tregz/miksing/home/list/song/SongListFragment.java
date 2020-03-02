@@ -72,7 +72,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         int position = getArguments() != null ? getArguments().getInt(POSITION, 0) : 0;
         page = Page.values()[position];
         if (page == Page.EVERYTHING) tubeId = PrefShared.getInstance(getContext()).getKeySongs();
-        else tubeId = PrefShared.getInstance(getContext()).getUid() + "-Prepare";
+        else tubeId = "Undefined";
     }
 
     @Override
@@ -141,7 +141,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         if (direction == ItemTouchHelper.RIGHT || direction == ItemTouchHelper.END) {
             if (page == Page.EVERYTHING) {
                 final TubeSong join = relations.get(position).join;
-                join.setTubeId(home.getPrepareListTitle());
+                join.setTubeId(home.getPrepareListId());
                 new DataUpdate(access().update(join));
             } else remove(position);
         } else if (direction == ItemTouchHelper.START || direction == ItemTouchHelper.LEFT) {

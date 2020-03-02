@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/home_fragment"
         android:name="com.tregz.miksing.home.HomeFragment"
-        android:label="HomeFragment"
+        android:label="Miksing"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_home_fragment_to_item_fragment"
@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/item_fragment"
         android:name="com.tregz.miksing.home.edit.song.SongEditFragment"
-        android:label="ItemFragment"
+        android:label="Info"
         tools:layout="@layout/fragment_song" />
 
 </navigation>

@@ -13,9 +13,15 @@ import java.util.List;
 
 public interface HomeView {
 
-    void startActivityForResult(Intent intent, int requestCode);
+    PlayWeb getWebView();
 
-    String getPrepareListTitle();
+    String getPrepareListId();
+
+    UserFragment userFragment();
+
+    UserMap areaFragment();
+
+    void load(String id);
 
     void onClearItemDetails();
 
@@ -43,10 +49,6 @@ public interface HomeView {
 
     void search(boolean focused);
 
-    UserFragment userFragment();
-
-    UserMap areaFragment();
-
-    PlayWeb getWebView();
+    void startActivityForResult(Intent intent, int requestCode);
 
 }

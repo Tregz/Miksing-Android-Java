@@ -78,11 +78,11 @@ public class PlayWeb extends WebView {
 
         String onReady = function("onPlayerReady(event)", "event.target.mute();");
         final String DELAYED = "delayed", RISE_UP = "riseUp";
-        //String hide = visibility(getElements("progress") + "[0]", "hidden");
-        //String ifProgress = ifVisible(getElements("progress") + "[0]") + "{" + hide + "}";
+        String hide = visibility(getElements("progress") + "[0]", "hidden");
+        String ifProgress = ifVisible(getElements("progress") + "[0]") + "{" + hide + "}";
         String timeOut = "setTimeout(" + DELAYED + ", 100);";
         String started = LOADING + "=true;" + timeOut + PLAYING + "=" + VIDEO_ID + ";";
-        String playing = started + setInterval(200, RISE_UP, LOOP, FADE_IN);// + ifProgress;
+        String playing = started + setInterval(200, RISE_UP, LOOP, FADE_IN) + ifProgress;
         String ifPlaying = ifState(playing, State.BUFFERING.name());
         String onPlayerStateChange = function("onPlayerStateChange(yt)", ifPlaying);
 
@@ -116,7 +116,7 @@ public class PlayWeb extends WebView {
 
         String getHidden = ENSUING + "=" + positionPlayerHidden() + ";";
         String getShown = "if (" + ENSUING + "==1) {" + CURRENT + "=2 } else {" + CURRENT + "=1 };";
-        String loadVideo = loadVideoById(PLAYERS + "[" + ENSUING + "]", VIDEO_ID);
+        String loadVideo = PLAYERS + "[" + ENSUING + "]" + ".loadVideoById(" + VIDEO_ID + ");";
         String notShown = "if(" + FRAMES + "[" + ENSUING + "].style.visibility==='hidden')";
         String setSwitchTimeOut = "setTimeout(function(){" + notShown + NEXT + "();}, 2000);";
         String mixer = getHidden + getShown + loadVideo + setSwitchTimeOut;
@@ -146,14 +146,10 @@ public class PlayWeb extends WebView {
 
         String api = api0 + api1 + api2 + api3;
         String script = "<script type='text/javascript'>" + vars + api + "</script>";
-        String frames = divTest() + div(1) + div(2);// + progress();
+        String frames = divTest() + div(1) + div(2) + progress();
         String body = "<body style='margin:0;padding:0;'>" + frames + script + "</body>";
         String html = "<html>" + body + "</html>";
         loadData(html, "text/html", null);
-    }
-
-    public void load(String id) {
-        loadUrl("javascript:(function(){" + loadVideoById("players[2]", id) + ";})()");
     }
 
     public void mix(String id) {
@@ -189,7 +185,6 @@ public class PlayWeb extends WebView {
 
     // when player is known
     private String ifState(String command, String state) {
-        //return "alert('wtf' + yt.data);if(yt.data===YT.PlayerState." + state + "){" + command + "}";
         return "if(yt.data===YT.PlayerState." + state + "){" + command + "}";
     }
 
@@ -201,10 +196,6 @@ public class PlayWeb extends WebView {
     private String ifVisible(String view) {
         String visible = view + ".style.visibility==='visible'";
         return "if(" + view + " && " + visible + ")";
-    }
-
-    private String loadVideoById(String player, String videoId) {
-        return player + ".loadVideoById(" + videoId + ");";
     }
 
     private String player(int ordinal, String events) {

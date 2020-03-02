@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="tx_tube_default">Miksing\'s playlist</string>
+    <string name="tx_tube_default">Prepared playlist</string>
     <string name="tx_tube_apero">Miksing\'s apero playlist</string>
     <string name="tx_tube_bistro">Miksing\'s bistro playlist</string>
     <string name="tx_tube_club">Miksing\'s club playlist</string>

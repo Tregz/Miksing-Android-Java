@@ -5,16 +5,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.FirebaseUiException;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,17 +17,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.R;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.note.NoteUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootScroll;
-import com.tregz.miksing.core.play.PlayVideo;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
-import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
@@ -58,7 +50,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -79,7 +70,6 @@ import androidx.navigation.ui.NavigationUI;
 import java.util.Date;
 import java.util.List;
 
-import static android.view.View.GONE;
 import static com.tregz.miksing.arch.auth.AuthLogin.SIGN_IN;
 
 public class HomeActivity extends BaseActivity implements
@@ -89,25 +79,21 @@ public class HomeActivity extends BaseActivity implements
 
     private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
-    private Tube prepareTube = null;
+    private Tube prepareTube = new Tube("Undefined", new Date(), "tx_tube_default");
 
     @Override
-    public String getPrepareListTitle() {
-        if (prepareTube != null) return prepareTube.getName(this);
-        else return PrefShared.getInstance(this).getUid() + "-Prepare";
+    public String getPrepareListId() {
+        return prepareTube.getId();
     }
 
     private ActivityHomeBinding binding;
     private CollapsingToolbarLayout toolbarLayout;
-    //private FloatingActionButton[] buttons = new FloatingActionButton[Button.values().length];
     //private ImageView imageView;
     private HomeNavigation navigation;
     private PlayWeb webView;
-    private PlayVideo videoView;
 
     @Override
     public void onItemClick(Song song) {
-        videoView.setVisibility(GONE);
         webView.mix(song.getId()); // testing
         Log.d(TAG, "song.getId(): " + song.getId());
     }
@@ -117,6 +103,7 @@ public class HomeActivity extends BaseActivity implements
         String id = song.getId();
         controller().navigate(HomeFragmentDirections.actionHomeFragmentToItemFragment(id));
         if (binding.contentHome != null) binding.contentHome.bottom.hide();
+        //if (videoView != null) videoView.hide();
     }
 
     @Override
@@ -205,7 +192,8 @@ public class HomeActivity extends BaseActivity implements
             binding.contentHome.paste.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WarnPaste warning = WarnPaste.newInstance(getPrepareListTitle());
+                    String name = prepareTube.getName(HomeActivity.this);
+                    WarnPaste warning = WarnPaste.newInstance(name);
                     warning.show(getSupportFragmentManager(), WarnScore.TAG);
                 }
             });
@@ -219,62 +207,12 @@ public class HomeActivity extends BaseActivity implements
             // Scroll listener, to show/hide options while collapsing
             ((AppBarLayout) binding.contentHome.appBar.getRoot()).addOnOffsetChangedListener(this);
 
-            videoView = binding.contentHome.appBar.video1;
+            binding.contentHome.appBar.video1.init(this);
             webView = binding.contentHome.appBar.webview;
         } else {
-            videoView = binding.video1;
+            if (binding.video1 != null) binding.video1.init(this);
             webView = binding.webview;
         }
-
-        // Stream video player
-        // Stock video player
-        if (videoView != null) {
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start(); // auto play
-                }
-            });
-            videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mp.start(); // loop
-                }
-            });
-        }
-        String anim = "anim/Miksing_Logo-Animated.mp4";
-        task(anim).addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                // TODO videoView.setVideoURI(uri);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e.getMessage() != null) toast(e.getMessage());
-            }
-        });
-
-        videoView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                webView.load("'5-q3meXJ6W4'"); // testing
-                //webView.setListing("['5-q3meXJ6W4']");
-            }
-        });
-        videoView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        v.performClick();
-                        break;
-                }
-                return true;
-            }
-        });
 
         // Check Google Map permission
         if (!check(Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -286,6 +224,11 @@ public class HomeActivity extends BaseActivity implements
         FirebaseUser firebaseUser = AuthUtil.user();
         String id = firebaseUser != null ? firebaseUser.getUid() : "Zdh2ZOt9AOMKih2cNv00XSwk3fh1";
         new UserListener(this, id);
+    }
+
+    @Override
+    public void load(String id) {
+        webView.mix(id);
     }
 
     @Override
@@ -539,10 +482,6 @@ public class HomeActivity extends BaseActivity implements
     private void expand(FloatingActionButton fab) {
         fab.setExpanded(!fab.isExpanded());
         fab.setImageResource(fab.isExpanded() ? R.drawable.ic_close : R.drawable.ic_add);
-    }
-
-    private Task<Uri> task(String path) {
-        return FirebaseStorage.getInstance().getReference().child(path).getDownloadUrl();
     }
 
     private boolean back() {
