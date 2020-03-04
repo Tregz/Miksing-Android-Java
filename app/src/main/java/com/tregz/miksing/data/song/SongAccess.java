@@ -9,7 +9,6 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.tregz.miksing.data.DataAccess;
-import com.tregz.miksing.data.tube.song.TubeSongRelation;
 
 import java.util.List;
 
@@ -22,9 +21,12 @@ public interface SongAccess extends DataAccess<Song> {
     String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
 
+    @Query(SELECT_FROM_TABLE)
+    Maybe<List<Song>> songList();
+
     @Transaction
     @Query(SELECT_FROM_TABLE)
-    LiveData<List<SongRelation>> all();
+    LiveData<List<SongRelation>> liveSongRelationList();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<List<Long>> insert(Song...songs);
@@ -44,6 +46,9 @@ public interface SongAccess extends DataAccess<Song> {
 
     @Query(DELETE_FROM_TABLE)
     Single<Integer> wipe();
+
+    @Query(DELETE_FROM_TABLE + " WHERE id NOT IN(SELECT song FROM tube_song)")
+    Single<Integer> clear();
 
     @Query(SELECT_FROM_TABLE + " WHERE id = :key")
     Maybe<Song> test(String key);

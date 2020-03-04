@@ -15,12 +15,15 @@ import com.tregz.miksing.data.DataPositionable;
 import com.tregz.miksing.data.tube.Tube;
 
 import static androidx.room.ForeignKey.CASCADE;
-import static androidx.room.ForeignKey.NO_ACTION;
 
-@Entity(tableName = TubeSong.TABLE, foreignKeys = {@ForeignKey(entity = Song.class,
-        onDelete = CASCADE, onUpdate = CASCADE,
-        childColumns = Song.TABLE, parentColumns = DataNotation.PK)},
-        indices = {@Index(Song.TABLE)})
+@Entity(tableName = TubeSong.TABLE, foreignKeys = {
+        @ForeignKey(entity = Song.class,
+                onDelete = CASCADE, onUpdate = CASCADE,
+                childColumns = Song.TABLE, parentColumns = DataNotation.PK),
+        @ForeignKey(entity = Tube.class,
+                onDelete = CASCADE, onUpdate = CASCADE,
+                childColumns = Tube.TABLE, parentColumns = DataNotation.PK)
+}, indices = {@Index(Song.TABLE), @Index(Tube.TABLE)})
 public class TubeSong extends DataPositionable {
 
     public TubeSong(@NonNull String tubeId, @NonNull String songId) {

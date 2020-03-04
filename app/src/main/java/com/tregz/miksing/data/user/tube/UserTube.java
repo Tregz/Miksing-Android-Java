@@ -6,12 +6,24 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 
+import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataPositionable;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.user.User;
 
-@Entity(tableName = UserTube.TABLE)
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity(tableName = UserTube.TABLE, foreignKeys = {
+        /* @ForeignKey(entity = User.class,
+                onDelete = CASCADE, onUpdate = CASCADE,
+                childColumns = User.TABLE, parentColumns = DataNotation.PK), */
+        @ForeignKey(entity = Tube.class,
+                onDelete = CASCADE, onUpdate = CASCADE,
+                childColumns = Tube.TABLE, parentColumns = DataNotation.PK)
+}, indices = {@Index(User.TABLE), @Index(Tube.TABLE)})
 public class UserTube extends DataPositionable {
 
     public UserTube(@NonNull String userId, @NonNull String tubeId) {
@@ -44,7 +56,7 @@ public class UserTube extends DataPositionable {
 
     @NonNull
     @ColumnInfo(name = Tube.TABLE)
-    private String tubeId;
+    private String tubeId = "Undefined";
 
     public final static String TABLE = "user_tube";
 

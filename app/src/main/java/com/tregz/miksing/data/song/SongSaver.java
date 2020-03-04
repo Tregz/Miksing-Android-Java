@@ -2,16 +2,13 @@ package com.tregz.miksing.data.song;
 
 import android.content.Context;
 
+import com.tregz.miksing.data.DataMaybe;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongSaver;
 
-import io.reactivex.MaybeObserver;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-
-class SongSaver implements MaybeObserver<Song> {
+class SongSaver extends DataMaybe<Song> {
 
     private SongAccess access;
     private Context context;
@@ -22,22 +19,12 @@ class SongSaver implements MaybeObserver<Song> {
         this.context = context;
         this.join = join;
         this.song = song;
-        access().whereId(song.getId()).subscribeOn(Schedulers.io()).subscribe(this);
+        subscribe(access().whereId(song.getId()));
     }
 
     @Override
     public void onComplete() {
         new SongInsert(context, song, join);
-    }
-
-    @Override
-    public void onError(Throwable e) {
-
-    }
-
-    @Override
-    public void onSubscribe(Disposable d) {
-        //
     }
 
     @Override

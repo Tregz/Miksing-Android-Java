@@ -24,7 +24,6 @@ public class UserTubeListener extends DataListener {
     public UserTubeListener(Context context, String userId) {
         this.context = context;
         this.userId = userId;
-        //Log.d(TAG, "Get tube's user: " + userId);
         DatabaseReference users = FirebaseDatabase.getInstance().getReference(User.TABLE);
         users.child(userId).child(Tube.TABLE).addChildEventListener(this);
     }

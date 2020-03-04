@@ -87,15 +87,16 @@ public class PlayWeb extends WebView {
         //String onReady = function("onPlayerReady(event)", "event.target.mute();");
         String onReady = function("onPlayerReady(event)", LOAD + "();");
 
-        final String DELAYED = "delayed", RISE_UP = "riseUp";
-        String hide = visibility(getElements("progress") + "[0]", "hidden");
-        String ifProgress = ifVisible(getElements("progress") + "[0]") + "{" + hide + "}";
-        String timeOut = "setTimeout(" + DELAYED + ", 100);";
-        String started = LOADING + "=true;" + timeOut + PLAYING + "=" + VIDEO_ID + ";";
-        String buffering = started + setInterval(200, RISE_UP, LOOP, FADE_IN) + ifProgress;
+        final String DELAYED = "delayed", RISE_UP = "riseUp", SWITCH_VIDEO = "switchVideo";
+        String delayedVolumeFade = "setTimeout(" + DELAYED + ", 100);";
+        String delayedVideoSwitch = "setTimeout(" + SWITCH_VIDEO + ", 3000);";
+        String timeOuts = delayedVolumeFade + delayedVideoSwitch;
+        String started = LOADING + "=true;" + timeOuts + PLAYING + "=" + VIDEO_ID + ";";
+        String buffering = started + setInterval(200, RISE_UP, LOOP, FADE_IN);
         String ifBuffering = ifState(buffering, State.BUFFERING.name());
         String seekTo = PLAYERS + "[" + ENSUING + "]" + ".seekTo(" + seekPosition() + ");";
-        String ifPosition = "if(" + seekPosition() + "===0){" + SEEKED_TO + "=true;}";
+        // Can >> if(" + seekPosition() + "==='0') << ever be true?... ;
+        String ifPosition = "if(" + seekPosition() + "==='0'){" + SEEKED_TO + "=true;}";
         String seeking = "else {" + seekTo + SEEKED_TO + "=true;}";
         String playing = "if(" + SEEKED_TO + "===false){" + ifPosition + seeking + "}";
         String ifPlaying = ifState(playing, State.PLAYING.name());
@@ -117,9 +118,10 @@ public class PlayWeb extends WebView {
 
         String testing = "'onStateChange':onTesterStateChange";
         String onState = "'onStateChange':onPlayerStateChange";
+        String onStateWithLauncher = "'onReady':onPlayerReady," + onState;
         String player0 = player(Player.TESTING.ordinal(), testing); // unused.
         String player1 = player(Player.PLAYER1.ordinal(), onState);
-        String player2 = player(Player.PLAYER2.ordinal(), "'onReady':onPlayerReady," + onState);
+        String player2 = player(Player.PLAYER2.ordinal(), onStateWithLauncher);
         String players = player0 + player1 + player2 + PLAYERS + "=[player0,player1,player2];";
         String iFrames = FRAMES + "=" + getElements("iframe") + ";";
         String api1 = function("onYouTubeIframeAPIReady()", players + iFrames);
@@ -150,6 +152,7 @@ public class PlayWeb extends WebView {
         String stepDown = ifFadedDown + "else{" + FADE_OUT + "+=" + STEP_UP + ";";
         String goDown = stepDown + "stopping.setVolume(100-" + FADE_OUT + ")}";
         String volumeDown = function(GO_DOWN + "()", stopping + goDown);
+
         // Volume up fading
         String starting = "var starting = " + PLAYERS + "[" + ENSUING + "];";
         String clear = "{" + clearInterval(LOOP) + ";" + FADE_IN + "=0;}";
@@ -157,13 +160,19 @@ public class PlayWeb extends WebView {
         String stepUp = FADE_IN + "+=" + STEP_UP + ";starting.setVolume(" + FADE_IN + ");";
         String goUp = starting + stepUp + ifFadedUp;
         String volumeUp = function(RISE_UP + "()", goUp);
-        // Delayed volume down fading
+
+        // Video visibility switch
+        String hide = visibility(getElements("progress") + "[0]", "hidden");
+        String ifProgress = ifVisible(getElements("progress") + "[0]") + "{" + hide + "}";
         String setHidden = visibility(FRAMES + "[" + CURRENT + "]", "hidden");
         String setVisible = visibility(FRAMES + "[" + ENSUING + "]", "visible");
+        String videoSwitch = setHidden + setVisible + ifProgress;
+        String funSwitch = function(SWITCH_VIDEO + "()", videoSwitch);
+
+        // Delayed volume down fading
         String setDelayedFadeOut = setInterval(400, GO_DOWN, LOOP_OUT, FADE_OUT);
-        String delayedFadeOut = setHidden + setVisible + setDelayedFadeOut;
-        String delayedVolumeDown = function(DELAYED + "()", delayedFadeOut);
-        String api3 = mixYouTube + funLoad + volumeDown + volumeUp + delayedVolumeDown;
+        String delayedVolumeDown = function(DELAYED + "()", setDelayedFadeOut);
+        String api3 = mixYouTube + funLoad + volumeDown + volumeUp + delayedVolumeDown + funSwitch;
 
         String api = api0 + api1 + api2 + api3;
         String script = "<script type='text/javascript'>" + vars + api + "</script>";

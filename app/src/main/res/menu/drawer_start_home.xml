@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu></menu>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_clear"
+        android:title="@string/nav_login_title"
+        android:icon="@drawable/ic_clear_all"
+        app:actionLayout="@layout/menu_login"
+        app:showAsAction="ifRoom" />
+
+</menu>

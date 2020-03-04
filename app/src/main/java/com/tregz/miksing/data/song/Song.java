@@ -6,11 +6,18 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataObject;
+import com.tregz.miksing.data.tube.Tube;
+import com.tregz.miksing.data.tube.song.TubeSong;
+import com.tregz.miksing.data.user.tube.UserTube;
 
 import java.util.Date;
+
+import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = Song.TABLE)
 public class Song extends DataObject {

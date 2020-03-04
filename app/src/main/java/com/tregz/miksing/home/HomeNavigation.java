@@ -20,14 +20,16 @@ import com.tregz.miksing.arch.auth.AuthLogin;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
+import com.tregz.miksing.data.song.SongCount;
+import com.tregz.miksing.data.song.SongDelete;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 
 public class HomeNavigation implements
         BottomNavigationView.OnNavigationItemSelectedListener,
         DrawerLayout.DrawerListener,
         NavigationView.OnNavigationItemSelectedListener,
-        OnCompleteListener<Void> {
-    //private final String TAG = HomeNavigation.class.getSimpleName();
+        OnCompleteListener<Void>, SongCount.Total {
+    private final String TAG = HomeNavigation.class.getSimpleName();
 
     private ActivityHomeBinding binding;
     private HomeView view;
@@ -103,6 +105,13 @@ public class HomeNavigation implements
                     AuthUI.getInstance().signOut(context).addOnCompleteListener(this);
                 }
                 break;
+            case R.id.nav_clear:
+                if (binding.navStart != null) {
+                    Context context =binding.navStart.getContext();
+                    new SongCount(context, this);
+                    new SongDelete(context).wipe();
+                }
+                break;
             case R.id.sort_alpha:
                 ListSorted.comparator = ListSorted.Order.ALPHA;
                 item.setChecked(true);
@@ -120,6 +129,11 @@ public class HomeNavigation implements
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void size(int number) {
+        Log.d(TAG, "Song size: " + number);
     }
 
     void toggle(int gravity) {

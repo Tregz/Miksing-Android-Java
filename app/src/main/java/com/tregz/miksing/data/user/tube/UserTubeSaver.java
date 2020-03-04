@@ -2,14 +2,11 @@ package com.tregz.miksing.data.user.tube;
 
 import android.content.Context;
 
+import com.tregz.miksing.data.DataMaybe;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 
-import io.reactivex.MaybeObserver;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-
-public class UserTubeSaver implements MaybeObserver<UserTube> {
+public class UserTubeSaver extends DataMaybe<UserTube> {
     protected String TAG = UserTubeSaver.class.getSimpleName();
 
     private UserTubeAccess access;
@@ -19,22 +16,12 @@ public class UserTubeSaver implements MaybeObserver<UserTube> {
     public UserTubeSaver(Context context, UserTube join) {
         this.context = context;
         this.join = join;
-        access().whereId(join.getId()).subscribeOn(Schedulers.io()).subscribe(this);
+        subscribe(access().whereId(join.getId()));
     }
 
     @Override
     public void onComplete() {
         new UserTubeInsert(access().insert(join));
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        // do nothing
-    }
-
-    @Override
-    public void onSubscribe(Disposable d) {
-        // do nothing
     }
 
     @Override
