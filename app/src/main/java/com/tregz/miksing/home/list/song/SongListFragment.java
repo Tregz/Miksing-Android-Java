@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -95,6 +96,8 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     @Override
     public void onChanged(List<TubeSongRelation> relations) {
+        boolean help = page == Page.PREPARE && (relations == null || relations.isEmpty());
+        binding.txGuidance.setVisibility(help ? View.VISIBLE : View.GONE);
         if (this.relations == null || this.relations.size() != relations.size()) {
             this.relations = relations;
             if (getActivity() instanceof HomeActivity && !relations.isEmpty())
@@ -102,12 +105,13 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
             sort();
         } else {
             this.relations = relations;
-            ((SongListAdapter)adapter).items.replaceAll(relations);
+            //((SongListAdapter)adapter).items.replaceAll(relations);
         }
     }
 
     @Override
     public void onGestureClear(final int from, final int destination) {
+        Log.d(TAG, "onGestureClear");
         boolean mainList = page == Page.EVERYTHING;
         boolean editable = mainList || join != null && AuthUtil.isUser(join.getUserId());
         String nodeId = editable ? tubeId : null;
@@ -153,12 +157,13 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     public void onItemSwipe(int position, int direction) {
         if (direction == ItemTouchHelper.RIGHT || direction == ItemTouchHelper.END) {
             if (page == Page.EVERYTHING) {
-                final TubeSong join = relations.get(position).join;
+                final TubeSong join = ((SongListAdapter)adapter).items.get(position).join;
                 join.setTubeId(home.getPrepareListId());
                 new DataUpdate(access().update(join));
             } else remove(position);
         } else if (direction == ItemTouchHelper.START || direction == ItemTouchHelper.LEFT) {
             if (page == Page.EVERYTHING) {
+                // TODO
             } else remove(position);
         }
     }
@@ -225,7 +230,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     private void remove(int position) {
         TubeSongRelation relation = relations.get(position);
-        if (tubeId != null) {
+        if (tubeId != null && !tubeId.equals("Undefined")) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Tube.TABLE);
             ref.child(tubeId).child(Song.TABLE).child(relation.join.getSongId()).removeValue();
         } else new DataUpdate(access().delete(relation.join));

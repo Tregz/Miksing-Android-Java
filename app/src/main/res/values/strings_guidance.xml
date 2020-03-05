@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="guidance_swipe">To add content to this list, swipe song from the main list or
+        select a playlist from the left drawer.</string>
+</resources>

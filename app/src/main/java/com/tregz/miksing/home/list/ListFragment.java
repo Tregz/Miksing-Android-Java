@@ -22,7 +22,7 @@ import static android.telephony.TelephonyManager.PHONE_TYPE_NONE;
 public abstract class ListFragment extends BaseFragment {
     //private final String TAG = ListFragment.class.getSimpleName();
 
-    private FragmentListBinding binding;
+    protected FragmentListBinding binding;
     protected RecyclerView.Adapter<?> adapter;
     protected RecyclerView recycler;
 
