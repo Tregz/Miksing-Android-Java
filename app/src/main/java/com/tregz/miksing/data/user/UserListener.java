@@ -76,7 +76,6 @@ public class UserListener implements MaybeObserver<User>,
             new UserTubeQuery(context, this).whereUser(PrefShared.defaultUser);
         } else {
             // Remove previous data
-            subscribe(DataReference.getInstance(context).accessSong().wipe());
             subscribe(DataReference.getInstance(context).accessTube().wipe());
             subscribe(DataReference.getInstance(context).accessUser().wipe());
 

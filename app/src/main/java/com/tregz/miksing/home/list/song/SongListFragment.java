@@ -72,7 +72,8 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         super.onCreate(savedInstanceState);
         int position = getArguments() != null ? getArguments().getInt(POSITION, 0) : 0;
         page = Page.values()[position];
-        if (page == Page.EVERYTHING) tubeId = PrefShared.getInstance(getContext()).getKeySongs();
+        //if (page == Page.EVERYTHING) tubeId = PrefShared.getInstance(getContext()).getKeySongs();
+        if (page == Page.EVERYTHING) tubeId = null;
         else tubeId = "Undefined";
     }
 
@@ -194,15 +195,16 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     public void live(UserTube join) {
         this.join = join;
-        live(join.getTubeId());
+        tubeId = join.getTubeId();
+        live(tubeId);
     }
 
     private void live(String tubeId) {
         if (getView() != null && mediator != null) {
-            this.tubeId = tubeId;
             if (mediator.hasObservers()) mediator.removeObserver(this);
             mediator.observe(getViewLifecycleOwner(), this);
-            mediator.addSource(access().whereLiveTube(tubeId), this);
+            if (tubeId == null) mediator.addSource(access().all(), this);
+            else mediator.addSource(access().whereLiveTube(tubeId), this);
         }
     }
 
