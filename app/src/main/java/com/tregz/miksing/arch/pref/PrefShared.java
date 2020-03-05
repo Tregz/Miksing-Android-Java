@@ -12,6 +12,9 @@ public class PrefShared {
     private final String SONGS_KEY = "songs";
     private SharedPreferences sp;
 
+    public static final String defaultUser = "Zdh2ZOt9AOMKih2cNv00XSwk3fh1";
+    private static final String defaultTube = "-M0A1B6LQlpJpgdbkYyx";
+
     private static PrefShared instance;
 
     public static PrefShared getInstance(Context context) {
@@ -34,7 +37,7 @@ public class PrefShared {
     }
 
     public String getKeySongs() {
-        return sp.getString(SONGS_KEY, "-M0A1B6LQlpJpgdbkYyx");
+        return sp.getString(SONGS_KEY, defaultTube);
     }
 
     public void setKeySongs(String id) {

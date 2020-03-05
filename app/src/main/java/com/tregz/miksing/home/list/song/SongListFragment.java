@@ -22,6 +22,7 @@ import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongAccess;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.tube.UserTube;
+import com.tregz.miksing.data.user.tube.UserTubeTransfer;
 import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.HomeView;
 import com.tregz.miksing.home.list.ListFragment;
@@ -157,20 +158,10 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
                 //
                 break;
             case 1:
-                // Save playlist
-                DatabaseReference tube = FirebaseDatabase.getInstance().getReference("tube");
-                boolean create = tubeId == null || paste;
-                DatabaseReference node = create ? tube.push() : tube.child(tubeId);
-                node.child("name").setValue(name);
-                for (TubeSongRelation relation : relations) {
-                    int position = relation.join.getPosition();
-                    node.child("song").child(relation.song.getId()).setValue(position);
-                }
-                // Save user's playlist
-                DatabaseReference user = FirebaseDatabase.getInstance().getReference("user");
-                String currentUser = PrefShared.getInstance(getContext()).getUid();
-                if (node.getKey() != null)
-                    user.child(currentUser).child("tube").child(node.getKey()).setValue(0);
+                String userId = PrefShared.getInstance(getContext()).getUid();
+                int position = join.getPosition();
+                UserTubeTransfer transfer = new UserTubeTransfer(userId, tubeId, position);
+                transfer.upload(name, relations, null, paste);
                 home.onSaved();
                 break;
         }
@@ -211,7 +202,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
             this.tubeId = tubeId;
             if (mediator.hasObservers()) mediator.removeObserver(this);
             mediator.observe(getViewLifecycleOwner(), this);
-            mediator.addSource(access().whereTube(tubeId), this);
+            mediator.addSource(access().whereLiveTube(tubeId), this);
         }
     }
 

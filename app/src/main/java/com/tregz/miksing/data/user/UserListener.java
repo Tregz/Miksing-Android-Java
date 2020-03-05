@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -12,18 +13,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tregz.miksing.arch.auth.AuthUtil;
+import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
+import com.tregz.miksing.data.tube.song.TubeSongQuery;
+import com.tregz.miksing.data.tube.song.TubeSongRelation;
+import com.tregz.miksing.data.tube.song.TubeSongTransfer;
 import com.tregz.miksing.data.user.tube.UserTubeListener;
+import com.tregz.miksing.data.user.tube.UserTubeQuery;
+import com.tregz.miksing.data.user.tube.UserTubeRelation;
+import com.tregz.miksing.data.user.tube.UserTubeTransfer;
 
 import java.util.Date;
+import java.util.List;
 
 import io.reactivex.MaybeObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class UserListener implements MaybeObserver<User>, ValueEventListener {
+public class UserListener implements MaybeObserver<User>,
+        TubeSongQuery.OnTubeSongQueryDataResultCallback,
+        UserTubeQuery.OnUserTubeQueryDataResultCallback,
+        UserTubeTransfer.OnNewUserTube,
+        ValueEventListener {
     private final String TAG = UserListener.class.getSimpleName();
 
     private Context context;
@@ -53,11 +66,18 @@ public class UserListener implements MaybeObserver<User>, ValueEventListener {
         if (!snapshot.exists()) {
             // Create initial user data
             user = new User(userId, new Date());
-            FirebaseUser firebaseUser =  AuthUtil.user();
+            FirebaseUser firebaseUser = AuthUtil.user();
             user.setName(firebaseUser.getDisplayName());
             user.setEmail(firebaseUser.getEmail());
             table().child(userId).child("data").setValue(UserUtil.map(user));
+            // Get currently saved playlist of default user
+            new UserTubeQuery(context, this).whereUser(PrefShared.defaultUser);
         } else {
+            // Remove previous data
+            DataReference.getInstance(context).accessSong().wipe();
+            DataReference.getInstance(context).accessTube().wipe();
+            DataReference.getInstance(context).accessUser().wipe();
+
             Long createdAt = snapshot.child(DataNotation.CD).getValue(Long.class);
             if (createdAt != null) {
                 user = new User(userId, new Date(createdAt));
@@ -76,6 +96,33 @@ public class UserListener implements MaybeObserver<User>, ValueEventListener {
     @Override
     public void onSubscribe(Disposable d) {
 
+    }
+
+    @Override
+    public void onUserTubePushed(@Nullable String oldTubeId, @NonNull String newTubeId) {
+        if (oldTubeId != null) {
+            TubeSongQuery query = new TubeSongQuery(context, this, oldTubeId);
+            Log.d(TAG, "Query from tube: " + oldTubeId + " newId: " + newTubeId);
+            query.copyFromTube(newTubeId);
+        }
+    }
+
+    @Override
+    public void onUserTubeQueryDataResult(List<UserTubeRelation> relations) {
+        for (UserTubeRelation relation : relations) {
+            int position = relation.join.getPosition();
+            String tubeId = relation.tube.getId();
+            UserTubeTransfer transfer = new UserTubeTransfer(userId, tubeId, position);
+            transfer.upload(relation.tube.getName(), null, this, true);
+        }
+    }
+
+    @Override
+    public void onTubeSongQueryDataResult(List<TubeSongRelation> relations, String newTubeId) {
+        for (TubeSongRelation relation : relations) {
+            Log.d(TAG, "TubeSongTransfer " + newTubeId);
+            new TubeSongTransfer().upload(relation, newTubeId);
+        }
     }
 
     @Override

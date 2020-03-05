@@ -7,13 +7,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import com.firebase.ui.auth.ErrorCodes;
-import com.firebase.ui.auth.FirebaseUiException;
-import com.firebase.ui.auth.IdpResponse;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,6 +21,7 @@ import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootScroll;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
+import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
@@ -66,9 +63,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavGraph;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
@@ -125,6 +119,7 @@ public class HomeActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // to delete all song data from sql table: new SongWipe(getContext());
+        DataReference.getInstance(this).accessTube().wipe();
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
@@ -229,7 +224,7 @@ public class HomeActivity extends BaseActivity implements
 
         // Start observing user's cloud data or default user's playlists
         FirebaseUser firebaseUser = AuthUtil.user();
-        String id = firebaseUser != null ? firebaseUser.getUid() : "Zdh2ZOt9AOMKih2cNv00XSwk3fh1";
+        String id = firebaseUser != null ? firebaseUser.getUid() : PrefShared.defaultUser;
         new UserListener(this, id);
     }
 
@@ -305,28 +300,9 @@ public class HomeActivity extends BaseActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SIGN_IN) {
             if (resultCode == Activity.RESULT_OK) {
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (firebaseUser != null) {
-                    Log.d(TAG, "set UID " + firebaseUser.getUid());
-                    PrefShared.getInstance(this).setUid(firebaseUser.getUid());
-                    PrefShared.getInstance(this).setUsername(firebaseUser.getDisplayName());
-                    PrefShared.getInstance(this).setEmail(firebaseUser.getEmail());
-                    new UserListener(this, firebaseUser.getUid());
-                    // Retrieve fcm token for testing (result printed to Logcat)
-                    new NoteUtil(this);
-                }
+                AuthUtil.onUserLogin(this);
                 navigation.update();
-            } else {
-                IdpResponse response = IdpResponse.fromResultIntent(data);
-                if (response != null) {
-                    FirebaseUiException exception = response.getError();
-                    if (exception != null) {
-                        if (exception.getErrorCode() == ErrorCodes.NO_NETWORK)
-                            snack(getString(R.string.no_internet_connection));
-                        if (exception.getMessage() != null) Log.e(TAG, exception.getMessage());
-                    }
-                }
-            }
+            } else if (!AuthUtil.hasNetwork(data)) snack(getString(R.string.no_internet));
         }
     }
 

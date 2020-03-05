@@ -31,6 +31,10 @@ public interface TubeSongAccess extends DataAccess<TubeSong> {
     @Query(SELECT_FROM_TABLE)
     LiveData<List<TubeSongRelation>> all();
 
+    @Transaction
+    @Query(SELECT_FROM_TABLE + " WHERE tube = :id")
+    Maybe<List<TubeSongRelation>> whereTube(String id);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<List<Long>> insert(TubeSong...joins);
 
@@ -43,7 +47,7 @@ public interface TubeSongAccess extends DataAccess<TubeSong> {
 
     @Transaction
     @Query(SELECT_FROM_TABLE + " WHERE tube = :id" + ORDER_BY_POSITION)
-    LiveData<List<TubeSongRelation>> whereTube(String id);
+    LiveData<List<TubeSongRelation>> whereLiveTube(String id);
 
     @Update //(onConflict = REPLACE)
     Single<Integer> update(TubeSong...joins);
