@@ -31,6 +31,10 @@ public interface TubeSongAccess extends DataAccess<TubeSong> {
     LiveData<List<TubeSongRelation>> all();
 
     @Transaction
+    @Query(SELECT_FROM_TABLE + " GROUP BY song")
+    LiveData<List<TubeSongRelation>> allSongs();
+
+    @Transaction
     @Query(SELECT_FROM_TABLE + " WHERE tube = :id")
     Maybe<List<TubeSongRelation>> whereTube(String id);
 

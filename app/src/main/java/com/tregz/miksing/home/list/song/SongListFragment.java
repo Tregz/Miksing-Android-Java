@@ -108,7 +108,8 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
 
     @Override
     public void onGestureClear(final int from, final int destination) {
-        boolean editable = join != null && AuthUtil.isUser(join.getUserId());
+        boolean mainList = page == Page.EVERYTHING;
+        boolean editable = mainList || join != null && AuthUtil.isUser(join.getUserId());
         String nodeId = editable ? tubeId : null;
         final ListPosition listPosition = new ListPosition(Tube.TABLE, nodeId, Song.TABLE);
 
@@ -213,7 +214,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         if (getView() != null && mediator != null) {
             if (mediator.hasObservers()) mediator.removeObserver(this);
             mediator.observe(getViewLifecycleOwner(), this);
-            if (tubeId == null) mediator.addSource(access().all(), this);
+            if (tubeId == null) mediator.addSource(access().allSongs(), this);
             else mediator.addSource(access().whereLiveTube(tubeId), this);
         }
     }

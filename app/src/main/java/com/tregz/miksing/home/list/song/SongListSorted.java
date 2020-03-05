@@ -8,11 +8,11 @@ import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 
 class SongListSorted<T> extends ListSorted<T> {
+    private String TAG = SongListSorted.class.getSimpleName();
 
     SongListSorted(RecyclerView.Adapter adapter) {
         super(adapter);
     }
-
 
     @Override
     public boolean areContentsTheSame(T o1, T o2) {
