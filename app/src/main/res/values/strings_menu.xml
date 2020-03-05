@@ -1,40 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Toolbar menu item -->
     <string name="action_login">Login</string>
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
 
-    <string name="nav_login_title">Login</string>
+    <!-- Pages -->
+    <string name="page_everything">Everything</string>
+    <string name="page_prepare">Prepare</string>
 
-    <string name="nav_logout_title">Logout</string>
-
-    <string name="clear">Clear</string>
-
-    <string name="paste">Create a copy</string>
-    <string name="wreck">Delete forever</string>
-
-    <string name="save">Save</string>
-    <string name="playlist_name">Playlist name</string>
-    <string name="playlist_name_must_not_null">Playlist name must not be empty</string>
-    <string name="request_link_must_not_null">Request link must not be empty</string>
-    <string name="request_link_not_valid">Request link does not appear to be valid</string>
-
-    <string name="fetch_youtube_title">Get YouTube video or playlist</string>
-    <string name="fetch_youtube_hint">Http link</string>
-
+    <!-- Bottom navigation menu items -->
     <string name="main_bottom_alpha">Alphabetic</string>
     <string name="main_bottom_digit">Custom</string>
     <string name="main_bottom_fresh">Released</string>
 
-    <string name="nav_drawer_back">Up</string>
-    <string name="nav_drawer_items">Items</string>
-    <string name="nav_drawer_playlists">PLAYLISTS</string>
-    <string name="nav_drawer_title">Mobile app development demo</string>
-    <string name="nav_drawer_sub">by Tregz (jerome@tregz.com)</string>
-    <string name="nav_user_profile">Profile</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="user_name">Username</string>
-    <string name="user_area">Location</string>
+    <!-- Floating action buttons -->
+    <string name="clear">Clear</string>
+    <string name="paste">Create a copy</string>
+    <string name="wreck">Delete forever</string>
+    <string name="score">Save</string>
+
+    <!-- Request YouTube videos -->
+    <string name="fetch_youtube_title">Get YouTube video or playlist</string>
+    <string name="fetch_youtube_hint">Http link</string>
+    <string name="request_link_must_not_null">Request link must not be empty</string>
+    <string name="request_link_not_valid">Request link does not appear to be valid</string>
+
+    <!-- Save or copy and paste playlist -->
+    <string name="playlist_name">Playlist name</string>
+    <string name="playlist_name_must_not_null">Playlist name must not be empty</string>
 
 </resources>

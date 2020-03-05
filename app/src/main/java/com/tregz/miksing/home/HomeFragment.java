@@ -34,7 +34,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.pager.setAdapter(new HomePager(getChildFragmentManager()));
+        binding.pager.setAdapter(new HomePager(getContext(), getChildFragmentManager()));
         binding.pager.addOnPageChangeListener(this);
     }
 

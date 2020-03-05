@@ -5,37 +5,24 @@
     <string name="action_search">Recherche</string>
     <string name="action_settings">Paramètres</string>
 
-    <string name="nav_login_title">Se connecter</string>
-
-    <string name="nav_logout_title">Déconnexion</string>
-
-    <string name="clear">Effacer</string>
-
-    <string name="paste">Créer une copie</string>
-    <string name="wreck">Détruire à jamais</string>
-
-    <string name="save">Sauvegarder</string>
-    <string name="playlist_name">Nom de la liste</string>
-    <string name="playlist_name_must_not_null">Le nom de la liste ne peut pas être vide</string>
-    <string name="request_link_must_not_null">Le lien de la requête ne peut pas être vide</string>
-    <string name="request_link_not_valid">Le lien de la requête ne semble pas valide</string>
-
-    <string name="fetch_youtube_title">Charger un vidéo ou une liste YouTube</string>
-    <string name="fetch_youtube_hint">Lien http</string>
-
+    <string name="page_everything">Collection</string>
+    <string name="page_prepare">Préparation</string>
 
     <string name="main_bottom_alpha">Alphabétique</string>
     <string name="main_bottom_digit">Personnalisé</string>
     <string name="main_bottom_fresh">Parution</string>
 
-    <string name="nav_drawer_back">Up</string>
-    <string name="nav_drawer_items">Items</string>
-    <string name="nav_drawer_playlists">PLAYLISTS</string>
-    <string name="nav_drawer_title">Démo d\'application mobile</string>
-    <string name="nav_drawer_sub">par Tregz (jerome@tregz.com)</string>
-    <string name="nav_user_profile">Profil</string>
-    <string name="nav_header_desc">Entête de navigation</string>
-    <string name="user_name">Nom d\'utilisateur</string>
-    <string name="user_area">Localisation</string>
+    <string name="clear">Effacer</string>
+    <string name="paste">Créer une copie</string>
+    <string name="wreck">Détruire à jamais</string>
+    <string name="score">Sauvegarder</string>
+
+    <string name="request_link_must_not_null">Le lien de la requête ne peut pas être vide</string>
+    <string name="request_link_not_valid">Le lien de la requête ne semble pas valide</string>
+    <string name="fetch_youtube_title">Charger un vidéo ou une liste YouTube</string>
+    <string name="fetch_youtube_hint">Lien http</string>
+
+    <string name="playlist_name">Nom de la liste</string>
+    <string name="playlist_name_must_not_null">Le nom de la liste ne peut pas être vide</string>
 
 </resources>

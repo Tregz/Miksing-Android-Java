@@ -1,7 +1,6 @@
 package com.tregz.miksing.home.warn;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,10 +12,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.tregz.miksing.R;
-import com.tregz.miksing.base.BaseWarning;
-import com.tregz.miksing.home.HomeView;
 
 public class WarnScore extends WarnInput {
     public static final String TAG = WarnScore.class.getSimpleName();
@@ -32,7 +28,7 @@ public class WarnScore extends WarnInput {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         if (getContext() != null) {
             MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(getContext(), style);
-            alert.setTitle(R.string.save);
+            alert.setTitle(R.string.score);
 
             if (name == null) {
                 final TextInputEditText edit = setInputLayout(alert);

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="nav_drawer_playlists">PLAYLISTS</string>
+    <string name="nav_drawer_title">Mobile app development demo</string>
+    <string name="nav_drawer_sub">by Tregz (jerome@tregz.com)</string>
+    <string name="nav_user_profile">Profile</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="user_name">Username</string>
+    <string name="user_area">Location</string>
+
+    <string name="nav_login_title">Login</string>
+    <string name="nav_logout_title">Logout</string>
+
+</resources>
