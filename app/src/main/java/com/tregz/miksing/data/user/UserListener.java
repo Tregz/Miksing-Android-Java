@@ -59,6 +59,9 @@ public class UserListener implements MaybeObserver<User>,
 
     @Override
     public void onComplete() {
+        // Remove previous data
+        subscribe(DataReference.getInstance(context).accessTube().wipe());
+        subscribe(DataReference.getInstance(context).accessUser().wipe());
         if (user != null) new UserInsert(context, user);
         new UserTubeListener(context, userId);
     }
@@ -75,10 +78,6 @@ public class UserListener implements MaybeObserver<User>,
             // Get currently saved playlist of default user
             new UserTubeQuery(context, this).whereUser(PrefShared.defaultUser);
         } else {
-            // Remove previous data
-            subscribe(DataReference.getInstance(context).accessTube().wipe());
-            subscribe(DataReference.getInstance(context).accessUser().wipe());
-
             Long createdAt = snapshot.child(DataNotation.CD).getValue(Long.class);
             if (createdAt != null) {
                 user = new User(userId, new Date(createdAt));

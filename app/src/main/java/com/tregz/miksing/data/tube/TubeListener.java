@@ -1,7 +1,6 @@
 package com.tregz.miksing.data.tube;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -14,7 +13,7 @@ import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.tube.song.TubeSongListener;
 import com.tregz.miksing.data.user.tube.UserTube;
-import com.tregz.miksing.data.user.tube.UserTubeSaver;
+import com.tregz.miksing.data.user.tube.UserTubeWrite;
 
 import java.util.Date;
 
@@ -47,7 +46,7 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
 
     @Override
     public void onComplete() {
-        new TubeInsert(tube, this);
+        new TubeWrite(context, tube, this);
     }
 
     @Override
@@ -79,7 +78,7 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
     @Override
     public void saved() {
         if (join != null) {
-            new UserTubeSaver(context, join);
+            new UserTubeWrite(context, join);
             new TubeSongListener(context, join.getTubeId());
         }
     }

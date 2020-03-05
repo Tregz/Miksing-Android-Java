@@ -6,13 +6,13 @@ import com.tregz.miksing.data.DataMaybe;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 
-public class TubeSongSaver extends DataMaybe<TubeSong> {
+public class TubeSongWrite extends DataMaybe<TubeSong> {
 
     private TubeSongAccess access;
     private TubeSong join;
     private Context context;
 
-    public TubeSongSaver(Context context, TubeSong join) {
+    public TubeSongWrite(Context context, TubeSong join) {
         this.context = context;
         this.join = join;
         subscribe(access().whereId(join.getId()));

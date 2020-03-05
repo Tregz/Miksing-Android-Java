@@ -2,6 +2,8 @@ package com.tregz.miksing.home.list.song;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -74,7 +76,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
         page = Page.values()[position];
         //if (page == Page.EVERYTHING) tubeId = PrefShared.getInstance(getContext()).getKeySongs();
         if (page == Page.EVERYTHING) tubeId = null;
-        else tubeId = "Undefined";
+        else tubeId = home.getPrepareListId();
     }
 
     @Override
@@ -108,7 +110,7 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
     public void onGestureClear(final int from, final int destination) {
         boolean editable = join != null && AuthUtil.isUser(join.getUserId());
         String nodeId = editable ? tubeId : null;
-        ListPosition listPosition = new ListPosition(Tube.TABLE, nodeId, Song.TABLE);
+        final ListPosition listPosition = new ListPosition(Tube.TABLE, nodeId, Song.TABLE);
 
         //((SongListAdapter) adapter).items.beginBatchedUpdates();
         boolean changed = false;
@@ -120,12 +122,20 @@ public class SongListFragment extends ListFragment implements Observer<List<Tube
             }
         }
         //((SongListAdapter) adapter).items.endBatchedUpdates();
-        if (!editable) toast(listPosition.error());
-        if (changed) {
-            adapter.notifyDataSetChanged();
-            ((SongListAdapter)adapter).items.replaceAll(relations);
-            recycler.smoothScrollToPosition(destination);
-        }
+        if (!editable) new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                toast(listPosition.error());
+            }
+        });
+        if (changed) new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+                ((SongListAdapter)adapter).items.replaceAll(relations);
+                recycler.smoothScrollToPosition(destination);
+            }
+        });
     }
 
     @Override

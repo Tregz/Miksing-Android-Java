@@ -6,16 +6,16 @@ import com.tregz.miksing.data.DataMaybe;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.tube.song.TubeSong;
-import com.tregz.miksing.data.tube.song.TubeSongSaver;
+import com.tregz.miksing.data.tube.song.TubeSongWrite;
 
-class SongSaver extends DataMaybe<Song> {
+class SongWrite extends DataMaybe<Song> {
 
     private SongAccess access;
     private Context context;
     private TubeSong join;
     private Song song;
 
-    SongSaver(Context context, Song song, TubeSong join) {
+    SongWrite(Context context, Song song, TubeSong join) {
         this.context = context;
         this.join = join;
         this.song = song;
@@ -30,7 +30,7 @@ class SongSaver extends DataMaybe<Song> {
     @Override
     public void onSuccess(Song tubeSong) {
         new DataUpdate(access().update(song));
-        new TubeSongSaver(context, join);
+        new TubeSongWrite(context, join);
     }
 
     private SongAccess access() {

@@ -19,9 +19,9 @@ import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootScroll;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
-import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
+import com.tregz.miksing.data.tube.TubeWrite;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.data.user.tube.UserTube;
@@ -65,8 +65,6 @@ import androidx.navigation.ui.NavigationUI;
 import java.util.Date;
 import java.util.List;
 
-import io.reactivex.schedulers.Schedulers;
-
 import static com.tregz.miksing.arch.auth.AuthLogin.SIGN_IN;
 
 public class HomeActivity extends BaseActivity implements
@@ -76,10 +74,15 @@ public class HomeActivity extends BaseActivity implements
 
     //private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
-    private Tube prepareTube = new Tube("Undefined", new Date(), "tx_tube_default");
+    private Tube prepareTube;
 
     @Override
     public String getPrepareListId() {
+        if (prepareTube == null) {
+            prepareTube = new Tube("Undefined", new Date(), "tx_tube_default");
+            Log.d(TAG, "save Undefinded list");
+            new TubeWrite(this, prepareTube, null);
+        }
         return prepareTube.getId();
     }
 
@@ -123,9 +126,6 @@ public class HomeActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        // testing
-        DataReference.getInstance(this).accessTube().wipe().subscribeOn(Schedulers.io()).subscribe();
 
         new NoteUtil(this);
         if (binding.contentHome != null) {

@@ -5,7 +5,7 @@ import android.content.Context;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataSingle;
 import com.tregz.miksing.data.tube.song.TubeSong;
-import com.tregz.miksing.data.tube.song.TubeSongSaver;
+import com.tregz.miksing.data.tube.song.TubeSongWrite;
 
 import java.util.List;
 
@@ -22,6 +22,6 @@ class SongInsert extends DataSingle<List<Long>> {
     @Override
     public void onSuccess(List<Long> longs) {
         super.onSuccess(longs);
-        new TubeSongSaver(context, join);
+        new TubeSongWrite(context, join);
     }
 }

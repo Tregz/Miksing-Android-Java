@@ -2,18 +2,20 @@ package com.tregz.miksing.data.user;
 
 import android.content.Context;
 
+import com.tregz.miksing.data.DataReference;
+import com.tregz.miksing.data.DataSingle;
 import com.tregz.miksing.data.user.tube.UserTubeListener;
 
 import java.util.List;
 
-class UserInsert extends UserSingle<List<Long>> {
+class UserInsert extends DataSingle<List<Long>> {
 
     private User[] users;
 
     UserInsert(Context context, final User...users) {
         super(context);
         this.users = users;
-        subscribe(access().insert(users));
+        subscribe(DataReference.getInstance(context).accessUser().insert(users));
     }
 
     @Override

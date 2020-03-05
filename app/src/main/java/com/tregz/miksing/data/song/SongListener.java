@@ -43,7 +43,7 @@ public class SongListener extends DataListener implements ValueEventListener {
             //Log.d(TAG, "Song key: " + song.getArtist() + " - " + song.getTitle());
             Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
             // TODO insert or update
-            new SongSaver(context, song, join);
+            new SongWrite(context, song, join);
         }
     }
 

@@ -1,31 +1,37 @@
 package com.tregz.miksing.data.tube;
 
+import android.content.Context;
 import android.util.Log;
 
-import com.google.firebase.database.DatabaseReference;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataSingle;
 
 import java.util.List;
 
-import io.reactivex.Single;
-
 public class TubeInsert extends DataSingle<List<Long>> {
     protected String TAG = TubeInsert.class.getSimpleName();
 
     private TubeInsert.OnSave listener;
+    private Tube tube;
 
-    TubeInsert(Tube tube, TubeInsert.OnSave listener) {
+    TubeInsert(
+            @NonNull Context context,
+            @NonNull Tube tube,
+            @Nullable TubeInsert.OnSave listener
+    ) {
         this.listener = listener;
-        TubeAccess access = DataReference.getInstance(context).accessTube();
-        subscribe(access.insert(tube));
+        this.tube = tube;
+        subscribe(DataReference.getInstance(context).accessTube().insert(tube));
     }
 
     @Override
     public void onSuccess(List<Long> longs) {
         super.onSuccess(longs);
-        Log.d(TAG, "Saved " + longs.toString());
-        listener.saved();
+        Log.d(TAG, "Saved " + tube.getId());
+        if (listener != null) listener.saved();
     }
 
     interface OnSave {
