@@ -18,13 +18,14 @@ import com.tregz.miksing.data.user.tube.UserTubeSaver;
 
 import java.util.Date;
 
+import io.reactivex.Maybe;
 import io.reactivex.MaybeObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
         ValueEventListener {
-    private String TAG = TubeListener.class.getSimpleName();
+    //private String TAG = TubeListener.class.getSimpleName();
 
     private Context context;
     private UserTube join;
@@ -36,7 +37,7 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
     public TubeListener(Context context, UserTube join) {
         this.context = context;
         this.join = join;
-        table().child(join.getTubeId()).child("name").addListenerForSingleValueEvent(this);
+        table().child(join.getTubeId()).child("data").addListenerForSingleValueEvent(this);
     }
 
     @Override
@@ -51,11 +52,11 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-        String name = snapshot.getValue(String.class);
-        // TODO set and get createdAt
-        if (name != null) {
-            tube = new Tube(join.getTubeId(), new Date(), name);
-            access().whereId(join.getTubeId()).subscribeOn(Schedulers.io()).subscribe(this);
+        String name = snapshot.child("name").getValue(String.class);
+        Long createdAt = snapshot.child("copy").getValue(Long.class);
+        if (name != null && createdAt != null) {
+            tube = new Tube(join.getTubeId(), new Date(createdAt), name);
+            subscribe(access().whereId(join.getTubeId()));
         }
     }
 
@@ -81,6 +82,10 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
             new UserTubeSaver(context, join);
             new TubeSongListener(context, join.getTubeId());
         }
+    }
+
+    private void subscribe(Maybe<Tube> maybe) {
+        maybe.subscribeOn(Schedulers.io()).subscribe(this);
     }
 
     private DatabaseReference table() {

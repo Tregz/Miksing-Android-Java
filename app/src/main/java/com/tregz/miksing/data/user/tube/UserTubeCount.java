@@ -7,13 +7,22 @@ import com.tregz.miksing.data.DataReference;
 
 import java.util.List;
 
-public class UserTubeCount extends DataMaybe<List<UserTubeRelation>> {
+class UserTubeCount extends DataMaybe<List<UserTubeRelation>> {
 
+    private Context context;
     private Total listener;
 
-    public UserTubeCount(Context context, Total listener, String userId) {
+    UserTubeCount(Context context, Total listener) {
+        this.context = context;
         this.listener = listener;
+    }
+
+    void getTubeCount(String userId) {
         subscribe(DataReference.getInstance(context).accessUserTube().whereUser(userId));
+    }
+
+    void getUserCount(String tubeId) {
+        subscribe(DataReference.getInstance(context).accessUserTube().whereTube(tubeId));
     }
 
     @Override

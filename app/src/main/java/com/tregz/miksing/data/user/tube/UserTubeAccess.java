@@ -33,6 +33,10 @@ public interface UserTubeAccess extends DataAccess<UserTube> {
     Maybe<List<UserTubeRelation>> whereUser(String userId);
 
     @Transaction
+    @Query(SELECT_FROM_TABLE + " WHERE tube = :tubeId")
+    Maybe<List<UserTubeRelation>> whereTube(String tubeId);
+
+    @Transaction
     @Query(SELECT_FROM_TABLE + " WHERE user = :userId")
     LiveData<List<UserTubeRelation>> whereLiveUser(String userId);
 

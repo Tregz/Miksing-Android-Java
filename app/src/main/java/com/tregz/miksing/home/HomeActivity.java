@@ -11,8 +11,6 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.R;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.note.NoteUtil;
@@ -25,9 +23,9 @@ import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
-import com.tregz.miksing.data.user.User;
 import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.data.user.tube.UserTube;
+import com.tregz.miksing.data.user.tube.UserTubeDelete;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 import com.tregz.miksing.home.edit.song.SongEditFragment;
 import com.tregz.miksing.home.edit.song.SongEditView;
@@ -327,8 +325,8 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         Log.d(TAG, "OffsetChanged " + verticalOffset); // TODO: adjust for device sizes
-        if (portrait()) {
-            /* if (verticalOffset < -300) {
+        /* if (portrait()) {
+            if (verticalOffset < -300) {
                 if (!collapsing) collapsing = true;
             } else if (collapsing) collapsing = false;
             if (collapsing) {
@@ -343,8 +341,8 @@ public class HomeActivity extends BaseActivity implements
                 if (buttons[0].isExpanded())
                     for (FloatingActionButton fab : buttons) fab.show();
                 else buttons[0].show();
-            } */
-        }
+            }
+        } */
     }
 
     @Override
@@ -400,13 +398,7 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public void onWreck(Tube tube) {
-        DatabaseReference uRef = FirebaseDatabase.getInstance().getReference(User.TABLE);
-        String userId = PrefShared.getInstance(this).getUid();
-        uRef.child(userId).child(Tube.TABLE).child(tube.getId()).removeValue();
-
-        // TODO if there is only 1 user, remove playlist
-        // TODO remove with Firebase listener
-        FirebaseDatabase.getInstance().getReference(Tube.TABLE).child(tube.getId()).removeValue();
+        new UserTubeDelete(this, PrefShared.getInstance(this).getUid(), tube.getId());
     }
 
     @Override
