@@ -43,7 +43,6 @@ public class TubeSongListener extends DataListener {
 
     @Override
     public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String s) {
-        Log.d(TAG, "onChildChanged");
         new DataUpdate(access().update(join(snapshot)));
     }
 

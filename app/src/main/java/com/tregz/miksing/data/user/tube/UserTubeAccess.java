@@ -32,6 +32,10 @@ public interface UserTubeAccess extends DataAccess<UserTube> {
     @Query(SELECT_FROM_TABLE + " WHERE user = :userId")
     Maybe<List<UserTubeRelation>> whereUser(String userId);
 
+    @Transaction
+    @Query(SELECT_FROM_TABLE + " WHERE user = :userId")
+    LiveData<List<UserTubeRelation>> whereLiveUser(String userId);
+
     @Delete
     Single<Integer> delete(UserTube...joins);
 

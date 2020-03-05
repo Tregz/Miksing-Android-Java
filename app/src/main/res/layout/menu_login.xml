@@ -12,6 +12,6 @@
         android:textStyle="bold"
         android:drawablePadding="@dimen/default_gap"
         app:drawableEndCompat="@drawable/ic_security"
-        app:drawableTint="?attr/primaryPageColor" />
+        app:drawableTint="?attr/colorAccent" />
 
 </FrameLayout>

@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.reactivex.MaybeObserver;
+import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -59,6 +60,7 @@ public class UserListener implements MaybeObserver<User>,
     @Override
     public void onComplete() {
         if (user != null) new UserInsert(context, user);
+        new UserTubeListener(context, userId);
     }
 
     @Override
@@ -74,9 +76,9 @@ public class UserListener implements MaybeObserver<User>,
             new UserTubeQuery(context, this).whereUser(PrefShared.defaultUser);
         } else {
             // Remove previous data
-            DataReference.getInstance(context).accessSong().wipe();
-            DataReference.getInstance(context).accessTube().wipe();
-            DataReference.getInstance(context).accessUser().wipe();
+            subscribe(DataReference.getInstance(context).accessSong().wipe());
+            subscribe(DataReference.getInstance(context).accessTube().wipe());
+            subscribe(DataReference.getInstance(context).accessUser().wipe());
 
             Long createdAt = snapshot.child(DataNotation.CD).getValue(Long.class);
             if (createdAt != null) {
@@ -102,7 +104,6 @@ public class UserListener implements MaybeObserver<User>,
     public void onUserTubePushed(@Nullable String oldTubeId, @NonNull String newTubeId) {
         if (oldTubeId != null) {
             TubeSongQuery query = new TubeSongQuery(context, this, oldTubeId);
-            Log.d(TAG, "Query from tube: " + oldTubeId + " newId: " + newTubeId);
             query.copyFromTube(newTubeId);
         }
     }
@@ -120,7 +121,6 @@ public class UserListener implements MaybeObserver<User>,
     @Override
     public void onTubeSongQueryDataResult(List<TubeSongRelation> relations, String newTubeId) {
         for (TubeSongRelation relation : relations) {
-            Log.d(TAG, "TubeSongTransfer " + newTubeId);
             new TubeSongTransfer().upload(relation, newTubeId);
         }
     }
@@ -131,6 +131,10 @@ public class UserListener implements MaybeObserver<User>,
             new DataUpdate(access().update(user));
             new UserTubeListener(context, userId);
         }
+    }
+
+    private void subscribe(Single<Integer> single) {
+        single.subscribeOn(Schedulers.io()).subscribe();
     }
 
     private DatabaseReference table() {

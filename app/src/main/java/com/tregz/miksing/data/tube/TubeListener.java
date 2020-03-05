@@ -77,8 +77,10 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
 
     @Override
     public void saved() {
-        new UserTubeSaver(context, join);
-        new TubeSongListener(context, join.getTubeId());
+        if (join != null) {
+            new UserTubeSaver(context, join);
+            new TubeSongListener(context, join.getTubeId());
+        }
     }
 
     private DatabaseReference table() {

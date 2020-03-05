@@ -22,7 +22,19 @@
             android:layout_gravity="start"
             android:background="@drawable/bg_drawer"
             app:headerLayout="@layout/header_start"
-            app:menu="@menu/drawer_start_home" />
+            app:menu="@menu/drawer_start_home">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/nav_tube_fragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="150dp"
+                android:layout_marginBottom="@dimen/normal_toolbar_height"
+                app:defaultNavHost="true"
+                app:navGraph="@navigation/storyboard_tube" />
+
+        </com.google.android.material.navigation.NavigationView>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_right"
@@ -31,6 +43,7 @@
             android:layout_gravity="end"
             android:background="@drawable/bg_drawer"
             app:headerLayout="@layout/header_right"
+            app:itemIconTint="?attr/primaryPageColor"
             app:menu="@menu/drawer_right_home" />
 
     </androidx.drawerlayout.widget.DrawerLayout>

@@ -67,6 +67,8 @@ import androidx.navigation.ui.NavigationUI;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.schedulers.Schedulers;
+
 import static com.tregz.miksing.arch.auth.AuthLogin.SIGN_IN;
 
 public class HomeActivity extends BaseActivity implements
@@ -119,11 +121,14 @@ public class HomeActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // to delete all song data from sql table: new SongWipe(getContext());
-        DataReference.getInstance(this).accessTube().wipe();
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // testing
+        DataReference.getInstance(this).accessTube().wipe().subscribeOn(Schedulers.io()).subscribe();
+
         new NoteUtil(this);
         if (binding.contentHome != null) {
             // Top menu
