@@ -24,7 +24,7 @@ import com.tregz.miksing.data.user.tube.UserTubeAccess;
         User.class,
         TubeSong.class,
         UserTube.class
-}, version = 27, exportSchema = false)
+}, version = 30, exportSchema = false)
 @TypeConverters({DataConverter.class})
 public abstract class DataReference extends RoomDatabase {
 

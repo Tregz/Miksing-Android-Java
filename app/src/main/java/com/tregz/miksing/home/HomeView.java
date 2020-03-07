@@ -15,8 +15,6 @@ public interface HomeView {
 
     PlayWeb getWebView();
 
-    String getPrepareListId();
-
     UserFragment userFragment();
 
     UserMap areaFragment();
@@ -38,8 +36,6 @@ public interface HomeView {
     void onSaveItem(String name);
 
     void onWreck(Tube tube);
-
-    void onTubeSongInserted(String id);
 
     void onDrawerStartOpened();
 

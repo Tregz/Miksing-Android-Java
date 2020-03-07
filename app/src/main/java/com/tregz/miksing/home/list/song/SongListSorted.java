@@ -1,5 +1,7 @@
 package com.tregz.miksing.home.list.song;
 
+import android.util.Log;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tregz.miksing.base.list.ListSorted;
@@ -10,6 +12,7 @@ import com.tregz.miksing.data.tube.song.TubeSongRelation;
 class SongListSorted<T> extends ListSorted<T> {
     private String TAG = SongListSorted.class.getSimpleName();
 
+
     SongListSorted(RecyclerView.Adapter adapter) {
         super(adapter);
     }
@@ -17,9 +20,10 @@ class SongListSorted<T> extends ListSorted<T> {
     @Override
     public boolean areContentsTheSame(T o1, T o2) {
         if (o1 instanceof TubeSongRelation) {
-            Song song1 = ((TubeSongRelation) o1).song;
-            Song song2 = ((TubeSongRelation) o2).song;
-            if (song1 != null && song2 != null) return song1.getUpdatedAt() == song2.getUpdatedAt();
+            TubeSongRelation r1 = (TubeSongRelation) o1;
+            TubeSongRelation r2 = (TubeSongRelation) o2;
+            boolean songsNotNull = r1.song != null && r2.song != null;
+            return songsNotNull && (r1.song.getUpdatedAt().compareTo(r2.song.getUpdatedAt()) == 0);
         }
         return false;
     }
@@ -29,10 +33,17 @@ class SongListSorted<T> extends ListSorted<T> {
         if (o1 instanceof TubeSongRelation) {
             Song song1 = ((TubeSongRelation) o1).song;
             Song song2 = ((TubeSongRelation) o2).song;
-            if (song1 != null && song2 != null)
+            if (song1 != null && song2 != null) {
                 return compare(song1.getId(), song2.getId()) == 0;
+            }
         }
         return false;
+    }
+
+    @Override
+    public void onMoved(int fromPosition, int toPosition) {
+        super.onMoved(fromPosition, toPosition);
+        Log.d(TAG, "onMoved from: " + fromPosition + " to: " + toPosition);
     }
 
     @Override

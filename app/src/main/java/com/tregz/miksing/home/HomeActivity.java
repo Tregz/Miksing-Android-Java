@@ -21,15 +21,15 @@ import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
-import com.tregz.miksing.data.tube.TubeWrite;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.UserListener;
-import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.data.user.tube.UserTubeDelete;
+import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 import com.tregz.miksing.home.edit.song.SongEditFragment;
 import com.tregz.miksing.home.edit.song.SongEditView;
 import com.tregz.miksing.home.list.song.SongListFragment;
+import com.tregz.miksing.home.list.song.plan.SongPlanFragment;
 import com.tregz.miksing.home.list.tube.TubeListFragment;
 import com.tregz.miksing.home.warn.WarnFetch;
 import com.tregz.miksing.home.warn.WarnPaste;
@@ -74,17 +74,6 @@ public class HomeActivity extends BaseActivity implements
 
     //private boolean collapsing = false;
     private final int LOCATION_CODE = 103;
-    private Tube prepareTube;
-
-    @Override
-    public String getPrepareListId() {
-        if (prepareTube == null) {
-            prepareTube = new Tube("Undefined", new Date(), "tx_tube_default");
-            Log.d(TAG, "save Undefinded list");
-            new TubeWrite(this, prepareTube, null);
-        }
-        return prepareTube.getId();
-    }
 
     private ActivityHomeBinding binding;
     private CollapsingToolbarLayout toolbarLayout;
@@ -108,15 +97,14 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onItemClick(UserTube join, Tube tube) {
+    public void onItemClick(UserTubeRelation relation) {
         Fragment primary = primary();
         navigation.toggle(Gravity.START);
-        if (primary instanceof HomeFragment) ((HomeFragment) primary).prepare(join);
-        prepareTube = tube;
+        if (primary instanceof HomeFragment) ((HomeFragment) primary).prepare(relation);
     }
 
     @Override
-    public void onItemLongClick(UserTube join) {
+    public void onItemLongClick(UserTubeRelation relation) {
     }
 
     @Override
@@ -195,7 +183,7 @@ public class HomeActivity extends BaseActivity implements
             binding.contentHome.paste.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String name = prepareTube.getName(HomeActivity.this);
+                    String name = SongPlanFragment.relation.tube.getName(HomeActivity.this);
                     WarnPaste warning = WarnPaste.newInstance(name);
                     warning.show(getSupportFragmentManager(), WarnScore.TAG);
                 }
@@ -203,7 +191,7 @@ public class HomeActivity extends BaseActivity implements
             binding.contentHome.wreck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WarnWreck warning = WarnWreck.newInstance(prepareTube);
+                    WarnWreck warning = WarnWreck.newInstance(SongPlanFragment.relation.tube);
                     warning.show(getSupportFragmentManager(), WarnWreck.TAG);
                 }
             });
@@ -399,16 +387,6 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public void onWreck(Tube tube) {
         new UserTubeDelete(this, PrefShared.getInstance(this).getUid(), tube.getId());
-    }
-
-    @Override
-    public void onTubeSongInserted(final String id) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            public void run() {
-                Fragment primary = primary();
-                if (primary instanceof HomeFragment) ((HomeFragment) primary).reload(id);
-            }
-        });
     }
 
     @Override

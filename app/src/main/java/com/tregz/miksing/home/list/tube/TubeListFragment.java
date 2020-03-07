@@ -2,6 +2,8 @@ package com.tregz.miksing.home.list.tube;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
@@ -10,13 +12,13 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
+import com.tregz.miksing.R;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.user.User;
-import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.data.user.tube.UserTubeAccess;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.home.list.ListFragment;
@@ -75,32 +77,34 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     }
 
     @Override
-    public void onGestureClear(int from, int destination) {
+    public void onGestureClear(final int destination) {
         User user = !relations.isEmpty() ? relations.get(0).user : null;
         boolean editable = user != null && AuthUtil.isUser(user.getId());
-        String nodeId = editable ? user.getId() : null;
-        ListPosition listPosition = new ListPosition(User.TABLE, nodeId, Tube.TABLE);
-
-        //((TubeListAdapter)adapter).items.beginBatchedUpdates();
+        String userId = editable ? user.getId() : null;
+        ListPosition list = new ListPosition(User.TABLE, userId, Tube.TABLE);
+        adapter.notifyDataSetChanged(); // to update new sorted items order, before saving
+        // Save new positions after gesture event
         boolean changed = false;
         for (int i = 0; i < relations.size(); i++) {
             UserTubeRelation relation = relations.get(i);
-            if (listPosition.hasChanged(relation.join, relation.join.getTubeId(), i)) {
+            if (list.hasChanged(relation.join, relation.join.getTubeId(), i)) {
                 if (!changed) changed = true;
                 if (!editable) new DataUpdate(access().update(relation.join));
             }
         }
-        //((TubeListAdapter)adapter).items.endBatchedUpdates()
-        if (!editable) toast(listPosition.error());
         if (changed) {
-            adapter.notifyDataSetChanged();
-            ((TubeListAdapter)adapter).items.replaceAll(relations);
-            recycler.smoothScrollToPosition(destination);
+            ((TubeListAdapter)adapter).items.replaceAll(relations); // update new positions
+            if (!editable)  new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    toast(R.string.to_save_login);
+                }
+            });
         }
     }
 
     @Override
-    public void onItemMoved(int from, int destination) {
+    public boolean onItemMoved(int from, int destination) {
         // Update unsorted array to save to new position after gesture event
         int start = Math.min(from, destination);
         int end = Math.max(from, destination);
@@ -111,15 +115,11 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
         Log.d(TAG, "swaped");
         // Update sorted list to animate gesture event
         adapter.notifyItemMoved(from, destination);
+        return false;
     }
 
     @Override
     public void onItemSwipe(int position, int direction) {
-
-    }
-
-    @Override
-    public void save(String name, boolean paste) {
 
     }
 
@@ -132,12 +132,12 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     public void sort() {
         if (relations != null && adapter != null && recycler != null) {
             Log.d(TAG, "Comparator: " + comparator.name());
-            if (comparator != ListSorted.comparator) {
+            //if (comparator != ListSorted.comparator) {
                 comparator = ListSorted.comparator;
                 //if (ListSorted.customOrder()) ordered();
                 ((TubeListAdapter)adapter).items.replaceAll(relations);
                 //recycler.smoothScrollToPosition(0);
-            }
+            //}
         }
     }
 
@@ -147,8 +147,8 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
 
     // Allow an interaction to be communicated to the activity
     public interface OnItem {
-        void onItemClick(UserTube join, Tube tube);
+        void onItemClick(UserTubeRelation relation);
 
-        void onItemLongClick(UserTube tube);
+        void onItemLongClick(UserTubeRelation relation);
     }
 }

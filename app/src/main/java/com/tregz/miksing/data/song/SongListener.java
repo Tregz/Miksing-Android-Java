@@ -40,9 +40,6 @@ public class SongListener extends DataListener implements ValueEventListener {
             song.setArtist(getString(snapshot, DataNotation.MS));
             song.setTitle(getString(snapshot, DataNotation.NS));
             song.setWhat(getInt(snapshot, DataNotation.WI));
-            //Log.d(TAG, "Song key: " + song.getArtist() + " - " + song.getTitle());
-            Log.d(TAG, "Song added: " + song.getArtist() + " - " + song.getTitle());
-            // TODO insert or update
             new SongWrite(context, song, join);
         }
     }

@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.SortedListAdapterCallback;
 import com.bumptech.glide.Glide;
 import com.tregz.miksing.R;
 import com.tregz.miksing.base.date.DateUtil;
-import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.song.SongRelation;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.home.list.ListHolder;
 
@@ -27,7 +25,7 @@ public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
 
     private SongListFragment.OnItem listener;
     private SortedListAdapterCallback<TubeSongRelation> echo = new SongListSorted<>(this);
-    SortedList<TubeSongRelation> items = new SortedList<>(TubeSongRelation.class, echo);
+    public SortedList<TubeSongRelation> items = new SortedList<>(TubeSongRelation.class, echo);
 
     SongListAdapter(SongListFragment.OnItem listener) {
         this.listener = listener;

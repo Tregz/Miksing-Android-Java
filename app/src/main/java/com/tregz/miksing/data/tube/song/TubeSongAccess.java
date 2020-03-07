@@ -24,33 +24,36 @@ public interface TubeSongAccess extends DataAccess<TubeSong> {
     String FROM_TABLE = " FROM " + TubeSong.TABLE;
     String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
+    String DISTINCT_FROM_TABLE = "SELECT DISTINCT *" + FROM_TABLE;
     String ORDER_BY_POSITION = " ORDER BY " + TubeSong.TABLE + "." + DataNotation.SI;
+    String WHERE_TUBE = " WHERE tube = :tubeId";
+    String EXCLUDE_TUBE = " AND song NOT IN(SELECT song FROM tube_song WHERE tube = :exclude)";
 
     @Transaction
     @Query(SELECT_FROM_TABLE)
     LiveData<List<TubeSongRelation>> all();
 
     @Transaction
-    @Query(SELECT_FROM_TABLE + " GROUP BY song")
-    LiveData<List<TubeSongRelation>> allSongs();
-
-    @Transaction
-    @Query(SELECT_FROM_TABLE + " WHERE tube = :id")
-    Maybe<List<TubeSongRelation>> whereTube(String id);
+    @Query(SELECT_FROM_TABLE + WHERE_TUBE)
+    Maybe<List<TubeSongRelation>> whereTube(String tubeId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<List<Long>> insert(TubeSong...joins);
 
     @Transaction
-    @Query(SELECT_FROM_TABLE + " WHERE song = :id")
-    LiveData<TubeSongRelation> whereSong(String id);
+    @Query(SELECT_FROM_TABLE + " WHERE song = :songId")
+    LiveData<TubeSongRelation> whereSong(String songId);
 
-    @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    Maybe<TubeSong> whereId(String key);
+    @Query(SELECT_FROM_TABLE + " WHERE id = :id")
+    Maybe<TubeSong> whereId(String id);
 
     @Transaction
-    @Query(SELECT_FROM_TABLE + " WHERE tube = :id" + ORDER_BY_POSITION)
-    LiveData<List<TubeSongRelation>> whereLiveTube(String id);
+    @Query(SELECT_FROM_TABLE + WHERE_TUBE + ORDER_BY_POSITION)
+    LiveData<List<TubeSongRelation>> whereTubeLive(String tubeId);
+
+    @Transaction
+    @Query(DISTINCT_FROM_TABLE + WHERE_TUBE + EXCLUDE_TUBE + ORDER_BY_POSITION)
+    LiveData<List<TubeSongRelation>> whereTubeLive(String tubeId, String exclude);
 
     @Update //(onConflict = REPLACE)
     Single<Integer> update(TubeSong...joins);

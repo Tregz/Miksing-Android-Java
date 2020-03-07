@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tregz.miksing.base.list.ListSorted;
 
 public class ListGesture extends ItemTouchHelper.Callback {
-    //private String TAG = ListGesture.class.getSimpleName();
+    private String TAG = ListGesture.class.getSimpleName();
 
     private ListView view;
 
@@ -18,10 +18,9 @@ public class ListGesture extends ItemTouchHelper.Callback {
     @Override
     public void clearView(
             @NonNull RecyclerView recycler,
-            @NonNull RecyclerView.ViewHolder holder) {
+            @NonNull final RecyclerView.ViewHolder holder) {
         super.clearView(recycler, holder);
-        if (holder.getOldPosition() != holder.getAdapterPosition())
-            view.onGestureClear(holder.getOldPosition(), holder.getAdapterPosition());
+        view.onGestureClear(holder.getAdapterPosition());
     }
 
     @Override
@@ -29,9 +28,8 @@ public class ListGesture extends ItemTouchHelper.Callback {
             @NonNull RecyclerView recycler,
             @NonNull RecyclerView.ViewHolder holder
     ) {
-        int vertical = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+        int vertical = ListSorted.customOrder() ? ItemTouchHelper.UP | ItemTouchHelper.DOWN : 0;
         int horizontal = ItemTouchHelper.START | ItemTouchHelper.END;
-        //return makeMovementFlags(vertical | horizontal, horizontal);
         return makeMovementFlags(vertical, horizontal);
     }
 
@@ -41,9 +39,11 @@ public class ListGesture extends ItemTouchHelper.Callback {
             @NonNull RecyclerView.ViewHolder holder,
             @NonNull RecyclerView.ViewHolder target
     ) {
-        if (ListSorted.customOrder())
-            view.onItemMoved(holder.getAdapterPosition(), target.getAdapterPosition());
-        return false;
+        boolean alike = holder.getItemViewType() == target.getItemViewType();
+        int holderPosition = holder.getAdapterPosition();
+        int targetPosition = target.getAdapterPosition();
+        boolean indexed = holderPosition > -1 && targetPosition > -1;
+        return alike && indexed && view.onItemMoved(holderPosition, targetPosition);
     }
 
     @Override

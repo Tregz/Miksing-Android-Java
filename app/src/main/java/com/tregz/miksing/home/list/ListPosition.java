@@ -14,15 +14,15 @@ public class ListPosition {
         if (p1 != null) ref = FirebaseDatabase.getInstance().getReference(p0).child(p1).child(p2);
     }
 
+    public boolean editable() {
+        return ref != null;
+    }
+
     public boolean hasChanged(DataPositionable data, String childId, int position) {
         if (data.getPosition() != position) {
             data.setPosition(position);
-            if (ref != null) ref.child(childId).setValue(position);
+            if (editable()) ref.child(childId).setValue(position);
             return true;
         } else return false;
-    }
-
-    public int error() {
-        return AuthUtil.logged() ? R.string.to_save_paste : R.string.to_save_login;
     }
 }

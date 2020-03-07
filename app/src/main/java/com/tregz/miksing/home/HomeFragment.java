@@ -10,14 +10,15 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 import com.tregz.miksing.base.BaseFragment;
-import com.tregz.miksing.data.user.tube.UserTube;
+import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.databinding.FragmentHomeBinding;
 import com.tregz.miksing.home.list.ListFragment;
-import com.tregz.miksing.home.list.song.SongListFragment;
+import com.tregz.miksing.home.list.song.main.SongMainFragment;
+import com.tregz.miksing.home.list.song.plan.SongPlanFragment;
 
 public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
-
     //private final String TAG = HomeFragment.class.getSimpleName();
+
     private FragmentHomeBinding binding;
 
     @Nullable
@@ -51,24 +52,21 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     @Override
     public void onPageSelected(int position) {
         if (getActivity() != null) ((HomeActivity) getActivity()).setFabVisibility(position > 0);
-        ListFragment page = page();
-        if (page instanceof SongListFragment) ((SongListFragment)page).sort();
+        sort();
     }
 
-    void prepare(UserTube join) {
+    void prepare(UserTubeRelation relation) {
         binding.pager.setCurrentItem(1);
-        ListFragment page = page();
-        if (page instanceof SongListFragment) ((SongListFragment)page).live(join);
-    }
-
-    void reload(String id) {
-        ListFragment page = page();
-        if (page instanceof SongListFragment) ((SongListFragment)page).reload(id);
+        SongPlanFragment.relation = relation;
+        ListFragment main = page(HomePager.HomeTab.EVERYTHING.ordinal());
+        if (main instanceof SongMainFragment) ((SongMainFragment)main).live();
+        ListFragment plan = page(HomePager.HomeTab.PREPARE.ordinal());
+        if (plan instanceof SongPlanFragment) ((SongPlanFragment)plan).live();
     }
 
     void save(String name, boolean paste) {
         ListFragment page = page();
-        if (page != null) page.save(name, paste);
+        if (page instanceof SongPlanFragment) ((SongPlanFragment)page).save(name, paste);
     }
 
     void search(String query) {
@@ -82,11 +80,19 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     }
 
     private ListFragment page() {
+        return page(binding.pager.getCurrentItem());
+    }
+
+    private ListFragment page(int position) {
         if (binding.pager.getAdapter() != null) {
-            int position = binding.pager.getCurrentItem();
             Object fragment = binding.pager.getAdapter().instantiateItem(binding.pager, position);
             if (fragment instanceof ListFragment) return ((ListFragment) fragment);
         }
         return null;
+    }
+
+    private enum Page {
+        EVERYTHING,
+
     }
 }

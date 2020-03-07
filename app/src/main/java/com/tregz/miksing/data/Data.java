@@ -4,12 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
 
-import java.util.Date;
-
 public abstract class Data implements Parcelable {
+    public final static String UNDEFINED = "Undefined";
 
     Data() {}
 
@@ -19,7 +17,7 @@ public abstract class Data implements Parcelable {
 
     @PrimaryKey
     @NonNull
-    private String id = "Undefined";
+    private String id = UNDEFINED;
 
     @NonNull
     public String getId() {
@@ -33,7 +31,7 @@ public abstract class Data implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         String key = parcel.readString();
-        id = key != null ? key : "Undefined";
+        id = key != null ? key : UNDEFINED;
     }
 
     protected void read(Parcel parcel) {

@@ -9,7 +9,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.tregz.miksing.R;
 import com.tregz.miksing.home.list.ListFragment;
-import com.tregz.miksing.home.list.song.SongListFragment;
+import com.tregz.miksing.home.list.song.main.SongMainFragment;
+import com.tregz.miksing.home.list.song.plan.SongPlanFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,8 @@ public class HomePager extends FragmentStatePagerAdapter {
     HomePager(Context context, FragmentManager manager) {
         super(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.context = context;
-        pages.add(SongListFragment.newInstance(SongListFragment.Page.EVERYTHING.ordinal()));
-        pages.add(SongListFragment.newInstance(SongListFragment.Page.PREPARE.ordinal()));
+        pages.add(new SongMainFragment());
+        pages.add(new SongPlanFragment());
     }
 
     @NonNull
@@ -43,7 +44,7 @@ public class HomePager extends FragmentStatePagerAdapter {
         return context.getString(HomeTab.values()[position].getTab());
     }
 
-    private enum HomeTab {
+    public enum HomeTab {
         EVERYTHING(R.string.page_everything),
         PREPARE(R.string.page_prepare);
 

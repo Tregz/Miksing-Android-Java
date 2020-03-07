@@ -44,6 +44,11 @@ public final class AuthUtil {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    public static String userId() {
+        FirebaseUser user = user();
+        return user != null ? user.getUid() : null;
+    }
+
     public static void onUserLogin(Context context) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
