@@ -12,7 +12,6 @@ import com.tregz.miksing.data.tube.song.TubeSongRelation;
 class SongListSorted<T> extends ListSorted<T> {
     private String TAG = SongListSorted.class.getSimpleName();
 
-
     SongListSorted(RecyclerView.Adapter adapter) {
         super(adapter);
     }
@@ -56,6 +55,7 @@ class SongListSorted<T> extends ListSorted<T> {
                     if (song1 != null && song2 != null)
                         return compare(song1.getName(), song2.getName());
                 }
+                break;
             case DIGIT:
                 if (o1 instanceof TubeSongRelation) {
                     TubeSong join1 = ((TubeSongRelation) o1).join;
@@ -63,6 +63,7 @@ class SongListSorted<T> extends ListSorted<T> {
                     if (join1 != null && join2 != null)
                         return join1.getPosition() - join2.getPosition();
                 }
+                break;
             case FRESH:
                 if (o1 instanceof TubeSongRelation) {
                     Song song1 = ((TubeSongRelation) o1).song;
@@ -70,6 +71,7 @@ class SongListSorted<T> extends ListSorted<T> {
                     if (song1 != null && song2 != null)
                         return compare(song1.getReleasedAt(), song2.getReleasedAt());
                 }
+                break;
         }
         return 0;
     }

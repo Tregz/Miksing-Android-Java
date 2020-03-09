@@ -31,7 +31,7 @@
                 android:contentDescription="@string/thumbnail"
                 android:src="@mipmap/ic_launcher_logo" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/llCard"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -41,13 +41,13 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="16dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView style="@style/WrapWrap.DarkBold"
                         android:id="@+id/tv_name"
                         android:maxLines="1"
-                        android:text="@string/card_name" />
+                        android:text="@string/card_name"/>
 
                     <TextView style="@style/WrapWrap.Black"
                         android:id="@+id/tv_what"
@@ -58,7 +58,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="16dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:orientation="horizontal">
 
                     <TextView style="@style/WrapWrap.Black"
@@ -77,7 +78,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="16dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
                     android:orientation="horizontal">
 
                     <TextView style="@style/WrapWrap.Black"
@@ -93,7 +95,7 @@
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 

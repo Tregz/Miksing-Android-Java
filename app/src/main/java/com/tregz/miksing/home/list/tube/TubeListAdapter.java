@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.SortedListAdapterCallback;
 
 import com.bumptech.glide.Glide;
 import com.tregz.miksing.R;
-import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.tube.Tube;
-import com.tregz.miksing.data.user.User;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.home.list.ListHolder;
 
@@ -83,7 +81,7 @@ public class TubeListAdapter extends RecyclerView.Adapter<ListHolder> {
     @Override
     public ListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ListHolder(inflater.inflate(R.layout.card_work, parent, false));
+        return new ListHolder(inflater.inflate(R.layout.card_item, parent, false));
     }
 
     @Override

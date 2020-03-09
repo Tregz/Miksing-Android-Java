@@ -35,7 +35,7 @@ public class ListArray extends ArrayAdapter<Song> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            int layout = R.layout.card_work;
+            int layout = R.layout.card_item;
             view = LayoutInflater.from(context).inflate(layout, parent,false);
         }
         Song song = list.get(position);

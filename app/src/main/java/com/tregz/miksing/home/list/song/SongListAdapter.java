@@ -78,7 +78,7 @@ public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
     @Override
     public ListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ListHolder(inflater.inflate(R.layout.card_work, parent, false));
+        return new ListHolder(inflater.inflate(R.layout.card_item, parent, false));
     }
 
     @Override

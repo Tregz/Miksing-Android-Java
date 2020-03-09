@@ -21,6 +21,6 @@
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context=".home.HomeActivity"
-        tools:listitem="@layout/card_work"/>
+        tools:listitem="@layout/card_item"/>
 
 </FrameLayout>

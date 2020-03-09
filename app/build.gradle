@@ -9,7 +9,7 @@ android {
         applicationId "com.tregz.miksing"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 20200306
+        versionCode 20200307
         versionName "1.07"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

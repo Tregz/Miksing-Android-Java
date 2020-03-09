@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -25,7 +24,6 @@ import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListPosition;
 import com.tregz.miksing.home.list.ListView;
-import com.tregz.miksing.home.list.song.main.SongMainFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,8 +31,8 @@ import java.util.List;
 
 public abstract class SongListFragment extends ListFragment implements ListView,
         Observer<List<TubeSongRelation>> {
+    //private final String TAG = SongListFragment.class.getSimpleName();
 
-    private final String TAG = SongListFragment.class.getSimpleName();
     protected MediatorLiveData<List<TubeSongRelation>> mediator = new MediatorLiveData<>();
     protected List<TubeSongRelation> relations;
     private OnItem onItem;
@@ -68,29 +66,6 @@ public abstract class SongListFragment extends ListFragment implements ListView,
         sort();
     }
 
-    protected void onGestureClear(@NonNull final ListPosition list, final int destination) {
-        this.destination = destination; // to retrieve scroll position on paging
-        adapter.notifyDataSetChanged(); // to update new sorted items order, before saving
-        // Save new positions after gesture event
-        boolean changed = false;
-        for (int i = 0; i < relations.size(); i++) {
-            TubeSongRelation relation = relations.get(i);
-            if (list.hasChanged(relation.join, relation.join.getSongId(), i)) {
-                if (!changed) changed = true;
-                if (!list.editable()) new DataUpdate(access().update(relation.join));
-            }
-        }
-        if (changed) {
-            ((SongListAdapter) adapter).items.replaceAll(relations); // update new positions
-            if (!list.editable()) new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    toast(AuthUtil.logged() ? R.string.to_save_paste : R.string.to_save_login);
-                }
-            });
-        }
-    }
-
     @Override
     public boolean onItemMoved(final int from, final int destination) {
         // Swap items
@@ -117,7 +92,6 @@ public abstract class SongListFragment extends ListFragment implements ListView,
     @Override
     public void sort() {
         if (getView() != null && relations != null && adapter != null && recycler != null) {
-            if (this instanceof SongMainFragment) Log.d(TAG, "Sort data" + relations.size());
             ((SongListAdapter) adapter).items.replaceAll(relations);
             recycler.smoothScrollToPosition(destination);
         }
@@ -125,9 +99,32 @@ public abstract class SongListFragment extends ListFragment implements ListView,
 
     public void live() {
         if (getView() != null && mediator != null) {
-            if (this instanceof SongMainFragment) Log.d(TAG, "Live data");
             if (mediator.hasObservers()) mediator.removeObserver(this);
             mediator.observe(getViewLifecycleOwner(), this);
+        }
+    }
+
+    protected void onGestureClear(@NonNull final ListPosition list, final int destination) {
+        if (destination >= 0) this.destination = destination; // retrieve scroll position on paging
+        // Notify the recycler of position changes after gesture event and save new positions
+        adapter.notifyDataSetChanged();
+        boolean changed = false;
+        for (int i = 0; i < relations.size(); i++) {
+            TubeSongRelation relation = relations.get(i);
+            if (list.hasChanged(relation.join, relation.join.getSongId(), i)) {
+                if (!changed) changed = true;
+                if (!list.editable()) new DataUpdate(access().update(relation.join));
+            }
+        }
+        if (changed) {
+            // Replace the sorted list with updated data, before the auto update for each position
+            ((SongListAdapter) adapter).items.replaceAll(relations);
+            if (!list.editable()) new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    toast(AuthUtil.logged() ? R.string.to_save_paste : R.string.to_save_login);
+                }
+            });
         }
     }
 
