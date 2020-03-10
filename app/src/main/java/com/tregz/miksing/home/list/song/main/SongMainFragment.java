@@ -3,6 +3,7 @@ package com.tregz.miksing.home.list.song.main;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.tregz.miksing.arch.auth.AuthUtil;
+import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongWrite;
@@ -17,13 +18,14 @@ import static com.tregz.miksing.data.Data.UNDEFINED;
 
 public class SongMainFragment extends SongListFragment {
     //private final String TAG = SongMainFragment.class.getSimpleName();
-    public final static String EVERYTHING = "Everything";
 
     @Override
     public void live() {
         super.live();
         String exclude = SongPlanFragment.getPrepareListTubeId();
-        mediator.addSource(access().whereTubeLive(EVERYTHING, exclude), this);
+        String uid = PrefShared.getInstance(getContext()).getUid();
+        String include = uid != null ? uid : "-M0A1B6LQlpJpgdbkYyx";
+        mediator.addSource(access().whereTubeLive(include, exclude), this);
     }
 
     @Override

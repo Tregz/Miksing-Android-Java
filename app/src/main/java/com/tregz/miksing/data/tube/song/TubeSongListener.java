@@ -10,6 +10,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.data.DataListener;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
@@ -38,7 +39,10 @@ public class TubeSongListener extends DataListener {
 
     @Override
     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
-        new SongListener(context, snapshot.getKey(), join(snapshot));
+        if (AuthUtil.logged()) {
+            TubeSong join = join(snapshot);
+            if (join != null) new TubeSongWrite(context, join);
+        } else new SongListener(context, snapshot.getKey(), join(snapshot));
     }
 
     @Override

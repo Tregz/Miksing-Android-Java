@@ -9,8 +9,6 @@ import com.tregz.miksing.data.tube.song.TubeSongWrite;
 
 import java.util.List;
 
-import static com.tregz.miksing.home.list.song.main.SongMainFragment.EVERYTHING;
-
 class SongInsert extends DataSingle<List<Long>> {
     //private String TAG = SongInsert.class.getSimpleName();
 
@@ -26,6 +24,5 @@ class SongInsert extends DataSingle<List<Long>> {
     public void onSuccess(List<Long> longs) {
         super.onSuccess(longs);
         new TubeSongWrite(context, join);
-        new TubeSongWrite(context, new TubeSong(EVERYTHING, join.getSongId()));
     }
 }

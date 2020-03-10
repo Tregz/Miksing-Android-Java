@@ -3,17 +3,17 @@ package com.tregz.miksing.arch.pref;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.tregz.miksing.arch.auth.AuthUtil;
+
 import static com.tregz.miksing.data.DataNotation.PK;
 
 public class PrefShared {
     //private final String TAG = PrefShared.class.getSimpleName();
     private final String USERNAME = "username";
     private final String EMAIL = "email";
-    private final String SONGS_KEY = "songs";
     private SharedPreferences sp;
 
     public static final String defaultUser = "Zdh2ZOt9AOMKih2cNv00XSwk3fh1";
-    private static final String defaultTube = "-M0A1B6LQlpJpgdbkYyx";
 
     private static PrefShared instance;
 
@@ -36,16 +36,10 @@ public class PrefShared {
         sp.edit().putString(EMAIL, email).apply();
     }
 
-    public String getKeySongs() {
-        return sp.getString(SONGS_KEY, defaultTube);
-    }
-
-    public void setKeySongs(String id) {
-        sp.edit().putString(SONGS_KEY, id).apply();
-    }
-
     public String getUid() {
-        return sp.getString(PK, null);
+        if (AuthUtil.logged()) return sp.getString(PK, null);
+        else setUid(null);
+        return null;
     }
 
     public void setUid(String id) {

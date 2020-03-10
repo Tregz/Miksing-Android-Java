@@ -24,6 +24,9 @@ public interface SongAccess extends DataAccess<Song> {
     @Query(SELECT_FROM_TABLE)
     Maybe<List<Song>> songList();
 
+    @Query(SELECT_FROM_TABLE)
+    LiveData<List<Song>> liveSongList();
+
     @Transaction
     @Query(SELECT_FROM_TABLE)
     LiveData<List<SongRelation>> liveSongRelationList();
@@ -34,15 +37,15 @@ public interface SongAccess extends DataAccess<Song> {
     @Update
     Single<Integer> update(Song...songs);
 
-    @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    Maybe<Song> whereId(String key);
+    @Query(SELECT_FROM_TABLE + " WHERE id = :id")
+    Maybe<Song> whereId(String id);
 
-    @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    LiveData<Song> liveWhereId(String key);
+    @Query(SELECT_FROM_TABLE + " WHERE id = :id")
+    LiveData<Song> liveWhereId(String id);
 
     @Transaction
-    @Query(SELECT_FROM_TABLE + " WHERE id IN(SELECT song FROM tube_song WHERE tube = :id)")
-    LiveData<List<SongRelation>> whereTube(String id);
+    @Query(SELECT_FROM_TABLE + " WHERE id IN(SELECT song FROM tube_song WHERE tube = :tubeId)")
+    LiveData<List<SongRelation>> whereTube(String tubeId);
 
     @Query(DELETE_FROM_TABLE)
     Single<Integer> wipe();
@@ -50,8 +53,8 @@ public interface SongAccess extends DataAccess<Song> {
     @Query(DELETE_FROM_TABLE + " WHERE id NOT IN(SELECT song FROM tube_song)")
     Single<Integer> clear();
 
-    @Query(SELECT_FROM_TABLE + " WHERE id = :key")
-    Maybe<Song> test(String key);
+    @Query(SELECT_FROM_TABLE + " WHERE id = :id")
+    Maybe<Song> test(String id);
 
     //@RawQuery(observedEntities = Song.class)
     //Observable<Song> item(SupportSQLiteQuery query);

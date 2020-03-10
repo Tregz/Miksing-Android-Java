@@ -108,7 +108,6 @@ public class HomeNavigation implements
             case R.id.nav_clear:
                 if (binding.navStart != null) {
                     Context context =binding.navStart.getContext();
-                    new SongCount(context, this);
                     new SongDelete(context).wipe();
                 }
                 break;
