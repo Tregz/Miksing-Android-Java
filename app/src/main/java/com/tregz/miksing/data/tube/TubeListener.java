@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.tube.song.TubeSongListener;
@@ -51,8 +52,8 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-        String name = snapshot.child("name").getValue(String.class);
-        Long createdAt = snapshot.child("copy").getValue(Long.class);
+        String name = snapshot.child(DataNotation.NS).getValue(String.class);
+        Long createdAt = snapshot.child(DataNotation.CD).getValue(Long.class);
         if (name != null && createdAt != null) {
             tube = new Tube(join.getTubeId(), new Date(createdAt), name);
             subscribe(access().whereId(join.getTubeId()));

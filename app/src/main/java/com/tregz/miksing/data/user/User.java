@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataObject;
+import com.tregz.miksing.data.DataNotation;
 
 import java.util.Date;
 
@@ -21,7 +21,7 @@ public class User extends DataObject {
     @ColumnInfo(name = DataNotation.BD)
     private Date birthDay;
 
-    @ColumnInfo(name = DataNotation.AS)
+    @ColumnInfo(name = DataNotation.ES)
     private String email;
 
     public Date getBirthDay() {

@@ -4,19 +4,13 @@ import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 
 import android.content.Context;
 
 import com.tregz.miksing.arch.load.LoadResource;
-import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataObject;
-import com.tregz.miksing.data.user.tube.UserTube;
 
 import java.util.Date;
-
-import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = Tube.TABLE)
 public class Tube extends DataObject {

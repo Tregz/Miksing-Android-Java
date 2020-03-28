@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.tregz.miksing.data.DataAccess;
+import com.tregz.miksing.data.DataNotation;
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ public interface UserAccess extends DataAccess<User> {
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
     String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
 
-    @Query(SELECT_FROM_TABLE + " WHERE born BETWEEN :from AND :then")
+    @Query(SELECT_FROM_TABLE + " WHERE " + DataNotation.BD + " BETWEEN :from AND :then")
     LiveData<List<User>> findBirthDayBetween(Date from, Date then);
 
     @Query(DELETE_FROM_TABLE)

@@ -19,10 +19,10 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity(tableName = TubeSong.TABLE, foreignKeys = {
         @ForeignKey(entity = Song.class,
                 onDelete = CASCADE, onUpdate = CASCADE,
-                childColumns = Song.TABLE, parentColumns = DataNotation.PK),
+                childColumns = Song.TABLE, parentColumns = DataNotation.ID),
         @ForeignKey(entity = Tube.class,
                 onDelete = CASCADE, onUpdate = CASCADE,
-                childColumns = Tube.TABLE, parentColumns = DataNotation.PK)
+                childColumns = Tube.TABLE, parentColumns = DataNotation.ID)
 }, indices = {@Index(Song.TABLE), @Index(Tube.TABLE)})
 public class TubeSong extends DataPositionable {
 

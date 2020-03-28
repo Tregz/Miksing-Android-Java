@@ -24,7 +24,7 @@ public abstract class DataObject extends Data {
     private Date deletedAt;
     @ColumnInfo(name = DataNotation.NS)
     protected String name;
-    @ColumnInfo(name = DataNotation.ED)
+    @ColumnInfo(name = DataNotation.UD)
     private Date updatedAt;
 
     @NonNull

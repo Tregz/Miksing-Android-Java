@@ -48,13 +48,13 @@ public class SongListener extends DataListener implements ValueEventListener {
     private Song songFrom(@NonNull DataSnapshot snapshot) {
         if (snapshot.getKey() != null) {
             Song song = new Song(snapshot.getKey(), new Date(getLong(snapshot, DataNotation.CD)));
-            song.setReleasedAt(new Date(getLong(snapshot, DataNotation.BD)));
-            song.setUpdatedAt(new Date(getLong(snapshot, DataNotation.ED)));
+            song.setReleasedAt(new Date(getLong(snapshot, DataNotation.RD)));
+            song.setUpdatedAt(new Date(getLong(snapshot, DataNotation.UD)));
             song.setFeaturing(getString(snapshot, DataNotation.FS));
-            song.setMixedBy(getString(snapshot, DataNotation.LS));
-            song.setArtist(getString(snapshot, DataNotation.MS));
+            song.setMixedBy(getString(snapshot, DataNotation.MS));
+            song.setArtist(getString(snapshot, DataNotation.AS));
             song.setTitle(getString(snapshot, DataNotation.NS));
-            song.setWhat(getInt(snapshot, DataNotation.WI));
+            song.setVersion(getInt(snapshot, DataNotation.VI));
             return song;
         } else return null;
     }

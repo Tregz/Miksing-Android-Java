@@ -54,8 +54,11 @@ public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
                     String html = "<i>" + feat + "</i> " + song.getFeaturing();
                     holder.tvFeat.setText(HtmlCompat.fromHtml(html, FROM_HTML_MODE_LEGACY));
                 } else holder.tvFeat.setText("");
-                if (song.getWhat() > 0)
-                    holder.tvWhat.setText(Song.What.values()[song.getMix()].name());
+                if (song.getVersion() > 0) {
+                    Song.Version version = Song.Version.values()[song.getVersion()];
+                    String what = enclosed(version.getMix()) + enclosed(version.getExplicit());
+                    holder.tvWhat.setText(what);
+                }
                 else holder.tvWhat.setText("");
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -84,5 +87,9 @@ public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    private String enclosed(String str) {
+        return str != null ? "(" + str + ")" : "";
     }
 }

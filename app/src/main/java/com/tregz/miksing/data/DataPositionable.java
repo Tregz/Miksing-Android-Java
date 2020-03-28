@@ -1,11 +1,8 @@
 package com.tregz.miksing.data;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import androidx.room.ColumnInfo;
-
-import com.tregz.miksing.data.DataNotation;
 
 public abstract class DataPositionable extends Data {
 
@@ -19,7 +16,7 @@ public abstract class DataPositionable extends Data {
         this.position = position;
     }
 
-    @ColumnInfo(name = DataNotation.SI)
+    @ColumnInfo(name = DataNotation.PI)
     private int position;
 
     @Override

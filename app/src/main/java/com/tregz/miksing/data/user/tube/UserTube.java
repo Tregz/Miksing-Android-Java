@@ -9,8 +9,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
-import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataPositionable;
+import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.user.User;
 
@@ -22,7 +22,7 @@ import static androidx.room.ForeignKey.CASCADE;
                 childColumns = User.TABLE, parentColumns = DataNotation.PK), */
         @ForeignKey(entity = Tube.class,
                 onDelete = CASCADE, onUpdate = CASCADE,
-                childColumns = Tube.TABLE, parentColumns = DataNotation.PK)
+                childColumns = Tube.TABLE, parentColumns = DataNotation.ID)
 }, indices = {@Index(User.TABLE), @Index(Tube.TABLE)})
 public class UserTube extends DataPositionable {
 

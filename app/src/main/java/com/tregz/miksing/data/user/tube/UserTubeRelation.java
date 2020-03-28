@@ -10,8 +10,8 @@ import com.tregz.miksing.data.user.User;
 public class UserTubeRelation {
     @Embedded
     public UserTube join;
-    @Relation(parentColumn = Tube.TABLE, entityColumn = DataNotation.PK)
+    @Relation(parentColumn = Tube.TABLE, entityColumn = DataNotation.ID)
     public Tube tube;
-    @Relation(parentColumn = User.TABLE, entityColumn = DataNotation.PK)
+    @Relation(parentColumn = User.TABLE, entityColumn = DataNotation.ID)
     public User user;
 }

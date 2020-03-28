@@ -25,7 +25,7 @@ public interface TubeSongAccess extends DataAccess<TubeSong> {
     String DELETE_FROM_TABLE = "DELETE" + FROM_TABLE;
     String SELECT_FROM_TABLE = "SELECT *" + FROM_TABLE;
     String DISTINCT_FROM_TABLE = "SELECT DISTINCT *" + FROM_TABLE;
-    String ORDER_BY_POSITION = " ORDER BY " + TubeSong.TABLE + "." + DataNotation.SI;
+    String ORDER_BY_POSITION = " ORDER BY " + TubeSong.TABLE + "." + DataNotation.PI;
     String WHERE_TUBE = " WHERE tube = :tubeId";
     String EXCLUDE_TUBE = " AND song NOT IN(SELECT song FROM tube_song WHERE tube = :exclude)";
 

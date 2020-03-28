@@ -10,7 +10,7 @@ final class UserUtil {
         HashMap<String, Object> map = new HashMap<>();
         map.put(DataNotation.CD, user.getCreatedAt().getTime());
         if (user.getName() != null) map.put(DataNotation.NS, user.getName());
-        if (user.getEmail() != null) map.put(DataNotation.AS, user.getEmail());
+        if (user.getEmail() != null) map.put(DataNotation.ES, user.getEmail());
         return map;
     }
 }

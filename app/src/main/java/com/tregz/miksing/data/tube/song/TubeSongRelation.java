@@ -10,8 +10,8 @@ import com.tregz.miksing.data.tube.Tube;
 public class TubeSongRelation {
     @Embedded
     public TubeSong join;
-    @Relation(parentColumn = Song.TABLE, entityColumn = DataNotation.PK)
+    @Relation(parentColumn = Song.TABLE, entityColumn = DataNotation.ID)
     public Song song;
-    @Relation(parentColumn = Tube.TABLE, entityColumn = DataNotation.PK)
+    @Relation(parentColumn = Tube.TABLE, entityColumn = DataNotation.ID)
     public Tube tube;
 }

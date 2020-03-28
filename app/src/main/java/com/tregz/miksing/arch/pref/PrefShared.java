@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.tregz.miksing.arch.auth.AuthUtil;
 
-import static com.tregz.miksing.data.DataNotation.PK;
+import static com.tregz.miksing.data.DataNotation.ID;
 
 public class PrefShared {
     //private final String TAG = PrefShared.class.getSimpleName();
@@ -37,13 +37,13 @@ public class PrefShared {
     }
 
     public String getUid() {
-        if (AuthUtil.logged()) return sp.getString(PK, null);
+        if (AuthUtil.logged()) return sp.getString(ID, null);
         else setUid(null);
         return null;
     }
 
     public void setUid(String id) {
-        sp.edit().putString(PK, id).apply();
+        sp.edit().putString(ID, id).apply();
     }
 
     public String getUsername() {

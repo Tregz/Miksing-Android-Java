@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.tregz.miksing.home.HomeView;
 
-
 public class PlayVideo extends VideoView implements
         MediaPlayer.OnPreparedListener,
         OnFailureListener,
@@ -55,7 +54,6 @@ public class PlayVideo extends VideoView implements
     public void onPrepared(MediaPlayer mp) {
         mp.setLooping(true);
         mp.start(); // auto play
-
     }
 
     @Override
@@ -89,8 +87,7 @@ public class PlayVideo extends VideoView implements
     }
 
     public void hide() {
-        if (getVisibility() != GONE)
-            setVisibility(GONE);
+        if (getVisibility() != GONE) setVisibility(GONE);
     }
 
     public void init(HomeView listener) {

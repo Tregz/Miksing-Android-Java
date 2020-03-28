@@ -6,18 +6,11 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 
-import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataObject;
-import com.tregz.miksing.data.tube.Tube;
-import com.tregz.miksing.data.tube.song.TubeSong;
-import com.tregz.miksing.data.user.tube.UserTube;
+import com.tregz.miksing.data.DataNotation;
 
 import java.util.Date;
-
-import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = Song.TABLE)
 public class Song extends DataObject {
@@ -28,11 +21,11 @@ public class Song extends DataObject {
         super(id, createdAt);
     }
 
-    @ColumnInfo(name = DataNotation.BD) private Date releasedAt;
+    @ColumnInfo(name = DataNotation.AS) private String artist;
     @ColumnInfo(name = DataNotation.FS) private String featuring;
-    @ColumnInfo(name = DataNotation.LS) private String mixedBy;
-    @ColumnInfo(name = DataNotation.MS) private String artist;
-    private int what = 0;
+    @ColumnInfo(name = DataNotation.MS) private String mixedBy;
+    @ColumnInfo(name = DataNotation.RD) private Date releasedAt;
+    private int version = 0;
 
     public String getArtist() {
         return artist;
@@ -43,8 +36,8 @@ public class Song extends DataObject {
     }
 
     public int getMix() {
-        return what - (!isClean() ? 5 : 0);
-    }
+        return version - (!isClean() ? 5 : 0);
+    } // TODO: update
 
     public String getMixedBy() {
         return mixedBy;
@@ -58,12 +51,12 @@ public class Song extends DataObject {
         return name;
     }
 
-    public int getWhat() {
-        return what;
+    public int getVersion() {
+        return version;
     }
 
     public boolean isClean() {
-        return what < What.UNDEFINED_DIRTY.ordinal();
+        return version < Version.UNDEFINED_DIRTY.ordinal();
     }
 
     public void setArtist(String artist) {
@@ -71,8 +64,8 @@ public class Song extends DataObject {
     }
 
     public void setClean(boolean value) {
-        if (value && !isClean()) { what -= What.UNDEFINED_DIRTY.ordinal(); }
-        else if (!value && isClean()) { what += What.UNDEFINED_DIRTY.ordinal(); }
+        if (value && !isClean()) { version -= Version.UNDEFINED_DIRTY.ordinal(); }
+        else if (!value && isClean()) { version += Version.UNDEFINED_DIRTY.ordinal(); }
     }
 
     public void setFeaturing(String featuring) {
@@ -80,8 +73,8 @@ public class Song extends DataObject {
     }
 
     public void setMix(int value) {
-        what = value + (isClean() ? 5 : 0);
-    }
+        version = value + (isClean() ? 5 : 0);
+    } // TODO: update
 
     public void setMixedBy(String mixedBy) {
         this.mixedBy = mixedBy;
@@ -95,8 +88,8 @@ public class Song extends DataObject {
         this.name = title;
     }
 
-    public void setWhat(int what) {
-        this.what = what;
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     @Override
@@ -110,7 +103,7 @@ public class Song extends DataObject {
         parcel.writeString(featuring);
         parcel.writeString(mixedBy);
         parcel.writeSerializable(releasedAt);
-        parcel.writeInt(what);
+        parcel.writeInt(version);
         super.writeToParcel(parcel, i);
     }
 
@@ -119,7 +112,7 @@ public class Song extends DataObject {
         featuring = parcel.readString();
         mixedBy = parcel.readString();
         releasedAt = (Date) parcel.readSerializable();
-        what = parcel.readInt();
+        version = parcel.readInt();
         read(parcel);
     }
 
@@ -135,16 +128,57 @@ public class Song extends DataObject {
         }
     };
 
-    public enum What {
-        UNDEFINED,
-        MIX_CLEAN,
-        EXTENDED_CLEAN,
-        REMIX_CLEAN,
-        REMIX_EXTENDED_CLEAN,
-        UNDEFINED_DIRTY,
-        MIX_DIRTY,
-        EXTENDED_DIRTY,
-        REMIX_DIRTY,
-        REMIX_EXTENDED_DIRTY,
+    public enum Version {
+        // undefined mix version
+        UNDEFINED(null, null), //0
+        // undefined lyrics (clean or dirty)
+        EDIT_UNDEFINED(Mix.EDIT, null), // 1
+        EXTENDED_UNDEFINED(Mix.EXTENDED, null), // 2
+        REMIX_UNDEFINED(Mix.REMIX, null), // 3
+        REMIX_EXTENDED_UNDEFINED(Mix.EXTENDED_REMIX, null), // 4
+        // clean lyrics
+        UNDEFINED_CLEAN(null, Explicit.CLEAN),
+        EDIT_CLEAN(Mix.EDIT, Explicit.CLEAN),
+        EXTENDED_CLEAN(Mix.EXTENDED, Explicit.CLEAN),
+        REMIX_CLEAN(Mix.REMIX, Explicit.CLEAN),
+        REMIX_EXTENDED_CLEAN(Mix.EXTENDED_REMIX, Explicit.CLEAN),
+        // dirty lyrics
+        UNDEFINED_DIRTY(null, Explicit.DIRTY),
+        EDIT_DIRTY(Mix.EDIT, Explicit.DIRTY),
+        EXTENDED_DIRTY(Mix.EXTENDED, Explicit.DIRTY),
+        REMIX_DIRTY(Mix.REMIX, Explicit.DIRTY),
+        REMIX_EXTENDED_DIRTY(Mix.EXTENDED_REMIX, Explicit.DIRTY);
+
+        private final Mix mix;
+        private final Explicit explicit;
+
+        public String getMix() {
+            return mix != null ? capitalizeFully(mix.name()) : null;
+        }
+
+        public String getExplicit() {
+            return explicit != null ? capitalizeFully(explicit.name()) : null;
+        }
+
+        private String capitalizeFully(String str) {
+            return str.substring(0, 1).toUpperCase() + str.toLowerCase().substring(1);
+        }
+
+        Version(Mix mix, Explicit explicit) {
+            this.mix = mix;
+            this.explicit = explicit;
+        }
+    }
+
+    public enum Mix {
+        EDIT,
+        EXTENDED,
+        REMIX,
+        EXTENDED_REMIX;
+    }
+
+    public enum Explicit {
+        CLEAN,
+        DIRTY
     }
 }

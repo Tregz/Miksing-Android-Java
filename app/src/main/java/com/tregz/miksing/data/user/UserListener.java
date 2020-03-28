@@ -14,9 +14,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
-import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
+import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.song.SongListener;
 import com.tregz.miksing.data.tube.TubeCreate;
 import com.tregz.miksing.data.tube.song.TubeSongQuery;
@@ -91,7 +91,7 @@ public class UserListener implements MaybeObserver<User>,
             if (createdAt != null) {
                 user = new User(userId, new Date(createdAt));
                 user.setName(snapshot.child(DataNotation.NS).getValue(String.class));
-                user.setEmail(snapshot.child(DataNotation.AS).getValue(String.class));
+                user.setEmail(snapshot.child(DataNotation.ES).getValue(String.class));
             }
         }
         access().whereId(userId).subscribeOn(Schedulers.io()).subscribe(this);

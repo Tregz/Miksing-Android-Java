@@ -162,6 +162,7 @@ public class PlayWeb extends WebView {
         String volumeUp = function(RISE_UP + "()", goUp);
 
         // Video visibility switch
+
         String hide = visibility(getElements("progress") + "[0]", "hidden");
         String ifProgress = ifVisible(getElements("progress") + "[0]") + "{" + hide + "}";
         String setHidden = visibility(FRAMES + "[" + CURRENT + "]", "hidden");
