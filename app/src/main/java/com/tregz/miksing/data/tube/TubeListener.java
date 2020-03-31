@@ -12,6 +12,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
+import com.tregz.miksing.data.lang.Lang;
+import com.tregz.miksing.data.lang.LangAccess;
 import com.tregz.miksing.data.tube.song.TubeSongListener;
 import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.data.user.tube.UserTubeWrite;
@@ -52,11 +54,19 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-        String name = snapshot.child(DataNotation.NS).getValue(String.class);
+        //String name = snapshot.child(DataNotation.NS).getValue(String.class);
         Long createdAt = snapshot.child(DataNotation.CD).getValue(Long.class);
-        if (name != null && createdAt != null) {
-            tube = new Tube(join.getTubeId(), new Date(createdAt), name);
+        if (createdAt != null) {
+            tube = new Tube(join.getTubeId(), new Date(createdAt), null);
             subscribe(access().whereId(join.getTubeId()));
+            Lang lang = new Lang(Tube.TABLE + "-" + tube.getId(), new Date(createdAt));
+            String en = snapshot.child(DataNotation.NS).child("en").getValue(String.class);
+            if (en != null) lang.setEnglish(en);
+            String fr = snapshot.child(DataNotation.NS).child("fr").getValue(String.class);
+            if (fr != null) lang.setFrench(fr);
+            LangAccess access = DataReference.getInstance(context).accessLang();
+            access.insert(lang).subscribeOn(Schedulers.io()).subscribe();
+
         }
     }
 

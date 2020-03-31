@@ -7,6 +7,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import com.tregz.miksing.data.lang.Lang;
+import com.tregz.miksing.data.lang.LangAccess;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.TubeAccess;
 import com.tregz.miksing.data.tube.song.TubeSong;
@@ -19,12 +21,13 @@ import com.tregz.miksing.data.user.tube.UserTube;
 import com.tregz.miksing.data.user.tube.UserTubeAccess;
 
 @Database(entities = {
+        Lang.class,
         Song.class,
         Tube.class,
         User.class,
         TubeSong.class,
         UserTube.class
-}, version = 32, exportSchema = false)
+}, version = 33, exportSchema = false)
 @TypeConverters({DataConverter.class})
 public abstract class DataReference extends RoomDatabase {
 
@@ -42,6 +45,8 @@ public abstract class DataReference extends RoomDatabase {
                 // do not do this in production: .allowMainThreadQueries()
                 .fallbackToDestructiveMigration().build();
     }
+
+    public abstract LangAccess accessLang();
 
     public abstract SongAccess accessSong();
 
