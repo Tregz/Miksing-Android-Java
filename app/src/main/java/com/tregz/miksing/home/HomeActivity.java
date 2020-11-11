@@ -90,8 +90,9 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public void onItemLongClick(Song song) {
-        String id = song.getId();
-        controller().navigate(HomeFragmentDirections.actionHomeFragmentToItemFragment(id));
+        Bundle bundle = new Bundle();
+        bundle.putString("id", song.getId());
+        controller().navigate(R.id.action_home_fragment_to_item_fragment, bundle);
         if (binding.contentHome != null) binding.contentHome.bottom.hide();
         //if (videoView != null) videoView.hide();
     }
@@ -114,8 +115,9 @@ public class HomeActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        fullscreen();
 
-        new NoteUtil(this);
+        new NoteUtil();
         if (binding.contentHome != null) {
             // Top menu
             Toolbar toolbar = binding.contentHome.appBar.toolbar;
@@ -124,7 +126,7 @@ public class HomeActivity extends BaseActivity implements
             NavGraph graph = controller().getGraph();
             AppBarConfiguration.Builder builder = new AppBarConfiguration.Builder(graph);
             DrawerLayout layout = binding.drawerLayout;
-            AppBarConfiguration abc = builder.setDrawerLayout(layout).build();
+            AppBarConfiguration abc = builder.setOpenableLayout(layout).build();
             toolbarLayout = binding.contentHome.appBar.toolbarLayout;
             // Toolbar setup including auto update of the collapsing toolbar's title
             NavigationUI.setupWithNavController(toolbarLayout, toolbar, controller(), abc);
@@ -246,7 +248,7 @@ public class HomeActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
         if (countdown == null) {
-            countdown = new Handler();
+            countdown = new Handler(Looper.getMainLooper());
             countdown();
         }
     }

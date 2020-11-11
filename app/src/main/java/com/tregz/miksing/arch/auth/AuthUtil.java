@@ -56,7 +56,7 @@ public final class AuthUtil {
             PrefShared.getInstance(context).setUsername(firebaseUser.getDisplayName());
             PrefShared.getInstance(context).setEmail(firebaseUser.getEmail());
             new UserListener(context, firebaseUser.getUid());
-            new NoteUtil(context); // Retrieve fcm token for testing (result printed to Logcat)
+            new NoteUtil(); // Retrieve fcm token for testing (result printed to Logcat)
         }
     }
 }

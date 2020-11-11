@@ -19,7 +19,7 @@ import com.tregz.miksing.R;
 import com.tregz.miksing.home.HomeActivity;
 
 public class NoteService extends FirebaseMessagingService {
-    private final String TAG = NoteService.class.getSimpleName();
+    //private final String TAG = NoteService.class.getSimpleName();
 
     private final String cId = "com.tregz.miksing.channel_id";
 
@@ -60,6 +60,11 @@ public class NoteService extends FirebaseMessagingService {
                 manager().notify(nId, builder.build());
             }
         }
+    }
+
+    @Override
+    public void onNewToken(@NonNull String s) {
+        super.onNewToken(s);
     }
 
     private NotificationManager manager() {

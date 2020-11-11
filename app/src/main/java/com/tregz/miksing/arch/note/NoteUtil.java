@@ -4,41 +4,32 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import android.content.Context;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-import com.tregz.miksing.arch.pref.PrefShared;
-import com.tregz.miksing.data.user.tube.UserTubeListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
-public class NoteUtil implements OnCompleteListener<InstanceIdResult>, OnFailureListener {
+public class NoteUtil implements OnCompleteListener<String>, OnFailureListener {
     private final static String TAG = NoteUtil.class.getSimpleName();
 
-    private Context context;
-
-    public NoteUtil(Context context) {
-        this.context = context;
-        Task<InstanceIdResult> task = FirebaseInstanceId.getInstance().getInstanceId();
+    public NoteUtil() {
+        Task<String> task = FirebaseMessaging.getInstance().getToken();
         task.addOnCompleteListener(this);
         task.addOnFailureListener(this);
     }
 
     @Override
-    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+    public void onComplete(@NonNull Task<String> task) {
         if (!task.isSuccessful()) {
-            Log.w(TAG, "getInstanceId failed", task.getException());
+            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
             return;
         }
-        if (task.getResult() != null) {
 
-            // Get new Instance ID token
-            String token = task.getResult().getToken();
+        // Get new Instance ID token
+        String token = task.getResult();
 
-            // Log token
-            Log.d(TAG, token);
-        }
+        // Log token
+        Log.d(TAG, token);
     }
 
     @Override

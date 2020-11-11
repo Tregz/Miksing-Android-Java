@@ -2,9 +2,11 @@ package com.tregz.miksing.base;
 
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,30 +27,29 @@ import com.google.android.material.snackbar.Snackbar;
 import com.tregz.miksing.R;
 import com.tregz.miksing.home.list.tube.TubeListFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class BaseActivity extends AppCompatActivity {
     protected static String TAG = BaseActivity.class.getSimpleName();
     protected static int PRIMARY;
     protected final int HOST = R.id.nav_host_fragment;
     protected final int TUBE = R.id.nav_tube_fragment;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        super.onCreate(savedInstanceState);
+    @SuppressWarnings("DEPRECATION")
+    protected void fullscreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final WindowInsetsController controller = getWindow().getInsetsController();
+            if (controller != null) controller.hide(WindowInsets.Type.navigationBars());
+        } else getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override
+    @SuppressWarnings("DEPRECATION")
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-    }
-
-    public ViewGroup getViewGroup() {
-        return getWindow().getDecorView().findViewById(android.R.id.content);
+        if (hasFocus && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            int navigator = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            int immersive = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            getWindow().getDecorView().setSystemUiVisibility(navigator | immersive);
+        }
     }
 
     public FragmentManager manager(int host) {

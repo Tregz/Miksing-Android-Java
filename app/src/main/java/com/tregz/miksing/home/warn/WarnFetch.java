@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,7 +98,7 @@ public class WarnFetch extends BaseWarning {
 
     private void getData(final WebView webView, final boolean isList) {
         final String script = "(function(){return data;})()"; // try to get data from youtube api
-        new android.os.Handler().postDelayed(new Runnable() {
+        new android.os.Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             public void run() {
                 webView.evaluateJavascript(script, new ValueCallback<String>() {
                     @Override
