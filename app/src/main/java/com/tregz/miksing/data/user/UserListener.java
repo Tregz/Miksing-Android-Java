@@ -44,10 +44,10 @@ public class UserListener implements MaybeObserver<User>,
         ValueEventListener {
     private final String TAG = UserListener.class.getSimpleName();
 
-    private Context context;
+    private final Context context;
     private DatabaseReference table;
     private User user;
-    private String userId;
+    private final String userId;
     private UserAccess access;
 
     public UserListener(Context context, String userId) {
@@ -68,6 +68,7 @@ public class UserListener implements MaybeObserver<User>,
         subscribe(DataReference.getInstance(context).accessUser().wipe());
 
         // Create lists of positionable items for the pager, if they do not exist
+        Log.d(TAG, "Should get user data");
         new TubeCreate(context, userId, null);
         new TubeCreate(context, UNDEFINED, null);
 
