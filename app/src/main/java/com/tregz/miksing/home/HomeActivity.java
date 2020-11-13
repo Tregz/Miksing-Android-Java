@@ -276,16 +276,14 @@ public class HomeActivity extends BaseActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (!back()) navigation.toggle(GravityCompat.START);
-                return true;
-            case R.id.login:
-                if (navigation != null) navigation.toggle(GravityCompat.END);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            if (!back()) navigation.toggle(GravityCompat.START);
+            return true;
+        } else if (id == R.id.login) {
+            if (navigation != null) navigation.toggle(GravityCompat.END);
+            return true;
+        } else return super.onOptionsItemSelected(item);
     }
 
     @Override
