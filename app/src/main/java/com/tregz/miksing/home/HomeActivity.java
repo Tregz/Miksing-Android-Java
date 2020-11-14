@@ -7,13 +7,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.tregz.miksing.R;
 import com.tregz.miksing.arch.auth.AuthUtil;
@@ -221,14 +217,8 @@ public class HomeActivity extends BaseActivity implements
 
         // Start observing user's cloud data or default user's playlists
         FirebaseUser firebaseUser = AuthUtil.user();
-        if (firebaseUser != null) new UserListener(this, firebaseUser.getUid());
-        else new UserListener(HomeActivity.this, PrefShared.defaultUser);
-        /* FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                new UserListener(HomeActivity.this, PrefShared.defaultUser);
-            }
-        }); */
+        String fUid = firebaseUser != null ? firebaseUser.getUid() : PrefShared.defaultUser;
+        new UserListener(this, fUid);
     }
 
     public void load(String id) {
