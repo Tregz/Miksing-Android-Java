@@ -24,14 +24,12 @@ import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListPosition;
-import com.tregz.miksing.home.list.ListView;
 import com.tregz.miksing.home.list.song.SongListFragment;
 
 import java.util.Collections;
 import java.util.List;
 
-public class TubeListFragment extends ListFragment implements Observer<List<UserTubeRelation>>,
-        ListView {
+public class TubeListFragment extends ListFragment implements Observer<List<UserTubeRelation>> {
     private final String TAG = TubeListFragment.class.getSimpleName();
 
     private List<UserTubeRelation> relations;

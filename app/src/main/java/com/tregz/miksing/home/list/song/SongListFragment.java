@@ -23,13 +23,17 @@ import com.tregz.miksing.home.HomeActivity;
 import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.ListGesture;
 import com.tregz.miksing.home.list.ListPosition;
-import com.tregz.miksing.home.list.ListView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class SongListFragment extends ListFragment implements ListView,
+/**
+ * Fragment listing songs
+ *
+ * @author Jerome M Robbins
+ */
+public abstract class SongListFragment extends ListFragment implements
         Observer<List<TubeSongRelation>> {
     //private final String TAG = SongListFragment.class.getSimpleName();
 
@@ -55,7 +59,7 @@ public abstract class SongListFragment extends ListFragment implements ListView,
         adapter = new SongListAdapter(onItem);
         recycler.setAdapter(adapter);
         new ItemTouchHelper(new ListGesture(this)).attachToRecyclerView(recycler);
-        live();
+        onTubeSongRelationObserve();
     }
 
     @Override
@@ -97,7 +101,7 @@ public abstract class SongListFragment extends ListFragment implements ListView,
         }
     }
 
-    public void live() {
+    protected void onTubeSongRelationObserve() {
         if (getView() != null && mediator != null) {
             if (mediator.hasObservers()) mediator.removeObserver(this);
             mediator.observe(getViewLifecycleOwner(), this);

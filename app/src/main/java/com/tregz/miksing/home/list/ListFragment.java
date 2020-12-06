@@ -18,7 +18,7 @@ import com.tregz.miksing.databinding.FragmentListBinding;
 
 import static android.telephony.TelephonyManager.PHONE_TYPE_NONE;
 
-public abstract class ListFragment extends BaseFragment {
+public abstract class ListFragment extends BaseFragment implements ListListener {
     //private final String TAG = ListFragment.class.getSimpleName();
 
     protected RecyclerView recycler;

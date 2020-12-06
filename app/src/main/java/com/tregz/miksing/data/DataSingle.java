@@ -26,11 +26,13 @@ public abstract class DataSingle<T> implements SingleObserver<T> {
 
     @Override
     public void onSuccess(T t) {
-        Log.d(TAG, t.toString());
+        // Log.d(TAG, t.toString());
+        // do nothing
     }
 
     @Override
     public void onError(Throwable e) {
+        Log.e(TAG, e.getLocalizedMessage());
         e.printStackTrace();
     }
 

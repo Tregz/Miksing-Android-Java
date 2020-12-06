@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.tregz.miksing.BuildConfig;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.data.DataUpdate;
@@ -25,6 +26,11 @@ import java.util.List;
 
 import static com.tregz.miksing.data.Data.UNDEFINED;
 
+/**
+ * Fragment listing prepared songs
+ *
+ * @author Jerome M Robbins
+ */
 public class SongPlanFragment extends SongListFragment {
     private final String TAG = SongPlanFragment.class.getSimpleName();
 
@@ -46,6 +52,13 @@ public class SongPlanFragment extends SongListFragment {
     }
 
     @Override
+    public void onChanged(List<TubeSongRelation> relations) {
+        super.onChanged(relations);
+        boolean guidance = relations == null || relations.isEmpty();
+        binding.txGuidance.setVisibility(guidance ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void onGestureClear(final int destination) {
         boolean editable = relation != null && AuthUtil.isUser(relation.user.getId());
         String tubeId = editable ? relation.tube.getId() : null;
@@ -62,16 +75,11 @@ public class SongPlanFragment extends SongListFragment {
     }
 
     @Override
-    public void live() {
-        super.live();
-        mediator.addSource(access().whereTubeLive(getPrepareListTubeId()), this);
-    }
-
-    @Override
-    public void onChanged(List<TubeSongRelation> relations) {
-        super.onChanged(relations);
-        boolean guidance = relations == null || relations.isEmpty();
-        binding.txGuidance.setVisibility(guidance ? View.VISIBLE : View.GONE);
+    public void onTubeSongRelationObserve() {
+        super.onTubeSongRelationObserve();
+        String id = getPrepareListTubeId();
+        if (BuildConfig.DEBUG) Log.d(TAG, "Prepare list id: " + id);
+        mediator.addSource(access().whereTubeLive(id), this);
     }
 
     public void save(String name, boolean paste) {

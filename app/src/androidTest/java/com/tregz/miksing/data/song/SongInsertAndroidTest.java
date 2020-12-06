@@ -39,7 +39,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class SongInsertAndroidTest {
     private final String TAG = SongInsertAndroidTest.class.getSimpleName();
 
-    private CountDownLatch latch = new CountDownLatch(1);
+    private final CountDownLatch latch = new CountDownLatch(1);
     private DataReference db;
     private SongAccess access;
     private Song song;
@@ -61,7 +61,7 @@ public class SongInsertAndroidTest {
     }
 
     @After
-    public void closeDb() throws IOException {
+    public void closeDb() {
         if (db != null) db.close();
     }
 
@@ -73,7 +73,7 @@ public class SongInsertAndroidTest {
         }
     }
 
-    private MaybeObserver<Song> maybeObserver = new MaybeObserver<Song>() {
+    private final MaybeObserver<Song> maybeObserver = new MaybeObserver<Song>() {
         @Override
         public void onComplete() {
             // do nothing
@@ -92,7 +92,7 @@ public class SongInsertAndroidTest {
         }
     };
 
-    private SingleObserver<List<Long>> singleObserver = new SingleObserver<List<Long>>() {
+    private final SingleObserver<List<Long>> singleObserver = new SingleObserver<List<Long>>() {
         @Override
         public void onError(Throwable e) {
             e.printStackTrace();
@@ -107,7 +107,7 @@ public class SongInsertAndroidTest {
         }
     };
 
-    private ValueEventListener eventListener = new ValueEventListener() {
+    private final ValueEventListener eventListener = new ValueEventListener() {
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
             // do nothing

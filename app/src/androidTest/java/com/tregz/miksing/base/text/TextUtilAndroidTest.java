@@ -12,7 +12,7 @@ import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class TextUtilAndroidTest {
-    private String TAG = TextUtilAndroidTest.class.getSimpleName();
+    private final String TAG = TextUtilAndroidTest.class.getSimpleName();
 
 
     @Test

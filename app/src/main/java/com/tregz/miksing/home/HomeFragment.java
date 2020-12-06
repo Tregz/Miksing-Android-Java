@@ -59,9 +59,9 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         binding.pager.setCurrentItem(1);
         SongPlanFragment.relation = relation;
         ListFragment main = page(HomePager.HomeTab.EVERYTHING.ordinal());
-        if (main instanceof SongMainFragment) ((SongMainFragment)main).live();
+        if (main instanceof SongMainFragment) ((SongMainFragment)main).onTubeSongRelationObserve();
         ListFragment plan = page(HomePager.HomeTab.PREPARE.ordinal());
-        if (plan instanceof SongPlanFragment) ((SongPlanFragment)plan).live();
+        if (plan instanceof SongPlanFragment) ((SongPlanFragment)plan).onTubeSongRelationObserve();
     }
 
     void save(String name, boolean paste) {

@@ -9,9 +9,9 @@ import com.tregz.miksing.base.list.ListSorted;
 public class ListGesture extends ItemTouchHelper.Callback {
     private String TAG = ListGesture.class.getSimpleName();
 
-    private ListView view;
+    private ListListener view;
 
-    public ListGesture(ListView view) {
+    public ListGesture(ListListener view) {
         this.view = view;
     }
 

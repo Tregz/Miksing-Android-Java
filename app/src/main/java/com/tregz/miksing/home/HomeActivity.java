@@ -21,6 +21,7 @@ import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.Tube;
+import com.tregz.miksing.data.tube.TubeCreate;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.user.UserListener;
 import com.tregz.miksing.data.user.tube.UserTubeDelete;
@@ -66,6 +67,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.tregz.miksing.arch.auth.AuthLogin.SIGN_IN;
+import static com.tregz.miksing.data.Data.UNDEFINED;
 
 public class HomeActivity extends BaseActivity implements
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout>,
@@ -118,6 +120,10 @@ public class HomeActivity extends BaseActivity implements
         fullscreen();
 
         new NoteUtil();
+
+        // init the prepare list
+        new TubeCreate(this, UNDEFINED, null);
+
         if (binding.contentHome != null) {
             // Top menu
             Toolbar toolbar = binding.contentHome.appBar.toolbar;

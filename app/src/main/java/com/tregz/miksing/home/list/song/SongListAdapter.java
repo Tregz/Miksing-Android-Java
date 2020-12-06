@@ -23,8 +23,8 @@ import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 public class SongListAdapter extends RecyclerView.Adapter<ListHolder> {
     public final String TAG = SongListAdapter.class.getSimpleName();
 
-    private SongListFragment.OnItem listener;
-    private SortedListAdapterCallback<TubeSongRelation> echo = new SongListSorted<>(this);
+    private final SongListFragment.OnItem listener;
+    private final SortedListAdapterCallback<TubeSongRelation> echo = new SongListSorted<>(this);
     public SortedList<TubeSongRelation> items = new SortedList<>(TubeSongRelation.class, echo);
 
     SongListAdapter(SongListFragment.OnItem listener) {

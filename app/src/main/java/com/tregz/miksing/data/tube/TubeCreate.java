@@ -11,12 +11,12 @@ import com.tregz.miksing.data.DataReference;
 import java.util.Date;
 
 public class TubeCreate extends DataMaybe<Tube> implements TubeInsert.OnSave {
-    private final String TAG = TubeCreate.class.getSimpleName();
+    //private final String TAG = TubeCreate.class.getSimpleName();
 
-    private Context context;
+    private final Context context;
     private TubeAccess access;
-    private String id;
-    private String name;
+    private final String id;
+    private final String name;
 
     public TubeCreate(
             @NonNull Context context,
