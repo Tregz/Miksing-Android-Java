@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.databinding.FragmentListBinding;
 
@@ -22,9 +21,9 @@ import static android.telephony.TelephonyManager.PHONE_TYPE_NONE;
 public abstract class ListFragment extends BaseFragment {
     //private final String TAG = ListFragment.class.getSimpleName();
 
+    protected RecyclerView recycler;
     protected FragmentListBinding binding;
     protected RecyclerView.Adapter<?> adapter;
-    protected RecyclerView recycler;
 
     @Nullable
     @Override
@@ -45,9 +44,9 @@ public abstract class ListFragment extends BaseFragment {
         else recycler.setLayoutManager(new GridLayoutManager(getContext(), columns()));
     }
 
-    abstract public void sort();
-
     abstract public void search(String query);
+
+    abstract public void sort();
 
     private int columns() {
         if (getContext() != null) {
