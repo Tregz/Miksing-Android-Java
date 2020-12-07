@@ -29,7 +29,9 @@ public class SongMainFragment extends SongListFragment {
 
     @Override
     public void onGestureClear(final int destination) {
-        onGestureClear(new ListPosition(User.TABLE, AuthUtil.userId(), Song.TABLE), destination);
+        String userId = AuthUtil.userId();
+        String nodeId = userId != null ? userId : "Q0ueoA9u7idnE10fqLk8Cr6FXHK2";
+        onGestureClear(new ListPosition(User.TABLE, nodeId, Song.TABLE), destination);
     }
 
     @Override
@@ -38,11 +40,8 @@ public class SongMainFragment extends SongListFragment {
             final TubeSong join = ((SongListAdapter) adapter).items.get(position).join;
             UserTubeRelation relation = SongPlanFragment.relation;
             String newTubeId = relation != null ? relation.tube.getId() : UNDEFINED;
-
             if (BuildConfig.DEBUG) Log.d(TAG, "New tube id: " + newTubeId);
-
             new TubeSongWrite(getContext(), new TubeSong(newTubeId, join.getSongId()));
-
             adapter.notifyItemRemoved(position);
         } /* else if (direction == ItemTouchHelper.START || direction == ItemTouchHelper.LEFT) {
             TODO
@@ -55,10 +54,7 @@ public class SongMainFragment extends SongListFragment {
         String exclude = SongPlanFragment.getPrepareListTubeId();
         if (BuildConfig.DEBUG) Log.d(TAG, "Observe TubeSongRelation exclude: " + exclude);
         String uid = PrefShared.getInstance(getContext()).getUid();
-        // TODO validate that uid is saved on cloud
-        // String include = uid != null ? uid : "-M0A1B6LQlpJpgdbkYyx";
-        String include = "-M0A1B6LQlpJpgdbkYyx";
-        Log.d(TAG, "Observe TubeSongRelation dubug? " + (BuildConfig.DEBUG));
+        String include = uid != null ? uid : "-M0A1B6LQlpJpgdbkYyx";
         if (BuildConfig.DEBUG) Log.d(TAG, "Observe TubeSongRelation include: " + include);
         mediator.addSource(access().whereTubeLive(include, exclude), this);
     }

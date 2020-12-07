@@ -1,6 +1,7 @@
 package com.tregz.miksing.data.tube;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -9,6 +10,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tregz.miksing.BuildConfig;
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
@@ -27,10 +29,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
         ValueEventListener {
-    //private String TAG = TubeListener.class.getSimpleName();
+    private final String TAG = TubeListener.class.getSimpleName();
 
-    private Context context;
-    private UserTube join;
+    private final Context context;
+    private final UserTube join;
     private DatabaseReference table;
 
     private Tube tube;
@@ -90,6 +92,7 @@ public class TubeListener implements MaybeObserver<Tube>, TubeInsert.OnSave,
     public void saved() {
         if (join != null) {
             new UserTubeWrite(context, join);
+            if (BuildConfig.DEBUG) Log.d(TAG, "Tube saved: " + join.getTubeId());
             new TubeSongListener(context, join.getTubeId());
         }
     }

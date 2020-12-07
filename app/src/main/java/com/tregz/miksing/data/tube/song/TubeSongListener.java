@@ -10,6 +10,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.tregz.miksing.BuildConfig;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.data.DataListener;
 import com.tregz.miksing.data.DataReference;
@@ -19,10 +20,10 @@ import com.tregz.miksing.data.song.SongListener;
 import com.tregz.miksing.data.tube.Tube;
 
 public class TubeSongListener extends DataListener {
-    private String TAG = TubeSongListener.class.getSimpleName();
+    private final String TAG = TubeSongListener.class.getSimpleName();
 
-    private Context context;
-    private String tubeId;
+    private final Context context;
+    private final String tubeId;
     private TubeSongAccess access;
 
     public TubeSongListener(Context context, String tubeId) {
@@ -39,10 +40,12 @@ public class TubeSongListener extends DataListener {
 
     @Override
     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
-        if (AuthUtil.logged()) {
+        /* if (AuthUtil.logged()) {
             TubeSong join = join(snapshot);
+            Log.d(TAG, "onChildAdded?");
             if (join != null) new TubeSongWrite(context, join);
-        } else new SongListener(context, snapshot.getKey(), join(snapshot));
+        } else new SongListener(context, snapshot.getKey(), join(snapshot)); */
+        new SongListener(context, snapshot.getKey(), join(snapshot));
     }
 
     @Override
@@ -52,12 +55,12 @@ public class TubeSongListener extends DataListener {
 
     @Override
     public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String s) {
-        Log.d(TAG, "onChildMoved");
+        if (BuildConfig.DEBUG) Log.d(TAG, "onChildMoved");
     }
 
     @Override
     public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-        Log.d(TAG, "onChildRemoved: " + snapshot.getKey());
+        if (BuildConfig.DEBUG) Log.d(TAG, "onChildRemoved: " + snapshot.getKey());
         new DataUpdate(access().delete(snapshot.getKey(), tubeId));
     }
 

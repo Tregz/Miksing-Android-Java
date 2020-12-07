@@ -11,9 +11,9 @@ import com.tregz.miksing.data.tube.song.TubeSongWrite;
 class SongWrite extends DataMaybe<Song> {
 
     private SongAccess access;
-    private Context context;
-    private TubeSong join;
-    private Song song;
+    private final Context context;
+    private final TubeSong join;
+    private final Song song;
 
     SongWrite(Context context, Song song, TubeSong join) {
         this.context = context;

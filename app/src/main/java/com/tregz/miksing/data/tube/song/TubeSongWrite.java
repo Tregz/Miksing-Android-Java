@@ -25,7 +25,8 @@ public class TubeSongWrite extends DataMaybe<TubeSong> {
     public void onComplete() {
         if (BuildConfig.DEBUG) Log.d(TAG, "onComplete: " + join.getTubeId());
         // TODO FOREIGN KEY constraint failed (code 787 SQLITE_CONSTRAINT_FOREIGNKEY)
-        new TubeSongInsert(context, access().insert(join));
+        Log.d(TAG, "Insert TubeSong tubeId: " + join.getTubeId());
+        new TubeSongInsert(context, access().insert(join), join.getTubeId());
     }
 
     @Override

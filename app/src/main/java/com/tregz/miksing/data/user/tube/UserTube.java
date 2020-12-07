@@ -17,9 +17,9 @@ import com.tregz.miksing.data.user.User;
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = UserTube.TABLE, foreignKeys = {
-        /* @ForeignKey(entity = User.class,
+        @ForeignKey(entity = User.class,
                 onDelete = CASCADE, onUpdate = CASCADE,
-                childColumns = User.TABLE, parentColumns = DataNotation.PK), */
+                childColumns = User.TABLE, parentColumns = DataNotation.ID),
         @ForeignKey(entity = Tube.class,
                 onDelete = CASCADE, onUpdate = CASCADE,
                 childColumns = Tube.TABLE, parentColumns = DataNotation.ID)

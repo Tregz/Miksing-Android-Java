@@ -22,6 +22,7 @@ import com.tregz.miksing.arch.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.song.SongCount;
 import com.tregz.miksing.data.song.SongDelete;
+import com.tregz.miksing.data.user.UserDelete;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 
 public class HomeNavigation implements
@@ -31,8 +32,8 @@ public class HomeNavigation implements
         OnCompleteListener<Void>, SongCount.Total {
     private final String TAG = HomeNavigation.class.getSimpleName();
 
-    private ActivityHomeBinding binding;
-    private HomeView view;
+    private final ActivityHomeBinding binding;
+    private final HomeView view;
     private String login, logout;
     private boolean initialized = false;
 
@@ -57,6 +58,8 @@ public class HomeNavigation implements
             Context context = binding.navStart.getContext();
             PrefShared.getInstance(context).setUsername("");
             PrefShared.getInstance(context).setEmail("");
+            new SongDelete(context).wipe();
+            new UserDelete(context).wipe();
             update();
         }
     }

@@ -62,6 +62,7 @@ public class SongPlanFragment extends SongListFragment {
     public void onGestureClear(final int destination) {
         boolean editable = relation != null && AuthUtil.isUser(relation.user.getId());
         String tubeId = editable ? relation.tube.getId() : null;
+        if (BuildConfig.DEBUG) Log.d(TAG, "tubeId: " + tubeId);
         onGestureClear(new ListPosition(Tube.TABLE, tubeId, Song.TABLE), destination);
     }
 

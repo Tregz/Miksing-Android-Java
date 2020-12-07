@@ -20,10 +20,13 @@ import com.tregz.miksing.base.foot.FootScroll;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
+import com.tregz.miksing.data.song.SongDelete;
 import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.TubeCreate;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
+import com.tregz.miksing.data.user.UserDelete;
 import com.tregz.miksing.data.user.UserListener;
+import com.tregz.miksing.data.user.song.UserSongListener;
 import com.tregz.miksing.data.user.tube.UserTubeDelete;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
@@ -120,9 +123,6 @@ public class HomeActivity extends BaseActivity implements
         fullscreen();
 
         new NoteUtil();
-
-        // init the prepare list
-        new TubeCreate(this, UNDEFINED, null);
 
         if (binding.contentHome != null) {
             // Top menu
@@ -222,9 +222,9 @@ public class HomeActivity extends BaseActivity implements
         }
 
         // Start observing user's cloud data or default user's playlists
-        FirebaseUser firebaseUser = AuthUtil.user();
-        String fUid = firebaseUser != null ? firebaseUser.getUid() : PrefShared.defaultUser;
-        new UserListener(this, fUid);
+        AuthUtil.onUserLogin(this);
+        //new UserListener(this, fUid);
+        //new TubeCreate(this, UNDEFINED, null); // init the prepare list
     }
 
     public void load(String id) {

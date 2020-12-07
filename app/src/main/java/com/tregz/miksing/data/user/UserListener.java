@@ -18,6 +18,7 @@ import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.DataNotation;
 import com.tregz.miksing.data.song.SongListener;
+import com.tregz.miksing.data.tube.Tube;
 import com.tregz.miksing.data.tube.TubeCreate;
 import com.tregz.miksing.data.tube.song.TubeSongQuery;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
@@ -64,13 +65,11 @@ public class UserListener implements MaybeObserver<User>,
     @Override
     public void onComplete() {
         // Remove previous data
-        subscribe(DataReference.getInstance(context).accessTube().wipe());
-        subscribe(DataReference.getInstance(context).accessUser().wipe());
+        //subscribe(DataReference.getInstance(context).accessTube().wipe());
+        //subscribe(DataReference.getInstance(context).accessUser().wipe());
 
         // Create lists of positionable items for the pager, if they do not exist
         Log.d(TAG, "Should get user data");
-        new TubeCreate(context, userId, null);
-        new TubeCreate(context, UNDEFINED, null);
 
         if (user != null) new UserInsert(context, user);
         sync();
@@ -146,8 +145,11 @@ public class UserListener implements MaybeObserver<User>,
     }
 
     private void sync() {
-        if (AuthUtil.logged()) new SongListener(context, userId);
-        else new UserTubeListener(context, userId);
+        Log.d(TAG, "Should sync logged user: " + AuthUtil.logged());
+        //new TubeCreate(context, UNDEFINED, null); // prepare list
+        //if (AuthUtil.logged()) new SongListener(context, userId);
+        //else
+            new UserTubeListener(context, userId);
     }
 
     private DatabaseReference table() {

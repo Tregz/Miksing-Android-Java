@@ -3,22 +3,28 @@ package com.tregz.miksing.data.song;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.content.Context;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tregz.miksing.BuildConfig;
 import com.tregz.miksing.data.DataListener;
 import com.tregz.miksing.data.DataNotation;
+import com.tregz.miksing.data.DataReference;
+import com.tregz.miksing.data.tube.Tube;
+import com.tregz.miksing.data.tube.TubeCreate;
 import com.tregz.miksing.data.tube.song.TubeSong;
+import com.tregz.miksing.data.tube.song.TubeSongInsert;
 import com.tregz.miksing.data.user.User;
 
 import java.util.Date;
 
-public class SongListener extends DataListener implements ValueEventListener {
-    //private String TAG = SongListener.class.getSimpleName();
+public class SongListener extends DataListener implements ValueEventListener, TubeCreate.OnUserSongListener {
+    private String TAG = SongListener.class.getSimpleName();
 
-    private Context context;
+    private final Context context;
     private TubeSong join;
     private String userId;
 
@@ -34,15 +40,24 @@ public class SongListener extends DataListener implements ValueEventListener {
     public SongListener(Context context, String userId) {
         this.context = context;
         this.userId = userId;
+
+        Tube main = new Tube(userId, new Date(), null);
+        new TubeCreate(context,  userId, null, main, this); // main list
+    }
+
+    @Override
+    public void onUserSongListener() {
+        Log.d(TAG, "onUserSongListener");
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(User.TABLE);
         userRef.child(userId).child(Song.TABLE).addChildEventListener(this);
-        new SongCount(context, userRef.child(userId).child(Song.TABLE), userId);
+        //new SongCount(context, userRef.child(userId).child(Song.TABLE), userId);
     }
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         Song song = songFrom(snapshot);
-        if (song != null && join != null) new SongWrite(context, song, join);
+        TubeSong join = this.join != null ? this.join : new TubeSong(userId, song.getId());
+        if (song != null) new SongWrite(context, song, join);
     }
 
     private Song songFrom(@NonNull DataSnapshot snapshot) {
@@ -62,15 +77,17 @@ public class SongListener extends DataListener implements ValueEventListener {
     @Override
     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String s) {
         if (snapshot.getKey() != null && userId != null) {
+            if (BuildConfig.DEBUG) Log.d(TAG, "onChildAdded");
             join = new TubeSong(userId, snapshot.getKey());
-            DatabaseReference songRef = FirebaseDatabase.getInstance().getReference(Song.TABLE);
-            songRef.child(snapshot.getKey()).addValueEventListener(this);
+            new TubeSongInsert(context, DataReference.getInstance(context).accessTubeSong().insert(join));
+            //DatabaseReference songRef = FirebaseDatabase.getInstance().getReference(Song.TABLE);
+            //songRef.child(snapshot.getKey()).addValueEventListener(this);
         }
     }
 
     @Override
     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        // TODO
+        if (BuildConfig.DEBUG) Log.d(TAG, "onChildAdded");
     }
 
     @Override

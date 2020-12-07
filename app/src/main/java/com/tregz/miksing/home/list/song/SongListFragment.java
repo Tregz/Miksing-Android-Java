@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
+import com.tregz.miksing.BuildConfig;
 import com.tregz.miksing.R;
 import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.data.DataReference;
@@ -35,7 +37,7 @@ import java.util.List;
  */
 public abstract class SongListFragment extends ListFragment implements
         Observer<List<TubeSongRelation>> {
-    //private final String TAG = SongListFragment.class.getSimpleName();
+    private final String TAG = SongListFragment.class.getSimpleName();
 
     protected MediatorLiveData<List<TubeSongRelation>> mediator = new MediatorLiveData<>();
     protected List<TubeSongRelation> relations;
@@ -101,13 +103,6 @@ public abstract class SongListFragment extends ListFragment implements
         }
     }
 
-    protected void onTubeSongRelationObserve() {
-        if (getView() != null && mediator != null) {
-            if (mediator.hasObservers()) mediator.removeObserver(this);
-            mediator.observe(getViewLifecycleOwner(), this);
-        }
-    }
-
     protected void onGestureClear(@NonNull final ListPosition list, final int destination) {
         if (destination >= 0) this.destination = destination; // retrieve scroll position on paging
         // Notify the recycler of position changes after gesture event and save new positions
@@ -120,15 +115,25 @@ public abstract class SongListFragment extends ListFragment implements
                 if (!list.editable()) new DataUpdate(access().update(relation.join));
             }
         }
+        if (BuildConfig.DEBUG) Log.d(TAG, "onGestureClear changed: " + changed);
         if (changed) {
+
             // Replace the sorted list with updated data, before the auto update for each position
             ((SongListAdapter) adapter).items.replaceAll(relations);
+
             if (!list.editable()) new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
                     toast(AuthUtil.logged() ? R.string.to_save_paste : R.string.to_save_login);
                 }
             });
+        }
+    }
+
+    protected void onTubeSongRelationObserve() {
+        if (getView() != null && mediator != null) {
+            if (mediator.hasObservers()) mediator.removeObserver(this);
+            mediator.observe(getViewLifecycleOwner(), this);
         }
     }
 
