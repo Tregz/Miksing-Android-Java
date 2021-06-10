@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -74,20 +73,12 @@ public class SongEditFragment extends BaseFragment implements AdapterView.OnItem
         super.onViewCreated(view, savedInstanceState);
 
         // TODO cbDirty.setChecked();
-        binding.cbDirty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                dirty = isChecked;
-            }
-        });
+        binding.cbDirty.setOnCheckedChangeListener((buttonView, isChecked) -> dirty = isChecked);
 
-        binding.etArtist.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String sequence = ((EditText)view).getText().toString();
-                if (!sequence.isEmpty()) {
-                    // TODO validate
-                }
+        binding.etArtist.setOnFocusChangeListener((view1, b) -> {
+            String sequence = ((EditText) view1).getText().toString();
+            if (!sequence.isEmpty()) {
+                // TODO validate
             }
         });
 
@@ -102,20 +93,12 @@ public class SongEditFragment extends BaseFragment implements AdapterView.OnItem
             }
         });
 
-        binding.etReleaseDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog();
-            }
-        });
+        binding.etReleaseDate.setOnClickListener(v -> dialog());
 
-        binding.etTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String sequence = ((EditText)view).getText().toString();
-                if (!sequence.isEmpty()) {
-                    // TODO validate
-                }
+        binding.etTitle.setOnFocusChangeListener((view12, b) -> {
+            String sequence = ((EditText) view12).getText().toString();
+            if (!sequence.isEmpty()) {
+                // TODO validate
             }
         });
 

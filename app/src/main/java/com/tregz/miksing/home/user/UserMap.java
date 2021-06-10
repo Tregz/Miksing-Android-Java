@@ -21,12 +21,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.tregz.miksing.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.List;
 
 public class UserMap extends SupportMapFragment implements OnMapReadyCallback,
         OnSuccessListener<Location> {
-    private String TAG = UserMap.class.getSimpleName();
+    private final String TAG = UserMap.class.getSimpleName();
 
     private Geocoder geocoder;
     private GoogleMap map;
@@ -39,7 +41,7 @@ public class UserMap extends SupportMapFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NotNull GoogleMap googleMap) {
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setPadding(0, 300, 0, 0);

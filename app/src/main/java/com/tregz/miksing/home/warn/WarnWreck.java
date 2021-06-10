@@ -2,7 +2,6 @@ package com.tregz.miksing.home.warn;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,12 +50,7 @@ public class WarnWreck extends BaseWarning {
                 AppCompatTextView label = view.findViewById(R.id.tv_title);
                 label.setText(tube.getName(getContext()));
                 alert.setView(view);
-                alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        listener.onWreck(tube);
-                    }
-                });
+                alert.setPositiveButton(R.string.ok, (dialog, which) -> listener.onWreck(tube));
             }
             alert.setNegativeButton(R.string.cancel, null);
             return alert.create();

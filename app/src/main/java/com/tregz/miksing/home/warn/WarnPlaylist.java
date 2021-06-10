@@ -45,16 +45,11 @@ public class WarnPlaylist extends BaseWarning {
             final ListView listing = view.findViewById(R.id.list_view);
             if (getArguments() != null) {
                 List<Song> list = getArguments().getParcelableArrayList(PLAYLIST);
-                listing.setAdapter(new ListArray(getContext(), new ArrayList<Song>(list)));
+                listing.setAdapter(new ListArray(getContext(), new ArrayList<>(list)));
             }
             alert.setView(view);
             alert.setNegativeButton(R.string.cancel, null);
-            alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.d(TAG, "isList?");
-                }
-            });
+            alert.setPositiveButton(R.string.ok, (dialog, which) -> Log.d(TAG, "isList?"));
             return alert.create();
         }
         return super.onCreateDialog(savedInstanceState);

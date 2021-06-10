@@ -2,13 +2,11 @@ package com.tregz.miksing.home.warn;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
@@ -67,18 +65,15 @@ public class WarnFetch extends BaseWarning {
             alert.setView(view);
 
             alert.setNegativeButton(R.string.cancel, null);
-            alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (edit.getText() == null || edit.getText().toString().isEmpty())
-                        toast(R.string.request_link_must_not_null);
-                    else {
-                        String link = edit.getText().toString();
-                        if (link.contains("youtu")) {
-                            boolean list = link.contains("list=");
-                            request(listener.getWebView(), getId(link, list), list);
-                        } else toast(R.string.request_link_not_valid);
-                    }
+            alert.setPositiveButton(R.string.ok, (dialog, which) -> {
+                if (edit.getText() == null || edit.getText().toString().isEmpty())
+                    toast(R.string.request_link_must_not_null);
+                else {
+                    String link = edit.getText().toString();
+                    if (link.contains("youtu")) {
+                        boolean list = link.contains("list=");
+                        request(listener.getWebView(), getId(link, list), list);
+                    } else toast(R.string.request_link_not_valid);
                 }
             });
             return alert.create();
@@ -98,21 +93,15 @@ public class WarnFetch extends BaseWarning {
 
     private void getData(final WebView webView, final boolean isList) {
         final String script = "(function(){return data;})()"; // try to get data from youtube api
-        new android.os.Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            public void run() {
-                webView.evaluateJavascript(script, new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Log.d(TAG, value);
-                        if (!TextUtil.stripQuotes(value).equals("null")) {
-                            if (TextUtil.stripQuotes(value).equals("error")) {
-                                Log.e(TAG, "Error!");
-                            } else readYouTubeData(value, isList);
-                        } else getData(webView, isList);
-                    }
-                });
-            }
-        }, 1000); // if data not yet available, delayed loop to try again
+        new android.os.Handler(Looper.getMainLooper()).postDelayed(() ->
+                webView.evaluateJavascript(script, value -> {
+            Log.d(TAG, value);
+            if (!TextUtil.stripQuotes(value).equals("null")) {
+                if (TextUtil.stripQuotes(value).equals("error")) {
+                    Log.e(TAG, "Error!");
+                } else readYouTubeData(value, isList);
+            } else getData(webView, isList);
+        }), 1000); // if data not yet available, delayed loop to try again
     }
 
     private void readYouTubeData(String data, boolean isList) {

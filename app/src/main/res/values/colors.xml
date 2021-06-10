@@ -21,4 +21,7 @@
     <color name="secondaryText">#ffddee</color>
     <color name="secondaryPageLight">#ffe9f9</color>
     <color name="secondaryTextDark">#330033</color>
+
+    <color name="test1">#009999</color>
+    <color name="test2">#CC0066</color>
 </resources>

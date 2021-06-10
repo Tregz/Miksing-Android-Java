@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,31 +36,22 @@ public class UserFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    v.setSelected(!v.isSelected());
-                    binding.editor.setVisibility(v.isSelected() ? VISIBLE : GONE);
-            }
+        binding.profile.setOnClickListener(v -> {
+                v.setSelected(!v.isSelected());
+                binding.editor.setVisibility(v.isSelected() ? VISIBLE : GONE);
         });
-        binding.myLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserMap map = map();
-                if (map != null) map.fromLastLocation();
-            }
+        binding.myLocation.setOnClickListener(v -> {
+            UserMap map = map();
+            if (map != null) map.fromLastLocation();
         });
         update();
         //final EditText home = view.findViewById(R.id.user_home);
-        binding.saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (binding.userHome.getText() != null) {
-                    String location = binding.userHome.getText().toString();
-                    UserMap map = map();
-                    if (map != null) map.fromLocationName(location);
-                    // TODO save
-                }
+        binding.saveButton.setOnClickListener(v -> {
+            if (binding.userHome.getText() != null) {
+                String location = binding.userHome.getText().toString();
+                UserMap map = map();
+                if (map != null) map.fromLocationName(location);
+                // TODO save
             }
         });
     }

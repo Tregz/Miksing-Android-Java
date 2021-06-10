@@ -2,7 +2,6 @@ package com.tregz.miksing.home.warn;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,12 +31,7 @@ public class WarnClear extends BaseWarning {
             MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(getContext(), style);
             alert.setTitle(R.string.clear);
             alert.setNegativeButton(R.string.cancel, null);
-            alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    listener.onClearPlaylist();
-                }
-            });
+            alert.setPositiveButton(R.string.ok, (dialog, which) -> listener.onClearPlaylist());
             return alert.create();
         }
         return super.onCreateDialog(savedInstanceState);

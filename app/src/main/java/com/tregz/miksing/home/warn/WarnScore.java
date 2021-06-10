@@ -33,11 +33,8 @@ public class WarnScore extends WarnInput {
             if (name == null) {
                 final TextInputEditText edit = setInputLayout(alert);
                 if (edit != null) {
-                    alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (nameNotNull(edit)) listener.onSaveItem(name(edit));
-                        }
+                    alert.setPositiveButton(R.string.ok, (dialog, which) -> {
+                        if (nameNotNull(edit)) listener.onSaveItem(name(edit));
                     });
                 }
             } else {
@@ -47,12 +44,7 @@ public class WarnScore extends WarnInput {
                     AppCompatTextView label = view.findViewById(R.id.tv_title);
                     label.setText(name);
                     alert.setView(view);
-                    alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            listener.onSaveItem(name);
-                        }
-                    });
+                    alert.setPositiveButton(R.string.ok, (dialog, which) -> listener.onSaveItem(name));
                 }
             }
             alert.setNegativeButton(R.string.cancel, null);
