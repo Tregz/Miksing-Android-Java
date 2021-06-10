@@ -57,6 +57,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
+            <com.tregz.miksing.base.mask.MaskFrame
+                android:id="@+id/a_z_wait_frame"
+                android:layout_width="match_parent"
+                app:porterduffxfermode="DST_IN"
+                app:mask="@drawable/sh_mask_vertical"
+                android:layout_height="match_parent">
+
+            <ProgressBar
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/ll_progress_vertical" />
+
+        </com.tregz.miksing.base.mask.MaskFrame>
+
         </FrameLayout>
 
         <FrameLayout

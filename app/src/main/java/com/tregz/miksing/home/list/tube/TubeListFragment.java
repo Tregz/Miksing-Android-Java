@@ -48,12 +48,6 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        access().all().observe(getViewLifecycleOwner(), this);
-    }
-
-    @Override
     public void onChanged(List<UserTubeRelation> relations) {
         if (this.relations == null || this.relations.size() != relations.size()) {
             this.relations = relations;
@@ -72,6 +66,7 @@ public class TubeListFragment extends ListFragment implements Observer<List<User
             recycler.setAdapter(adapter);
             new ItemTouchHelper(new ListGesture(this)).attachToRecyclerView(recycler);
         }
+        access().all().observe(getViewLifecycleOwner(), this);
     }
 
     @Override
