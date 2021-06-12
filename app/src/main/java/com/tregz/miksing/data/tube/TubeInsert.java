@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tregz.miksing.BuildConfig;
-import com.tregz.miksing.arch.auth.AuthUtil;
+import com.tregz.miksing.core.auth.AuthUtil;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataSingle;
 

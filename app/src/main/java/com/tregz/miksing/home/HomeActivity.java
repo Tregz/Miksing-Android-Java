@@ -10,23 +10,17 @@ import android.os.Bundle;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseUser;
 import com.tregz.miksing.R;
-import com.tregz.miksing.arch.auth.AuthUtil;
-import com.tregz.miksing.arch.note.NoteUtil;
-import com.tregz.miksing.arch.pref.PrefShared;
+import com.tregz.miksing.core.auth.AuthUtil;
+import com.tregz.miksing.core.note.NoteUtil;
+import com.tregz.miksing.core.pref.PrefShared;
 import com.tregz.miksing.base.BaseActivity;
 import com.tregz.miksing.base.foot.FootScroll;
 import com.tregz.miksing.core.play.PlayWeb;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.song.SongDelete;
 import com.tregz.miksing.data.tube.Tube;
-import com.tregz.miksing.data.tube.TubeCreate;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
-import com.tregz.miksing.data.user.UserDelete;
-import com.tregz.miksing.data.user.UserListener;
-import com.tregz.miksing.data.user.song.UserSongListener;
 import com.tregz.miksing.data.user.tube.UserTubeDelete;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
@@ -69,8 +63,7 @@ import androidx.navigation.ui.NavigationUI;
 import java.util.Date;
 import java.util.List;
 
-import static com.tregz.miksing.arch.auth.AuthLogin.SIGN_IN;
-import static com.tregz.miksing.data.Data.UNDEFINED;
+import static com.tregz.miksing.core.auth.AuthLogin.SIGN_IN;
 
 public class HomeActivity extends BaseActivity implements
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout>,

@@ -1,4 +1,4 @@
-package com.tregz.miksing.arch.note;
+package com.tregz.miksing.core.note;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

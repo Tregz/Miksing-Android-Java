@@ -1,9 +1,9 @@
-package com.tregz.miksing.arch.pref;
+package com.tregz.miksing.core.pref;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.tregz.miksing.arch.auth.AuthUtil;
+import com.tregz.miksing.core.auth.AuthUtil;
 
 import static com.tregz.miksing.data.DataNotation.ID;
 

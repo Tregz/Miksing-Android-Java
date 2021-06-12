@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tregz.miksing.R;
-import com.tregz.miksing.arch.pref.PrefShared;
+import com.tregz.miksing.core.pref.PrefShared;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.databinding.FragmentUserBinding;
 import com.tregz.miksing.home.HomeActivity;

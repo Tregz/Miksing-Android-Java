@@ -1,4 +1,4 @@
-package com.tregz.miksing.arch.auth;
+package com.tregz.miksing.core.auth;
 
 import com.firebase.ui.auth.AuthUI;
 import com.tregz.miksing.R;

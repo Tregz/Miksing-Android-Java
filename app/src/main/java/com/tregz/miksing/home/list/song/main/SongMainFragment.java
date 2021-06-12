@@ -5,8 +5,8 @@ import android.util.Log;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.tregz.miksing.BuildConfig;
-import com.tregz.miksing.arch.auth.AuthUtil;
-import com.tregz.miksing.arch.pref.PrefShared;
+import com.tregz.miksing.core.auth.AuthUtil;
+import com.tregz.miksing.core.pref.PrefShared;
 import com.tregz.miksing.data.song.Song;
 import com.tregz.miksing.data.tube.song.TubeSong;
 import com.tregz.miksing.data.tube.song.TubeSongWrite;

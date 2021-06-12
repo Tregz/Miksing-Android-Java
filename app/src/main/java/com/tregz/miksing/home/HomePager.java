@@ -1,54 +1,41 @@
 package com.tregz.miksing.home;
 
-import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.tregz.miksing.R;
-import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.song.main.SongMainFragment;
 import com.tregz.miksing.home.list.song.plan.SongPlanFragment;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-public class HomePager extends FragmentStatePagerAdapter {
+public class HomePager extends FragmentStateAdapter {
 
-    private List<ListFragment> pages = new ArrayList<>();
-    private Context context;
-
-    HomePager(Context context, FragmentManager manager) {
-        super(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        this.context = context;
-        pages.add(new SongMainFragment());
-        pages.add(new SongPlanFragment());
+    public HomePager(FragmentActivity fa) {
+        super(fa);
     }
 
-    @NonNull
+    @NotNull
     @Override
-    public Fragment getItem(int position) {
-        return pages.get(position);
+    public Fragment createFragment(int position) {
+        switch(position) {
+            case 0: return new SongMainFragment();
+            case 1: return new SongPlanFragment();
+        }
+        return new Fragment();
     }
 
     @Override
-    public int getCount() {
-        return pages.size();
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return context.getString(HomeTab.values()[position].getTab());
+    public int getItemCount() {
+        return HomeTab.values().length;
     }
 
     public enum HomeTab {
         EVERYTHING(R.string.page_everything),
         PREPARE(R.string.page_prepare);
 
-        private int tab;
+        private final int tab;
 
         public int getTab() {
             return tab;

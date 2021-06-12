@@ -11,7 +11,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tregz.miksing.BuildConfig;
-import com.tregz.miksing.arch.auth.AuthUtil;
 import com.tregz.miksing.data.DataListener;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;

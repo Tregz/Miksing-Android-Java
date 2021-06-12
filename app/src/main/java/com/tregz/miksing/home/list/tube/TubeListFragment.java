@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.tregz.miksing.R;
-import com.tregz.miksing.arch.auth.AuthUtil;
+import com.tregz.miksing.core.auth.AuthUtil;
 import com.tregz.miksing.base.list.ListSorted;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;

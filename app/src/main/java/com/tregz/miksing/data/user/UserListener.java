@@ -12,14 +12,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.tregz.miksing.arch.auth.AuthUtil;
-import com.tregz.miksing.arch.pref.PrefShared;
+import com.tregz.miksing.core.auth.AuthUtil;
+import com.tregz.miksing.core.pref.PrefShared;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.DataUpdate;
 import com.tregz.miksing.data.DataNotation;
-import com.tregz.miksing.data.song.SongListener;
-import com.tregz.miksing.data.tube.Tube;
-import com.tregz.miksing.data.tube.TubeCreate;
 import com.tregz.miksing.data.tube.song.TubeSongQuery;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
 import com.tregz.miksing.data.tube.song.TubeSongTransfer;
@@ -35,8 +32,6 @@ import io.reactivex.MaybeObserver;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.tregz.miksing.data.Data.UNDEFINED;
 
 public class UserListener implements MaybeObserver<User>,
         TubeSongQuery.OnTubeSongQueryDataResultCallback,

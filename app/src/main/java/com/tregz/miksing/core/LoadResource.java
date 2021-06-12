@@ -1,4 +1,4 @@
-package com.tregz.miksing.arch.load;
+package com.tregz.miksing.core;
 
 import android.content.Context;
 import android.content.res.Resources;

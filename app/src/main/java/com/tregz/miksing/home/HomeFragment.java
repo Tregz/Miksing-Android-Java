@@ -7,8 +7,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.tregz.miksing.R;
 import com.tregz.miksing.base.BaseFragment;
 import com.tregz.miksing.data.user.tube.UserTubeRelation;
 import com.tregz.miksing.databinding.FragmentHomeBinding;
@@ -16,7 +19,7 @@ import com.tregz.miksing.home.list.ListFragment;
 import com.tregz.miksing.home.list.song.main.SongMainFragment;
 import com.tregz.miksing.home.list.song.plan.SongPlanFragment;
 
-public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
+public class HomeFragment extends BaseFragment {
     //private final String TAG = HomeFragment.class.getSimpleName();
 
     private FragmentHomeBinding binding;
@@ -35,24 +38,22 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.pager.setAdapter(new HomePager(getContext(), getChildFragmentManager()));
-        binding.pager.addOnPageChangeListener(this);
+        binding.pager.setAdapter(new HomePager(requireActivity()));
+
+        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
+        new TabLayoutMediator(tabLayout, binding.pager,
+                (tab, position) -> {
+                    int resource = HomePager.HomeTab.values()[position].getTab();
+                    tab.setText(requireContext().getString(resource));
+                }
+        ).attach();
+        binding.pager.registerOnPageChangeCallback(callback);
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // do nothing
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        // do nothing
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (getActivity() != null) ((HomeActivity) getActivity()).setFabVisibility(position > 0);
-        sort();
+    public void onDestroy() {
+        super.onDestroy();
+        binding.pager.unregisterOnPageChangeCallback(callback);
     }
 
     void prepare(UserTubeRelation relation) {
@@ -66,7 +67,8 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
     void save(String name, boolean paste) {
         ListFragment page = page();
-        if (page instanceof SongPlanFragment) ((SongPlanFragment)page).save(name, paste);
+        if (page instanceof SongPlanFragment)
+            ((SongPlanFragment)page).save(name, paste);
     }
 
     void search(String query) {
@@ -85,14 +87,20 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
     private ListFragment page(int position) {
         if (binding.pager.getAdapter() != null) {
-            Object fragment = binding.pager.getAdapter().instantiateItem(binding.pager, position);
+            String tag = "f" + position;
+            Object fragment = requireActivity().getSupportFragmentManager().findFragmentByTag(tag);
             if (fragment instanceof ListFragment) return ((ListFragment) fragment);
         }
         return null;
     }
 
-    private enum Page {
-        EVERYTHING,
-
-    }
+    private final ViewPager2.OnPageChangeCallback callback = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageSelected(int position) {
+            if (getActivity() != null)
+                ((HomeActivity) getActivity()).setFabVisibility(position > 0);
+            sort();
+            super.onPageSelected(position);
+        }
+    };
 }

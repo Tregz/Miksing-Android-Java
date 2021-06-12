@@ -8,7 +8,6 @@ import androidx.room.Entity;
 
 import android.content.Context;
 
-import com.tregz.miksing.arch.load.LoadResource;
 import com.tregz.miksing.data.DataObject;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.lang.Lang;

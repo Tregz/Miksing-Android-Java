@@ -1,4 +1,4 @@
-package com.tregz.miksing.arch.auth;
+package com.tregz.miksing.core.auth;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +13,10 @@ import com.firebase.ui.auth.FirebaseUiException;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.tregz.miksing.arch.note.NoteUtil;
-import com.tregz.miksing.arch.pref.PrefShared;
+import com.tregz.miksing.core.note.NoteUtil;
+import com.tregz.miksing.core.pref.PrefShared;
 import com.tregz.miksing.data.DataReference;
 import com.tregz.miksing.data.song.Song;
-import com.tregz.miksing.data.song.SongDelete;
 import com.tregz.miksing.data.song.SongListener;
 import com.tregz.miksing.data.tube.TubeCreate;
 import com.tregz.miksing.data.tube.song.TubeSongRelation;
@@ -28,8 +27,6 @@ import com.tregz.miksing.data.user.song.UserSongListener;
 import java.util.List;
 
 import io.reactivex.MaybeObserver;
-import io.reactivex.Observable;
-import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
