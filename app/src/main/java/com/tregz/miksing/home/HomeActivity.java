@@ -63,8 +63,6 @@ import androidx.navigation.ui.NavigationUI;
 import java.util.Date;
 import java.util.List;
 
-import static com.tregz.miksing.core.auth.AuthLogin.SIGN_IN;
-
 public class HomeActivity extends BaseActivity implements
         AppBarLayout.BaseOnOffsetChangedListener<AppBarLayout>,
         FragmentManager.OnBackStackChangedListener, HomeView, SongEditView, SongListFragment.OnItem,
@@ -153,48 +151,35 @@ public class HomeActivity extends BaseActivity implements
                     if (e.getMessage() != null) toast(e.getMessage());
                 }
             }); */
-            binding.contentHome.fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //if (!back()) {
-                    if (v instanceof FloatingActionButton) {
-                        if (!((FloatingActionButton) v).isExpanded()) {
-                            //controller().navigate(R.id.action_homeFragment_to_workFragment);
-                            expand((FloatingActionButton) v);
-                            binding.contentHome.bottom.hide();
-                        } else {
-                            expand((FloatingActionButton) v);
-                            binding.contentHome.bottom.show(false);
-                        }
+            binding.contentHome.fab.setOnClickListener(v -> {
+                //if (!back()) {
+                if (v instanceof FloatingActionButton) {
+                    if (!((FloatingActionButton) v).isExpanded()) {
+                        //controller().navigate(R.id.action_homeFragment_to_workFragment);
+                        expand((FloatingActionButton) v);
+                        binding.contentHome.bottom.hide();
+                    } else {
+                        expand((FloatingActionButton) v);
+                        binding.contentHome.bottom.show(false);
                     }
                 }
             });
-            /* binding.contentHome.clear.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new WarnClear().show(getSupportFragmentManager(), WarnClear.TAG);
-                }
-            }); */
-            binding.contentHome.fetch.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new WarnFetch().show(getSupportFragmentManager(), WarnFetch.TAG);
-                }
+            // binding.contentHome.clear.setOnClickListener(new View.OnClickListener() {
+            //     @Override
+            //     public void onClick(View v) {
+            //         new WarnClear().show(getSupportFragmentManager(), WarnClear.TAG);
+            //     }
+            // });
+            binding.contentHome.fetch.setOnClickListener(v ->
+                    new WarnFetch().show(getSupportFragmentManager(), WarnFetch.TAG));
+            binding.contentHome.paste.setOnClickListener(v -> {
+                String name = SongPlanFragment.relation.tube.getName(HomeActivity.this);
+                WarnPaste warning = WarnPaste.newInstance(name);
+                warning.show(getSupportFragmentManager(), WarnScore.TAG);
             });
-            binding.contentHome.paste.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String name = SongPlanFragment.relation.tube.getName(HomeActivity.this);
-                    WarnPaste warning = WarnPaste.newInstance(name);
-                    warning.show(getSupportFragmentManager(), WarnScore.TAG);
-                }
-            });
-            binding.contentHome.wreck.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    WarnWreck warning = WarnWreck.newInstance(SongPlanFragment.relation.tube);
-                    warning.show(getSupportFragmentManager(), WarnWreck.TAG);
-                }
+            binding.contentHome.wreck.setOnClickListener(v -> {
+                WarnWreck warning = WarnWreck.newInstance(SongPlanFragment.relation.tube);
+                warning.show(getSupportFragmentManager(), WarnWreck.TAG);
             });
             // Scroll listener, to show/hide options while collapsing
             //((AppBarLayout) binding.contentHome.appBar.getRoot()).addOnOffsetChangedListener(this);
@@ -234,12 +219,9 @@ public class HomeActivity extends BaseActivity implements
     }
 
     private void countdown() {
-        if (countdown != null) countdown.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                webView.countdown();
-                countdown();
-            }
+        if (countdown != null) countdown.postDelayed(() -> {
+            webView.countdown();
+            countdown();
         }, 3000);
     }
 
@@ -288,7 +270,7 @@ public class HomeActivity extends BaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SIGN_IN) {
+        if (requestCode == AuthUtil.SIGN_IN) {
             if (resultCode == Activity.RESULT_OK) {
                 AuthUtil.onUserLogin(this);
                 navigation.update();

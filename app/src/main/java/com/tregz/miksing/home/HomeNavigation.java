@@ -14,9 +14,9 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.tregz.miksing.R;
-import com.tregz.miksing.core.auth.AuthLogin;
 import com.tregz.miksing.core.auth.AuthUtil;
 import com.tregz.miksing.core.pref.PrefShared;
 import com.tregz.miksing.base.list.ListSorted;
@@ -26,9 +26,9 @@ import com.tregz.miksing.data.user.UserDelete;
 import com.tregz.miksing.databinding.ActivityHomeBinding;
 
 public class HomeNavigation implements
-        BottomNavigationView.OnNavigationItemSelectedListener,
         DrawerLayout.DrawerListener,
         NavigationView.OnNavigationItemSelectedListener,
+        NavigationBarView.OnItemSelectedListener,
         OnCompleteListener<Void>, SongCount.Total {
     private final String TAG = HomeNavigation.class.getSimpleName();
 
@@ -45,7 +45,7 @@ public class HomeNavigation implements
         if (binding.navRight != null) binding.navRight.setNavigationItemSelectedListener(this);
         if (binding.contentHome != null) {
             BottomNavigationView bottom = binding.contentHome.bottom;
-            bottom.setOnNavigationItemSelectedListener(this);
+            bottom.setOnItemSelectedListener(this);
             Context context = bottom.getContext();
             login = context.getString(R.string.nav_login_title);
             logout = context.getString(R.string.nav_logout_title);
@@ -100,35 +100,29 @@ public class HomeNavigation implements
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_login:
-                if (!AuthUtil.logged()) new AuthLogin(view);
-                else if (binding.navRight != null) {
-                    Context context = binding.navRight.getContext();
-                    AuthUI.getInstance().signOut(context).addOnCompleteListener(this);
-                }
-                break;
-            case R.id.nav_clear:
-                if (binding.navStart != null) {
-                    Context context =binding.navStart.getContext();
-                    new SongDelete(context).wipe();
-                }
-                break;
-            case R.id.sort_alpha:
-                ListSorted.comparator = ListSorted.Order.ALPHA;
-                item.setChecked(true);
-                view.sort();
-                break;
-            case R.id.sort_digit:
-                ListSorted.comparator = ListSorted.Order.DIGIT;
-                item.setChecked(true);
-                view.sort();
-                break;
-            case R.id.sort_fresh:
-                ListSorted.comparator = ListSorted.Order.FRESH;
-                item.setChecked(true);
-                view.sort();
-                break;
+        if (item.getItemId() == R.id.nav_login) {
+            if (!AuthUtil.logged() && view != null) AuthUtil.login(view);
+            else if (binding.navRight != null) {
+                Context context = binding.navRight.getContext();
+                AuthUI.getInstance().signOut(context).addOnCompleteListener(this);
+            }
+        } else if (item.getItemId() == R.id.nav_clear) {
+            if (binding.navStart != null) {
+                Context context =binding.navStart.getContext();
+                new SongDelete(context).wipe();
+            }
+        } else if (item.getItemId() == R.id.sort_alpha) {
+            ListSorted.comparator = ListSorted.Order.ALPHA;
+            item.setChecked(true);
+            view.sort();
+        } else if (item.getItemId() == R.id.sort_digit) {
+            ListSorted.comparator = ListSorted.Order.DIGIT;
+            item.setChecked(true);
+            view.sort();
+        } else if (item.getItemId() == R.id.sort_fresh) {
+            ListSorted.comparator = ListSorted.Order.FRESH;
+            item.setChecked(true);
+            view.sort();
         }
         return false;
     }

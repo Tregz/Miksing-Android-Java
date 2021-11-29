@@ -30,9 +30,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected static int PRIMARY;
     protected final int HOST = R.id.nav_host_fragment;
     protected final int TUBE = R.id.nav_tube_fragment;
+    private final boolean IS_FULLSCREEN = false;
 
     @SuppressWarnings("DEPRECATION")
     protected void fullscreen() {
+        if (!IS_FULLSCREEN)
+            return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             final WindowInsetsController controller = getWindow().getInsetsController();
             if (controller != null) controller.hide(WindowInsets.Type.navigationBars());
@@ -43,7 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @SuppressWarnings("DEPRECATION")
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+        if (IS_FULLSCREEN && hasFocus && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             int navigator = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
             int immersive = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             getWindow().getDecorView().setSystemUiVisibility(navigator | immersive);
